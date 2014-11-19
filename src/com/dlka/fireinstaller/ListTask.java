@@ -59,19 +59,20 @@ public class ListTask extends
 						&& (ai.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) {
 					spitmp[idx] = new SortablePackageInfo();
 					spitmp[idx].packageName = info.packageName;
+					spitmp[idx].sourceDir = info.sourceDir;
 					spitmp[idx].displayName = pm
 							.getApplicationLabel(info.applicationInfo).toString();
 					spitmp[idx].installer = pm.getInstallerPackageName(info.packageName);
-					spitmp[idx].appInfo = ai;
-					spitmp[idx].versionCode = info.versionCode;
-					spitmp[idx].version = info.versionName;
-					spitmp[idx].firstInstalled = info.firstInstallTime;
-					spitmp[idx].lastUpdated = info.lastUpdateTime;
-					spitmp[idx].uid = info.applicationInfo.uid;
+			//		spitmp[idx].appInfo = ai;
+		//			spitmp[idx].versionCode = info.versionCode;
+			//		spitmp[idx].version = info.versionName;
+				//	spitmp[idx].firstInstalled = info.firstInstallTime;
+			//		spitmp[idx].lastUpdated = info.lastUpdateTime;
+		//			spitmp[idx].uid = info.applicationInfo.uid;
 					spitmp[idx].dataDir = info.applicationInfo.dataDir;
 		//			spitmp[idx].comment = aSource.getComment(info.packageName);
 		//			spitmp[idx].tags=aSource.getTags(info.packageName);
-					spitmp[idx].targetsdk = ai.targetSdkVersion;
+//					spitmp[idx].targetsdk = ai.targetSdkVersion;
 					idx++;
 				}
 			}

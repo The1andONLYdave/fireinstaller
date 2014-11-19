@@ -222,6 +222,7 @@ public class MainActivity extends ListActivity implements
 					try {
 						String qry="username=max&applist="+buf.toString(); // TODO: Query username from user and save (prefs? sqlite?) 
 						String result=SendPost(qry);
+						
 						Log.d(APP_TAG, "qry");
 						Log.d(APP_TAG, qry);
 						Log.d(APP_TAG, result);
@@ -229,21 +230,13 @@ public class MainActivity extends ListActivity implements
 						String url = result2[1].toString();
 						String[] url2 = url.split("\">");
 						
-						//Toast.makeText(this, result2[1], Toast.LENGTH_LONG).show();
 						
-						
-						if (((CheckBox) findViewById(R.id.always_gplay)).isChecked()) {
-							FlurryAgent.logEvent("Opening url intent");
-							shareTextUrl(url2[0].toString());
+
 							Toast.makeText(this, "Link geteilt", Toast.LENGTH_LONG).show();
+							Toast.makeText(this, url2[0].toString(), Toast.LENGTH_LONG).show();
+							Toast.makeText(this, url2[0], Toast.LENGTH_LONG).show();
 						
-						}
-						else{
-							FlurryAgent.logEvent("Opening url browser");
-							Uri uri = Uri.parse(url2[0].toString());
-							Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
-							this.startActivity(browserIntent);		
-						}
+					
 						
 						
 					} catch (IOException e) {
@@ -282,7 +275,7 @@ public class MainActivity extends ListActivity implements
 			}
 			case (R.id.item_help): {
 				FlurryAgent.logEvent("Menuhelp selected");
-				Uri uri = Uri.parse(getString(R.string.url_help)); MainActivity.openUri(this,uri);
+				//Uri uri = Uri.parse(getString(R.string.url_help)); MainActivity.openUri(this,uri);
 				return true;
 			} 
 			case (R.id.item_mail):{
@@ -291,7 +284,7 @@ public class MainActivity extends ListActivity implements
 			    buffer.append("mailto:");
 			    buffer.append("feedback@kulsch-it.de");
 			    buffer.append("?subject=");
-			    buffer.append("App-Liste.de");
+			    buffer.append("Fireinstaller");
 			    buffer.append("&body=");
 			    String uriString = buffer.toString().replace(" ", "%20");
 
@@ -418,21 +411,6 @@ public class MainActivity extends ListActivity implements
 	 *         search engine link is returned.
 	 */
 	public static String createSourceLink(String installer, String packname) {
-		if (installer == null) {
-			return "https://www.google.com/search?q=" + packname;
-		}
-		if (installer.startsWith("com.google")) {
-			return "https://play.google.com/store/apps/details?id=" + packname;
-		}
-		if (installer.startsWith("com.android")) {
-			return "https://play.google.com/store/apps/details?id=" + packname;
-		}
-		if (installer.startsWith("org.fdroid")) {
-			return "https://f-droid.org/repository/browse/?fdid=" + packname;
-		}
-		if (installer.startsWith("com.amazon")) {
-			return "http://www.amazon.com/gp/mas/dl/android?p=" + packname;
-		}
 		return "https://www.google.com/search?q=" + packname;
 	}
 
@@ -460,22 +438,14 @@ public class MainActivity extends ListActivity implements
 			int position, long id) {
 		AppAdapter aa = (AppAdapter) getListAdapter();
 		SortablePackageInfo spi = aa.getItem(position);
+		
+		 PackageManager pm = getPackageManager(); 
+		for (ApplicationInfo app : pm.getInstalledApplications(0)) {
+   
+	Log.d("Fireinstaller", "package: " + app.packageName + ", sourceDir: " + app.sourceDir
 
-		try {
-			// FIXME: This intent is only available in Gingerbread and up. I don't
-			// want to ditch Froyo, yet. I don't want to implement a giant
-			// compatibility cludge either, so dirty hack compromise: use the value
-			// android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS directly
-			// that way it works on newer droids and silently fails without crashing
-			// on Froyo.
-			Intent i = new Intent("android.settings.APPLICATION_DETAILS_SETTINGS");
-			i.addCategory(Intent.CATEGORY_DEFAULT);
-			i.setData(Uri.parse("package:" + spi.packageName));
-			startActivity(i);
-		}
-		catch (Exception e) {
-			Log.w(getClass().getName(), e);
-		}
+	
+	Log.d("Fireinstaller", "package: " + spi.packageName + ", sourceDir: " + spi.sourceDir
 
 		return true;
 	}
@@ -502,37 +472,10 @@ public class MainActivity extends ListActivity implements
 	      
 	       
 	        public String SendPost(String data) throws IOException   {
-	            URL url = new URL("http://show-my-apps.de/parser.php");
+	            
+		Log.d("Fireinstaller", "pushing to device");
 
-	            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-	            connection.setDoOutput(true);
-	            connection.setRequestMethod("POST");
-	            
-	            // If cookie exists, then send cookie
-	           
-	            
-	            // If Post Data not empty, then send POST Data
-	            if (data != "") {
-	                OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
-	                out.write(data);
-	                out.flush();
-	                out.close();
-	            }
-	            
-	            // Save Cookie
-	            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-	           // String headerName = null;
-	            //_cookies.clear();
-	            
-	            // Get HTML from Server
-	            String getData = "";
-	            String decodedString;
-	            while ((decodedString = in.readLine()) != null) {
-	                getData += decodedString + "\n";
-	            }
-	            in.close();
-	            
-	            return getData;
+	            return true;
 	        }
 	        
 	        /**
@@ -555,16 +498,6 @@ public class MainActivity extends ListActivity implements
 	            }
 	            return mTrackers.get(trackerId);
 	          }
-			  private void shareTextUrl(String url) {
-    Intent share = new Intent(android.content.Intent.ACTION_SEND);
-    share.setType("text/plain");
-    share.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
- 
-    // Add data to the intent, the receiving app will decide
-    // what to do with it.
-    share.putExtra(Intent.EXTRA_SUBJECT, "Meine App-Liste");
-    share.putExtra(Intent.EXTRA_TEXT, url);
- 
-    startActivity(Intent.createChooser(share, "Teilen!"));
-}
+			  
+	
 }
