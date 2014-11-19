@@ -11,7 +11,7 @@
 	<string name="mail">Send Developer Email</string>
 	<string name="edit_templates">Template Editor</string>
 	<string name="annotations">Annotations</string>
-	<string name="copy">Share</string>
+	<string name="copy">Push at FireTV</string>
 
 	<string-array name="templatebodyvars">
 		<item>${comment}</item>

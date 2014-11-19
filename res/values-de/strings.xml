@@ -6,7 +6,7 @@
 	<string name="share">Teilen</string>
 	<string name="help">Hilfe</string>
 	<string name="mail">Emaile dem Entwickler</string>
-	<string name="copy">Los!</string>
+	<string name="copy">Auf FireTV!</string>
 	
 	<string-array name="stdformattitles">
 	    <item>Einfacher Text</item>
