@@ -431,6 +431,7 @@ public class MainActivity extends ListActivity implements
 	
 	Log.d("Fireinstaller", "package: " + spi.packageName + ", sourceDir: " + spi.sourceDir);
 
+		}
 		return true;
 	}
 	
