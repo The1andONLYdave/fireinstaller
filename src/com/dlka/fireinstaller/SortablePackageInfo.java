@@ -29,6 +29,7 @@ class SortablePackageInfo implements Comparable<SortablePackageInfo>,
 	public int category;
 	public int targetsdk;
 	public ApplicationInfo appInfo;
+	public String sourceDir;
 
 	public SortablePackageInfo(){}
 

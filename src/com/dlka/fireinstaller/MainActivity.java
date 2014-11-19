@@ -1,11 +1,6 @@
 package com.dlka.fireinstaller;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -17,6 +12,8 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -36,7 +33,6 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.flurry.android.FlurryAgent;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
@@ -135,7 +131,6 @@ public class MainActivity extends ListActivity implements
 	//	Spinner spinner = (Spinner) findViewById(R.id.format_select);
 		templateSource = new TemplateSource(this);
 		templateSource.open();
-		FlurryAgent.logEvent("onresume", true);
 		List<TemplateData> formats = templateSource.list();
 		ArrayAdapter<TemplateData> adapter = new ArrayAdapter<TemplateData>(this,
 				android.R.layout.simple_spinner_item, formats);
@@ -162,7 +157,7 @@ public class MainActivity extends ListActivity implements
 		setListAdapter(new AppAdapter(this, R.layout.app_item,
 				new ArrayList<SortablePackageInfo>(), R.layout.app_item));
 		new ListTask(this, R.layout.app_item).execute("");
-		FlurryAgent.endTimedEvent("onresume");
+		
 	}
 
 	@Override
@@ -188,15 +183,12 @@ public class MainActivity extends ListActivity implements
 	protected void onStart()
 	{
 	super.onStart();
-	FlurryAgent.onStartSession(this, "H5N6DGG33JZRTMSRBXC3");
-	FlurryAgent.setUseHttps(true);
-	
+		
 	}
 	@Override
 	protected void onStop()
 	{
 	super.onStop();	
-	FlurryAgent.onEndSession(this);
 	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -211,7 +203,6 @@ public class MainActivity extends ListActivity implements
 			case R.id.copy: { 
 				
 				if (!isNothingSelected()) {
-					FlurryAgent.logEvent("Upload",true);
 					CharSequence buf = buildOutput();
 					//TODO sent html
 					//sendPost(buf.toString());
@@ -240,13 +231,11 @@ public class MainActivity extends ListActivity implements
 						
 						
 					} catch (IOException e) {
-						FlurryAgent.logEvent("Upload IOException e");
 						e.printStackTrace();
 					}
 				}
 				
-				else{FlurryAgent.logEvent("Upload nothing selected");}
-				FlurryAgent.endTimedEvent("Upload");
+				else{;}
 				Toast.makeText(this, "no app selected", Toast.LENGTH_LONG).show();
 				
 				break;
@@ -259,7 +248,6 @@ public class MainActivity extends ListActivity implements
 					spi.selected = false;
 				}
 				((AppAdapter) adapter).notifyDataSetChanged();
-				FlurryAgent.logEvent("deselected all");
 				break;
 			}
 			case (R.id.select_all): {
@@ -270,16 +258,13 @@ public class MainActivity extends ListActivity implements
 					spi.selected = true;
 				}
 				((AppAdapter) adapter).notifyDataSetChanged();
-				FlurryAgent.logEvent("selected all");
 				break;
 			}
 			case (R.id.item_help): {
-				FlurryAgent.logEvent("Menuhelp selected");
 				//Uri uri = Uri.parse(getString(R.string.url_help)); MainActivity.openUri(this,uri);
 				return true;
 			} 
 			case (R.id.item_mail):{
-				FlurryAgent.logEvent("Menumail selected");
 				StringBuffer buffer = new StringBuffer();
 			    buffer.append("mailto:");
 			    buffer.append("feedback@kulsch-it.de");
@@ -316,7 +301,6 @@ public class MainActivity extends ListActivity implements
 			}
 			sb.append(collect.get(i));
 			if (sb.length()>200) {
-				FlurryAgent.logEvent("sb.lenght too long "+sb.length());
 				Toast.makeText(this, "Zuviele Apps  ausgewählt!", Toast.LENGTH_LONG).show();		
 				break; // prevent the url from growing overly large. 
 			}
@@ -442,10 +426,10 @@ public class MainActivity extends ListActivity implements
 		 PackageManager pm = getPackageManager(); 
 		for (ApplicationInfo app : pm.getInstalledApplications(0)) {
    
-	Log.d("Fireinstaller", "package: " + app.packageName + ", sourceDir: " + app.sourceDir
+	Log.d("Fireinstaller", "package: " + app.packageName + ", sourceDir: " + app.sourceDir);
 
 	
-	Log.d("Fireinstaller", "package: " + spi.packageName + ", sourceDir: " + spi.sourceDir
+	Log.d("Fireinstaller", "package: " + spi.packageName + ", sourceDir: " + spi.sourceDir);
 
 		return true;
 	}
@@ -465,8 +449,7 @@ public class MainActivity extends ListActivity implements
 		}
 		catch (ActivityNotFoundException e) {
 			// There are actually people who don't have a webbrowser installed
-			Toast.makeText(ctx, com.dlka.fireinstaller.R.string.msg_no_webbrowser, Toast.LENGTH_SHORT)
-					.show();
+			//Toast.makeText(ctx, com.dlka.fireinstaller.R.string.msg_no_webbrowser, Toast.LENGTH_SHORT).show();
 		}
 	}
 	      
@@ -475,7 +458,7 @@ public class MainActivity extends ListActivity implements
 	            
 		Log.d("Fireinstaller", "pushing to device");
 
-	            return true;
+	            return "success";
 	        }
 	        
 	        /**
