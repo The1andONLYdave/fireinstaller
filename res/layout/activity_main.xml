@@ -8,7 +8,7 @@
 	android:paddingTop="@dimen/activity_vertical_margin"
 	tools:context=".MainActivity" >
 
-	<!--<TextView
+    <TextView
 		android:id="@+id/format_as"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
@@ -16,9 +16,10 @@
 		android:layout_alignParentLeft="true"
 		android:layout_alignParentTop="true"
 		android:gravity="center_vertical"
-		android:text="@string/lbl_format_as"
+		android:text="@string/always_link"
 		android:textAppearance="?android:attr/textAppearanceMedium" />
-
+    
+	<!--
 	 Spinner
 		android:id="@+id/format_select"
 		android:layout_width="wrap_content"
@@ -28,6 +29,8 @@
 		android:layout_toRightOf="@+id/format_as" />
  -->
 
+    
+
 		<LinearLayout
 		android:id="@+id/nest"
 		android:layout_width="match_parent"
@@ -35,12 +38,16 @@
 		android:padding="15dp"
 		android:gravity="center"
 		android:layout_below="@+id/format_as" >
+<EditText
+        android:id="@+id/editText1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10" 
+        android:text="192.168.1.106">
 
-		<CheckBox
-			android:id="@+id/always_gplay"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:text="@string/always_link" />
+        <requestFocus />
+    </EditText>
+					
 	</LinearLayout>
 
 	<ListView

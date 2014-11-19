@@ -107,6 +107,7 @@ public class MainActivity extends ListActivity implements
         AdRequest adRequest = new AdRequest.Builder()
         .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)       // Emulator
         .addTestDevice("89CADD0B4B609A30ABDCB7ED4E90A8DE")
+        .addTestDevice("CCCBB7E354C2E6E64DB5A399A77298ED") 
         .build();
         
         // Load the adView with the ad request.
@@ -127,7 +128,7 @@ public class MainActivity extends ListActivity implements
 	protected void onResume() {
 		super.onResume();
 		adView.resume();
-		CheckBox checkbox = (CheckBox) findViewById(R.id.always_gplay);
+		//CheckBox checkbox = (CheckBox) findViewById(R.id.always_gplay);
 	//	Spinner spinner = (Spinner) findViewById(R.id.format_select);
 		templateSource = new TemplateSource(this);
 		templateSource.open();
@@ -140,7 +141,7 @@ public class MainActivity extends ListActivity implements
 		//spinner.setOnItemSelectedListener(this);
 		SharedPreferences prefs = getSharedPreferences(PREFSFILE, 0);
 		//checkbox.setChecked(prefs.getBoolean((ALWAYS_GOOGLE_PLAY), true));
-		checkbox.setChecked(true);
+		//checkbox.setChecked(true);
 		int selection = 0;
 		Iterator<TemplateData> it = formats.iterator();
 		int count = 0;
@@ -165,8 +166,7 @@ public class MainActivity extends ListActivity implements
 		adView.pause();
 		super.onPause();
 		SharedPreferences.Editor editor = getSharedPreferences(PREFSFILE, 0).edit();
-		editor.putBoolean(ALWAYS_GOOGLE_PLAY,
-				((CheckBox) findViewById(R.id.always_gplay)).isChecked());
+		editor.putBoolean(ALWAYS_GOOGLE_PLAY,true);
 		if (template != null) {
 			editor.putLong(TEMPLATEID, template.id);
 		}
@@ -204,28 +204,20 @@ public class MainActivity extends ListActivity implements
 				
 				if (!isNothingSelected()) {
 					CharSequence buf = buildOutput();
-					//TODO sent html
-					//sendPost(buf.toString());
-					//Toast.makeText(this, buf.toString(), Toast.LENGTH_LONG).show();
+
 					//String value =
 					       // ((EditText) getView().findViewById(R.id.username)).getText().toString().trim();
 
 					try {
-						String qry="username=max&applist="+buf.toString(); // TODO: Query username from user and save (prefs? sqlite?) 
+						String qry=buf.toString(); // TODO: Query username from user and save (prefs? sqlite?) 
 						String result=SendPost(qry);
 						
 						Log.d(APP_TAG, "qry");
 						Log.d(APP_TAG, qry);
 						Log.d(APP_TAG, result);
-						String[] result2=result.split("<a href=\"");
-						String url = result2[1].toString();
-						String[] url2 = url.split("\">");
-						
 						
 
-							Toast.makeText(this, "Link geteilt", Toast.LENGTH_LONG).show();
-							Toast.makeText(this, url2[0].toString(), Toast.LENGTH_LONG).show();
-							Toast.makeText(this, url2[0], Toast.LENGTH_LONG).show();
+							Toast.makeText(this, "App pushed at FireTV", Toast.LENGTH_LONG).show();
 						
 					
 						
@@ -300,12 +292,13 @@ public class MainActivity extends ListActivity implements
 				sb.append(",");
 			}
 			sb.append(collect.get(i));
-			if (sb.length()>200) {
-				Toast.makeText(this, "Zuviele Apps  ausgewählt!", Toast.LENGTH_LONG).show();		
+			if (sb.length()>700) { //fixme try increase 200->700
+				Toast.makeText(this, "Select less apps!", Toast.LENGTH_LONG).show();		
 				break; // prevent the url from growing overly large. 
 			}
 		}
-		openUri(this,Uri.parse(getString(R.string.url_browse,sb.toString())));
+		//TODO apk push
+		Log.d("Fireinstaller","apk push called for" + sb.toString());
 	}
 
 	/**
@@ -314,48 +307,28 @@ public class MainActivity extends ListActivity implements
 	 * @return the html response
 	 */
 	private CharSequence buildOutput() {
-		//if (template == null) {
-		//	return getString(R.string.msg_error_no_templates);
-		//}
 
 		StringBuilder ret = new StringBuilder();
-	//	DateFormat df = DateFormat.getDateTimeInstance();
-		//boolean alwaysGP = ((CheckBox) findViewById(R.id.always_gplay)).isChecked();
 		ListAdapter adapter = getListAdapter();
 		int count = adapter.getCount();
 
-	//	String now = java.text.DateFormat.getDateTimeInstance().format(
-		//		Calendar .getInstance().getTime());
 		int selected = 0;
 
 		for (int i = 0; i < count; i++) {
 			SortablePackageInfo spi = (SortablePackageInfo) adapter.getItem(i);
 			if (spi.selected) {
 				selected++;
-		//		String tmp = spi.installer;
-			//	if (alwaysGP) {
-			//		tmp = "com.google.vending";
-			//	}
+				Log.d("Fireinstaller", " ret.append package: " + spi.packageName + ", sourceDir: " + spi.sourceDir);
+
 				ret.append(spi.packageName);
 				ret.append(":::");
+				ret.append(spi.sourceDir);
+				ret.append("::::");
+				
 			}
 		}
-		//ret.insert(
-		//		0,
-		//		template.header.replace("${now}", now).replace("${count}",
-		//				"" + selected));
-		//ret.append(template.footer.replace("${now}", now).replace("${count}",
-		//		"" + selected));
 		return ret;
 	}
-
-	/**
-	 * Make sure a string is not null
-	 * 
-	 * @param input
-	 *          the string to check
-	 * @return the input string or an empty string if the input was null.
-	 */
 	public static String noNull(String input) {
 		if (input == null) {
 			return "";
@@ -363,11 +336,6 @@ public class MainActivity extends ListActivity implements
 		return input;
 	}
 
-	/**
-	 * Check if at least one app is selected. Pop up a toast if none is selected.
-	 * 
-	 * @return true if no app is selected.
-	 */
 	public boolean isNothingSelected() {
 		ListAdapter adapter = getListAdapter();
 		if (adapter != null) {
@@ -384,16 +352,7 @@ public class MainActivity extends ListActivity implements
 		return true;
 	}
 
-	/**
-	 * Figure out from where an app can be downloaded
-	 * 
-	 * @param installer
-	 *          id of the installing app or null if unknown.
-	 * @param packname
-	 *          pacakgename of the app
-	 * @return a url containing a market link. If no market can be determined, a
-	 *         search engine link is returned.
-	 */
+
 	public static String createSourceLink(String installer, String packname) {
 		return "https://www.google.com/search?q=" + packname;
 	}
@@ -426,7 +385,7 @@ public class MainActivity extends ListActivity implements
 		 PackageManager pm = getPackageManager(); 
 		for (ApplicationInfo app : pm.getInstalledApplications(0)) {
    
-	Log.d("Fireinstaller", "package: " + app.packageName + ", sourceDir: " + app.sourceDir);
+	//Log.d("Fireinstaller", "package: " + app.packageName + ", sourceDir: " + app.sourceDir);
 
 	
 	Log.d("Fireinstaller", "package: " + spi.packageName + ", sourceDir: " + spi.sourceDir);

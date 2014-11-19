@@ -37,7 +37,7 @@
 		<item>\nListe erstellt mit [List My Apps](https://play.google.com/store/apps/details?id=com.dlka.showmyapps)</item>
 	</string-array>
 
-	<string name="always_link">Wähle ein paar Apps aus (max 9) und klicke auf den Uploadpfeil oben. (Diesen Haken abwählen für nur eine Webseite zu erstellen ohne Teilenfunktion)</string>
+	<string name="always_link">Wähle ein paar Apps aus, gib die IP deines FireTv ein und klicke auf den Uploadpfeil oben.</string>
 	<string name="lbl_format_as">Kopieren/Teilen als:</string>
 	<string name="lbl_version">Version</string>
 	<string name="lbl_versioncode">Versionsnummer</string>

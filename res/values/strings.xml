@@ -62,7 +62,7 @@
 		<item>\n</item>
 	</string-array>
 
-	<string name="always_link">Uncheck to only create and open webpage online, no sharing.</string>
+	<string name="always_link">Select some apps, input FireTV-IP Adress and press the arrow-up for uploading.</string>
 	<string name="lbl_format_as">Copy/Share as:</string>
 	<string name="lbl_version">Version</string>
 	<string name="lbl_versioncode">Version code</string>
