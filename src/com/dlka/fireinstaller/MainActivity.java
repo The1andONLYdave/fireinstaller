@@ -58,7 +58,8 @@ public class MainActivity extends ListActivity implements
         ECOMMERCE_TRACKER, // Tracker used by all ecommerce transactions from a company.
       }
     private AdView adView;
-    
+
+	public String fireip="192.168.1.106";    
 
       HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
       
@@ -73,16 +74,11 @@ public class MainActivity extends ListActivity implements
 		ListView listView = getListView();
 		listView.setOnItemClickListener(this);
 		listView.setOnItemLongClickListener(this);
-		//AppRater.appLaunched(this);
-		  // Get tracker.
-        Tracker t = (getTracker(
+	  Tracker t = (getTracker(
             TrackerName.APP_TRACKER));
 
-        // Set screen name.
-        // Where path is a String representing the screen name.
         t.setScreenName("MainView");
 
-        // Send a screen view.
         t.send(new HitBuilders.AppViewBuilder().build());
         
         
@@ -95,22 +91,16 @@ public class MainActivity extends ListActivity implements
         adView.setAdUnitId("ca-app-pub-8761501900041217/7037219683");
         adView.setAdSize(AdSize.BANNER);
 
-        // Lookup your LinearLayout assuming it's been given
-        // the attribute android:id="@+id/mainLayout".
         LinearLayout layout = (LinearLayout)findViewById(R.id.bannerLayout);
 
-        // Add the adView to it.
         layout.addView(adView);
 
-        // Initiate a generic request.
-       // AdRequest adRequest = new AdRequest.Builder().build();
         AdRequest adRequest = new AdRequest.Builder()
-        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)       // Emulator
+        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)       
         .addTestDevice("89CADD0B4B609A30ABDCB7ED4E90A8DE")
-        .addTestDevice("CCCBB7E354C2E6E64DB5A399A77298ED") 
+        .addTestDevice("CCCBB7E354C2E6E64DB5A399A77298ED")  //current Nexus 4
         .build();
         
-        // Load the adView with the ad request.
         adView.loadAd(adRequest);
 
         
@@ -128,8 +118,6 @@ public class MainActivity extends ListActivity implements
 	protected void onResume() {
 		super.onResume();
 		adView.resume();
-		//CheckBox checkbox = (CheckBox) findViewById(R.id.always_gplay);
-	//	Spinner spinner = (Spinner) findViewById(R.id.format_select);
 		templateSource = new TemplateSource(this);
 		templateSource.open();
 		List<TemplateData> formats = templateSource.list();
@@ -137,11 +125,7 @@ public class MainActivity extends ListActivity implements
 				android.R.layout.simple_spinner_item, formats);
 		adapter
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		//spinner.setAdapter(adapter);
-		//spinner.setOnItemSelectedListener(this);
 		SharedPreferences prefs = getSharedPreferences(PREFSFILE, 0);
-		//checkbox.setChecked(prefs.getBoolean((ALWAYS_GOOGLE_PLAY), true));
-		//checkbox.setChecked(true);
 		int selection = 0;
 		Iterator<TemplateData> it = formats.iterator();
 		int count = 0;
@@ -154,7 +138,6 @@ public class MainActivity extends ListActivity implements
 			template = null;
 			count++;
 		}
-		//spinner.setSelection(selection);
 		setListAdapter(new AppAdapter(this, R.layout.app_item,
 				new ArrayList<SortablePackageInfo>(), R.layout.app_item));
 		new ListTask(this, R.layout.app_item).execute("");
@@ -167,6 +150,7 @@ public class MainActivity extends ListActivity implements
 		super.onPause();
 		SharedPreferences.Editor editor = getSharedPreferences(PREFSFILE, 0).edit();
 		editor.putBoolean(ALWAYS_GOOGLE_PLAY,true);
+		//TODO editor.sharedprefs for saving/reading ip, make default ip go there if empty first
 		if (template != null) {
 			editor.putLong(TEMPLATEID, template.id);
 		}
@@ -205,12 +189,14 @@ public class MainActivity extends ListActivity implements
 				if (!isNothingSelected()) {
 					CharSequence buf = buildOutput();
 
-					//String value =
-					       // ((EditText) getView().findViewById(R.id.username)).getText().toString().trim();
+					String fireip =
+					        ((EditText) getView().findViewById(R.id.editText1)).getText().toString().trim();
+
+					        Log.d("Fireinstaller","IP ausgelesen:"+fireip);
 
 					try {
-						String qry=buf.toString(); // TODO: Query username from user and save (prefs? sqlite?) 
-						String result=SendPost(qry);
+						String qry=buf.toString(); // TODO: Save IP into prefs or file 
+						String result=PushApk(qry);
 						
 						Log.d(APP_TAG, "qry");
 						Log.d(APP_TAG, qry);
@@ -253,7 +239,7 @@ public class MainActivity extends ListActivity implements
 				break;
 			}
 			case (R.id.item_help): {
-				//Uri uri = Uri.parse(getString(R.string.url_help)); MainActivity.openUri(this,uri);
+				//TODO implement help screen
 				return true;
 			} 
 			case (R.id.item_mail):{
@@ -385,39 +371,30 @@ public class MainActivity extends ListActivity implements
 		 PackageManager pm = getPackageManager(); 
 		for (ApplicationInfo app : pm.getInstalledApplications(0)) {
    
-	//Log.d("Fireinstaller", "package: " + app.packageName + ", sourceDir: " + app.sourceDir);
-
-	
-	Log.d("Fireinstaller", "package: " + spi.packageName + ", sourceDir: " + spi.sourceDir);
+	Log.d("Fireinstaller", "package: " + spi.packageName + ", sourceDir: " + spi.sourceDir + ", ip:"+fireip);
 
 		}
 		return true;
 	}
 	
-	/**
-	 * Open an url in a webbrowser
-	 * 
-	 * @param ctx
-	 *          a context
-	 * @param uri
-	 *          target
-	 */
+
 	public static void openUri(Context ctx, Uri uri) {
 		try {
 			Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
 			ctx.startActivity(browserIntent);
 		}
 		catch (ActivityNotFoundException e) {
-			// There are actually people who don't have a webbrowser installed
-			//Toast.makeText(ctx, com.dlka.fireinstaller.R.string.msg_no_webbrowser, Toast.LENGTH_SHORT).show();
+			
+			Toast.makeText(ctx, "no webbrowser found", Toast.LENGTH_SHORT).show();
 		}
 	}
 	      
 	       
-	        public String SendPost(String data) throws IOException   {
+	        public String PushApk(String data) throws IOException   {
 	            
-		Log.d("Fireinstaller", "pushing to device");
+		Log.d("Fireinstaller", "pushing to device "+fireip);
 
+//TODO pushing to firetv
 	            return "success";
 	        }
 	        
