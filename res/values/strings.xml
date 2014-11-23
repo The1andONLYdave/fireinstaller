@@ -62,7 +62,7 @@
 		<item>\n</item>
 	</string-array>
 
-	<string name="always_link">1.)Input FireTV IP Adress and press "IP Ok" 2.)Select Apps 3.)Press "->FireTV" 4.)Wait</string>
+	<string name="always_link">1.)Input FireTV IP Adress and press \"IP Ok\" 2.)Select Apps 3.)Press \"->FireTV\" 4.)Wait</string>
 	<string name="lbl_format_as">Copy/Share as:</string>
 	<string name="lbl_version">Version</string>
 	<string name="lbl_versioncode">Version code</string>

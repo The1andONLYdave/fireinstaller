@@ -37,7 +37,7 @@
 		<item>\nListe erstellt mit [List My Apps](https://play.google.com/store/apps/details?id=com.dlka.showmyapps)</item>
 	</string-array>
 
-	<string name="always_link">1.)Gebe die IP Adresse deines FireTV an und klicke "IP Ok" 2.)Wähle Apps 3.)Klicke "->FireTV" 4.)Warte</string>
+	<string name="always_link">1.)Gebe die IP Adresse deines FireTV an und klicke \"IP Ok\" 2.)Wähle Apps 3.)Klicke \"->FireTV\" 4.)Warte</string>
 	<string name="lbl_format_as">Kopieren/Teilen als:</string>
 	<string name="lbl_version">Version</string>
 	<string name="lbl_versioncode">Versionsnummer</string>

@@ -1,5 +1,6 @@
 package com.dlka.fireinstaller;
 
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -32,6 +33,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -150,6 +152,12 @@ public class MainActivity extends ListActivity implements
 		new ListTask(this, R.layout.app_item).execute("");
 		
 		//when button pressed: copyMenuSelect();
+		final Button bs = (Button)findViewById(R.id.button2);
+		bs.setOnClickListener(new View.OnClickListener() {
+		public void onClick(View v) {
+			copyMenuSelect();
+			}
+		});
 
 	}
 
@@ -313,11 +321,18 @@ public class MainActivity extends ListActivity implements
 		int count = adapter.getCount();
 
 		
-	//	 PackageManager pm = getPackageManager(); 
-	//	for (ApplicationInfo app : pm.getInstalledApplications(0)) {
-	//		Log.d("Fireinstaller2", "package: " + app.packageName + ", sourceDir: " + app.sourceDir);
-	//	}
-
+		Log.d("Fireinstaller2", "connecting adb to "+fireip);
+		Process adb = null;
+		try {
+			adb = Runtime.getRuntime().exec("adb connect "+fireip+"\n");
+			
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		DataOutputStream outputStream = new DataOutputStream(adb.getOutputStream());
+		
 		for (int i = 0; i < count; i++) {
 			SortablePackageInfo spi = (SortablePackageInfo) adapter.getItem(i);
 			if (spi.selected) {
@@ -328,6 +343,7 @@ public class MainActivity extends ListActivity implements
 				//ret.append(spi.sourceDir);
 				//ret.append("::::");
 				ret.append(i+" ");
+
 				
 				        File file =new File(spi.sourceDir);
 				        InputStream myInput;
@@ -362,14 +378,44 @@ public class MainActivity extends ListActivity implements
 				            myInput.close();
 				            Toast.makeText(MainActivity.this, "temp.apk created", Toast.LENGTH_LONG)
 				            .show();
+				            
+				        	//move apk to fire tv here
+				    		//Foreach Entry do and show progress thing:
+				            Log.d("Fireinstaller2", "doing adb install "+exist.toString());
+				    		outputStream.writeBytes("adb install "+exist.toString()+"\n" );
+				    		outputStream.flush();
+
+				    		
+				    		
 				            } catch (IOException e) {
 				            // TODO Auto-generated catch block
 				            e.printStackTrace();
 				            }
 				    
-			//move apk to fire tv here
-			
+		
 		}}
+
+		//After pushing:
+		try {
+			outputStream.writeBytes("exit\n");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			outputStream.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			adb.waitFor();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		adb.destroy();
+		
 		return ret;
 			
 
