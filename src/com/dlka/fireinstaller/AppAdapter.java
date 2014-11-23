@@ -39,8 +39,8 @@ public class AppAdapter extends ArrayAdapter<SortablePackageInfo> {
 			vh.appName = (TextView) ret.findViewById(R.id.appname);
 			vh.appPackage = (TextView) ret.findViewById(R.id.apppackage);
 			vh.appIcon = (ImageView) ret.findViewById(R.id.icon);
-			vh.comment = (TextView) ret.findViewById(R.id.comments);
-			vh.tags = (TextView) ret.findViewById(R.id.tags);
+			//vh.comment = (TextView) ret.findViewById(R.id.comments);
+			//vh.tags = (TextView) ret.findViewById(R.id.tags);
 			ret.setTag(vh);
 		}
 		SortablePackageInfo spi = getItem(position);
@@ -58,23 +58,9 @@ public class AppAdapter extends ArrayAdapter<SortablePackageInfo> {
 				break;
 			}
 			case R.layout.app_item_annotation: {
-				String tmp = MainActivity.noNull(spi.tags);
-				if (tmp.length() > 0) {
-					viewHolder.tags.setText(tmp);
-					viewHolder.tags.setVisibility(View.VISIBLE);
-				}
-				else {
 					viewHolder.tags.setVisibility(View.GONE);
-				}
-
-				tmp = MainActivity.noNull(spi.comment);
-				if (tmp.length() > 0) {
-					viewHolder.comment.setText(tmp);
-					viewHolder.comment.setVisibility(View.VISIBLE);
-				}
-				else {
 					viewHolder.comment.setVisibility(View.GONE);
-				}
+				
 			}
 		}
 		return ret;

@@ -1,8 +1,12 @@
 package com.dlka.fireinstaller;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -12,16 +16,17 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -60,6 +65,8 @@ public class MainActivity extends ListActivity implements
     private AdView adView;
 
 	public String fireip="192.168.1.106";    
+	
+	private final String mailtag="0.5";
 
       HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
       
@@ -126,24 +133,28 @@ public class MainActivity extends ListActivity implements
 		adapter
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		SharedPreferences prefs = getSharedPreferences(PREFSFILE, 0);
-		int selection = 0;
+		//int selection = 0;
 		Iterator<TemplateData> it = formats.iterator();
-		int count = 0;
+		//int count = 0;
 		while (it.hasNext()) {
 			template = it.next();
 			if (template.id == prefs.getLong(TEMPLATEID, 0)) {
-				selection = count;
+			//	selection = count;
 				break;
 			}
 			template = null;
-			count++;
+			//count++;
 		}
 		setListAdapter(new AppAdapter(this, R.layout.app_item,
 				new ArrayList<SortablePackageInfo>(), R.layout.app_item));
 		new ListTask(this, R.layout.app_item).execute("");
 		
+		//when button pressed: copyMenuSelect();
+
 	}
 
+	
+	
 	@Override
 	public void onPause() {
 		adView.pause();
@@ -181,41 +192,36 @@ public class MainActivity extends ListActivity implements
 	}
 
 	@Override
+	public boolean dispatchTouchEvent(MotionEvent event) {
+
+	    View v = getCurrentFocus();
+	    boolean ret = super.dispatchTouchEvent(event);
+
+	    if (v instanceof EditText) {
+	        View w = getCurrentFocus();
+	        int scrcoords[] = new int[2];
+	        w.getLocationOnScreen(scrcoords);
+	        float x = event.getRawX() + w.getLeft() - scrcoords[0];
+	        float y = event.getRawY() + w.getTop() - scrcoords[1];
+
+	        Log.d("Activity", "Touch event "+event.getRawX()+","+event.getRawY()+" "+x+","+y+" rect "+w.getLeft()+","+w.getTop()+","+w.getRight()+","+w.getBottom()+" coords "+scrcoords[0]+","+scrcoords[1]);
+	        if (event.getAction() == MotionEvent.ACTION_UP && (x < w.getLeft() || x >= w.getRight() || y < w.getTop() || y > w.getBottom()) ) { 
+
+	            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+	            imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
+	        }
+	    }
+	return ret;
+	}
+	
+	
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
 		switch (item.getItemId()) {
 			case R.id.copy: { 
 				
-				if (!isNothingSelected()) {
-					CharSequence buf = buildOutput();
-
-					String fireip =
-					        ((EditText) findViewById(R.id.editText1)).getText().toString().trim();
-
-					        Log.d("Fireinstaller","IP ausgelesen:"+fireip);
-
-					try {
-						String qry=buf.toString(); // TODO: Save IP into prefs or file 
-						String result=PushApk(qry);
-						
-						Log.d(APP_TAG, "qry");
-						Log.d(APP_TAG, qry);
-						Log.d(APP_TAG, result);
-						
-
-							Toast.makeText(this, "App pushed at FireTV", Toast.LENGTH_LONG).show();
-						
-					
-						
-						
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-				
-				else{;}
-				Toast.makeText(this, "no app selected", Toast.LENGTH_LONG).show();
-				
+			copyMenuSelect();	
 				break;
 			}
 			case (R.id.deselect_all): {
@@ -240,6 +246,9 @@ public class MainActivity extends ListActivity implements
 			}
 			case (R.id.item_help): {
 				//TODO implement help screen
+
+				Toast.makeText(this, "Isn't implemented yet.", Toast.LENGTH_LONG).show();
+			
 				return true;
 			} 
 			case (R.id.item_mail):{
@@ -247,8 +256,8 @@ public class MainActivity extends ListActivity implements
 			    buffer.append("mailto:");
 			    buffer.append("feedback@kulsch-it.de");
 			    buffer.append("?subject=");
-			    buffer.append("Fireinstaller");
-			    buffer.append("&body=");
+			    buffer.append("Fireinstaller"+mailtag);
+			    buffer.append("&body=Please provide Androidversion and Device Model for Bugreport if you know it.");
 			    String uriString = buffer.toString().replace(" ", "%20");
 
 			    startActivity(Intent.createChooser(new Intent(Intent.ACTION_SENDTO, Uri.parse(uriString)), "Contact Developer"));
@@ -257,36 +266,41 @@ public class MainActivity extends ListActivity implements
 		return true;
 	}
 	
-	/**
-	 * Share with the world.
-	 */
-	private void doStumble() {
-		ListAdapter adapter = getListAdapter();
-		int count = adapter.getCount();
-		ArrayList<String> collect = new ArrayList<String>(); 
-		for (int i = 0; i < count; i++) {
-			SortablePackageInfo spi = (SortablePackageInfo) adapter.getItem(i);
-			if (spi.selected) {
-				collect.add(spi.packageName);
+	private void copyMenuSelect() {
+		
+		if (!isNothingSelected()) {
+			CharSequence buf = buildOutput();
+
+		fireip =
+			        ((EditText) findViewById(R.id.editText1)).getText().toString().trim();
+
+			        Log.d("Fireinstaller","IP ausgelesen:"+fireip);
+
+			try {
+				String qry=buf.toString(); // TODO: Save IP into prefs or file 
+				String result=PushApk(qry);
+				
+				Log.d(APP_TAG, "qry");
+				Log.d(APP_TAG, qry);
+				Log.d(APP_TAG, result);
+				
+
+					Toast.makeText(this, "App pushed at FireTV", Toast.LENGTH_LONG).show();
+				
+			
+				
+				
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
 		
-		Collections.shuffle(collect);
-		StringBuilder sb = new StringBuilder();
-		for (int i=0;i<collect.size();i++) {
-			if (sb.length()>0) {
-				sb.append(",");
-			}
-			sb.append(collect.get(i));
-			if (sb.length()>700) { //fixme try increase 200->700
-				Toast.makeText(this, "Select less apps!", Toast.LENGTH_LONG).show();		
-				break; // prevent the url from growing overly large. 
-			}
-		}
-		//TODO apk push
-		Log.d("Fireinstaller","apk push called for" + sb.toString());
+		else{;}
+		Toast.makeText(this, "no app selected", Toast.LENGTH_LONG).show();
+		
 	}
 
+	
 	/**
 	 * Construct what is to be shared/copied to the php parser
 	 * 
@@ -298,23 +312,68 @@ public class MainActivity extends ListActivity implements
 		ListAdapter adapter = getListAdapter();
 		int count = adapter.getCount();
 
-		int selected = 0;
+		
+	//	 PackageManager pm = getPackageManager(); 
+	//	for (ApplicationInfo app : pm.getInstalledApplications(0)) {
+	//		Log.d("Fireinstaller2", "package: " + app.packageName + ", sourceDir: " + app.sourceDir);
+	//	}
 
 		for (int i = 0; i < count; i++) {
 			SortablePackageInfo spi = (SortablePackageInfo) adapter.getItem(i);
 			if (spi.selected) {
-				selected++;
-				Log.d("Fireinstaller", " ret.append package: " + spi.packageName + ", sourceDir: " + spi.sourceDir);
-
-				ret.append(spi.packageName);
-				ret.append(":::");
-				ret.append(spi.sourceDir);
-				ret.append("::::");
+				Log.d("Fireinstaller2", " ret.append package: " + spi.packageName + ", sourceDir: " + spi.sourceDir);
 				
-			}
-		}
+				//ret.append(spi.packageName);
+				//ret.append(":::");
+				//ret.append(spi.sourceDir);
+				//ret.append("::::");
+				ret.append(i+" ");
+				
+				        File file =new File(spi.sourceDir);
+				        InputStream myInput;
+				        Log.d("Fireinstaller2", "filesrc " +file.toString());
+					
+				        String sdpath = Environment.getExternalStorageDirectory().getPath();
+				        try {
+				        	
+				        	// Set the output folder on the Scard
+				            File directory = new File(sdpath + "/fireinstaller");
+				            // Create the folder if it doesn't exist:
+				            if (!directory.exists()) {
+				            directory.mkdirs();
+				            }
+				            
+				        	
+				        	File exist=new File(Environment.getExternalStorageDirectory()+"/fireinstaller/temp.apk");
+				            Log.d("Fireinstaller2", "filetargt " +exist.toString());
+					        Log.d("Fireinstaller2", "1 "+ exist.exists());
+						    // Set the output file stream up:
+				            myInput = new FileInputStream(file.toString());
+				            OutputStream myOutput = new FileOutputStream(exist.toString());
+				            // Transfer bytes from the input file to the output file
+				            byte[] buffer = new byte[1024];
+				            int length;
+				            while ((length = myInput.read(buffer)) > 0) {
+				            myOutput.write(buffer, 0, length);
+				            }
+				            // Close and clear the streams
+				            myOutput.flush();
+				            myOutput.close();
+				            myInput.close();
+				            Toast.makeText(MainActivity.this, "temp.apk created", Toast.LENGTH_LONG)
+				            .show();
+				            } catch (IOException e) {
+				            // TODO Auto-generated catch block
+				            e.printStackTrace();
+				            }
+				    
+			//move apk to fire tv here
+			
+		}}
 		return ret;
-	}
+			
+
+}
 	public static String noNull(String input) {
 		if (input == null) {
 			return "";
@@ -339,10 +398,7 @@ public class MainActivity extends ListActivity implements
 	}
 
 
-	public static String createSourceLink(String installer, String packname) {
-		return "https://www.google.com/search?q=" + packname;
-	}
-
+	
 	@Override
 	public void onItemSelected(AdapterView<?> parent, View v, int pos, long id) {
 		template = (TemplateData) parent.getAdapter().getItem(pos);
@@ -365,15 +421,19 @@ public class MainActivity extends ListActivity implements
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 			int position, long id) {
-		AppAdapter aa = (AppAdapter) getListAdapter();
-		SortablePackageInfo spi = aa.getItem(position);
-		
-		 PackageManager pm = getPackageManager(); 
-		for (ApplicationInfo app : pm.getInstalledApplications(0)) {
-   
-	Log.d("Fireinstaller", "package: " + spi.packageName + ", sourceDir: " + spi.sourceDir + ", ip:"+fireip);
+		// AppAdapter aa = (AppAdapter) getListAdapter();
+		// SortablePackageInfo spi = aa.getItem(position);
+		// PackageManager pm = getPackageManager(); 
+		// for (ApplicationInfo app : pm.getInstalledApplications(0)) {
+		// Log.d("Fireinstaller", "package: " + app.packageName + ", sourceDir: " + app.sourceDir);
 
-		}
+			
+			
+			
+   
+	//Log.d("Fireinstaller", "package: " + spi.packageName + ", sourceDir: " + spi.sourceDir + ", ip:"+fireip);
+
+		//}
 		return true;
 	}
 	

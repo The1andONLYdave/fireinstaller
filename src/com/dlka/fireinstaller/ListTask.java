@@ -59,7 +59,7 @@ public class ListTask extends
 						&& (ai.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) {
 					spitmp[idx] = new SortablePackageInfo();
 					spitmp[idx].packageName = info.packageName;
-					spitmp[idx].sourceDir = "fixme:srcDir";
+					spitmp[idx].sourceDir = ai.sourceDir;
 
 					spitmp[idx].displayName = pm
 							.getApplicationLabel(info.applicationInfo).toString();
