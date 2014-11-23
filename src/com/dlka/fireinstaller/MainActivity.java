@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -26,6 +27,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -66,7 +68,7 @@ public class MainActivity extends ListActivity implements
       }
     private AdView adView;
 
-	public String fireip="192.168.1.106";    
+	public String fireip="192.168.1.134";    
 	
 	private final String mailtag="0.5";
 
@@ -187,6 +189,20 @@ public class MainActivity extends ListActivity implements
 	{
 	super.onStart();
 		
+	 final Dialog dialog = new Dialog(this);
+	    dialog.setContentView(R.layout.dialog);
+	    dialog.setTitle("Hello");
+
+	    Button button = (Button) dialog.findViewById(R.id.Button01);
+	    button.setOnClickListener(new OnClickListener() {  
+	        @Override  
+	        public void onClick(View view) {  
+	            dialog.dismiss();            
+	        }  
+	    });
+
+	    dialog.show();
+	    
 	}
 	@Override
 	protected void onStop()
@@ -212,7 +228,7 @@ public class MainActivity extends ListActivity implements
 	        float x = event.getRawX() + w.getLeft() - scrcoords[0];
 	        float y = event.getRawY() + w.getTop() - scrcoords[1];
 
-	        Log.d("Activity", "Touch event "+event.getRawX()+","+event.getRawY()+" "+x+","+y+" rect "+w.getLeft()+","+w.getTop()+","+w.getRight()+","+w.getBottom()+" coords "+scrcoords[0]+","+scrcoords[1]);
+	      //  Log.d("Activity", "Touch event "+event.getRawX()+","+event.getRawY()+" "+x+","+y+" rect "+w.getLeft()+","+w.getTop()+","+w.getRight()+","+w.getBottom()+" coords "+scrcoords[0]+","+scrcoords[1]);
 	        if (event.getAction() == MotionEvent.ACTION_UP && (x < w.getLeft() || x >= w.getRight() || y < w.getTop() || y > w.getBottom()) ) { 
 
 	            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -324,14 +340,23 @@ public class MainActivity extends ListActivity implements
 		Log.d("Fireinstaller2", "connecting adb to "+fireip);
 		Process adb = null;
 		try {
-			adb = Runtime.getRuntime().exec("adb connect "+fireip+"\n");
+			adb = Runtime.getRuntime().exec("sh");
 			
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			Log.e("Fireinstaller", "error");
 		}
 		
 		DataOutputStream outputStream = new DataOutputStream(adb.getOutputStream());
+		try {
+			outputStream.writeBytes("/system/bin/adb" +" connect "+fireip+"\n ");
+			outputStream.flush();
+			Log.d("fireinstaller", "/system/bin/adb" +" connect "+fireip+"\n ");
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			Log.e("Fireinstaller", "error");
+		}
+
 		
 		for (int i = 0; i < count; i++) {
 			SortablePackageInfo spi = (SortablePackageInfo) adapter.getItem(i);
@@ -348,7 +373,7 @@ public class MainActivity extends ListActivity implements
 				        File file =new File(spi.sourceDir);
 				        InputStream myInput;
 				        Log.d("Fireinstaller2", "filesrc " +file.toString());
-					
+				       // Environment.getExternalStoragePublicDirectory(type)
 				        String sdpath = Environment.getExternalStorageDirectory().getPath();
 				        try {
 				        	
@@ -381,15 +406,15 @@ public class MainActivity extends ListActivity implements
 				            
 				        	//move apk to fire tv here
 				    		//Foreach Entry do and show progress thing:
-				            Log.d("Fireinstaller2", "doing adb install "+exist.toString());
-				    		outputStream.writeBytes("adb install "+exist.toString()+"\n" );
-				    		outputStream.flush();
-
+				            Log.d("Fireinstaller2", "/system/bin/adb install /storage/sdcard0/fireinstaller/temp.apk");
+				    		//outputStream.writeBytes("/system/bin/adb install "+exist.toString().trim());
+				            outputStream.writeBytes("/system/bin/adb install /storage/sdcard0/fireinstaller/temp.apk");
+				            outputStream.flush();
 				    		
 				    		
 				            } catch (IOException e) {
 				            // TODO Auto-generated catch block
-				            e.printStackTrace();
+				            	Log.e("Fireinstaller", "error");
 				            }
 				    
 		
@@ -397,22 +422,11 @@ public class MainActivity extends ListActivity implements
 
 		//After pushing:
 		try {
-			outputStream.writeBytes("exit\n");
+			outputStream.close();
+			//adb.waitFor();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			outputStream.flush();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			adb.waitFor();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.e("Fireinstaller", "error");
 		}
 		adb.destroy();
 		
