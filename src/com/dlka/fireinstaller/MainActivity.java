@@ -68,7 +68,7 @@ public class MainActivity extends ListActivity implements
       }
     private AdView adView;
 
-	public String fireip="192.168.1.134";    
+	public String fireip="";    
 	
 	private final String mailtag="0.5";
 
@@ -293,13 +293,15 @@ public class MainActivity extends ListActivity implements
 	private void copyMenuSelect() {
 		
 		if (!isNothingSelected()) {
-			CharSequence buf = buildOutput();
-
-		fireip =
+			fireip =
 			        ((EditText) findViewById(R.id.editText1)).getText().toString().trim();
-
+					Toast.makeText(this, "Installing at IP"+fireip, Toast.LENGTH_LONG).show();
 			        Log.d("Fireinstaller","IP ausgelesen:"+fireip);
 
+			        
+			CharSequence buf = buildOutput();
+
+	
 			try {
 				String qry=buf.toString(); // TODO: Save IP into prefs or file 
 				String result=PushApk(qry);
@@ -309,7 +311,7 @@ public class MainActivity extends ListActivity implements
 				Log.d(APP_TAG, result);
 				
 
-					Toast.makeText(this, "App pushed at FireTV", Toast.LENGTH_LONG).show();
+				Toast.makeText(this, "App pushed at FireTV", Toast.LENGTH_LONG).show();
 				
 			
 				
@@ -352,6 +354,7 @@ public class MainActivity extends ListActivity implements
 			outputStream.writeBytes("/system/bin/adb" +" connect "+fireip+"\n ");
 			outputStream.flush();
 			Log.d("fireinstaller", "/system/bin/adb" +" connect "+fireip+"\n ");
+
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			Log.e("Fireinstaller", "error");
@@ -369,46 +372,50 @@ public class MainActivity extends ListActivity implements
 				//ret.append("::::");
 				ret.append(i+" ");
 
+				Toast.makeText(this, "Pushing now()"+spi.displayName, Toast.LENGTH_LONG).show();
 				
-				        File file =new File(spi.sourceDir);
-				        InputStream myInput;
-				        Log.d("Fireinstaller2", "filesrc " +file.toString());
+				
+				       // File file =new File(spi.sourceDir);
+				        //InputStream myInput;
+				        Log.d("Fireinstaller2", "filesrc " +spi.sourceDir);
 				       // Environment.getExternalStoragePublicDirectory(type)
-				        String sdpath = Environment.getExternalStorageDirectory().getPath();
+				        //String sdpath = Environment.getExternalStorageDirectory().getPath();
 				        try {
 				        	
 				        	// Set the output folder on the Scard
-				            File directory = new File(sdpath + "/fireinstaller");
+				        	//File directory = new File(sdpath + "/fireinstaller");
 				            // Create the folder if it doesn't exist:
-				            if (!directory.exists()) {
-				            directory.mkdirs();
-				            }
+				            //if (!directory.exists()) {
+				            	//directory.mkdirs();
+				            //}
 				            
 				        	
-				        	File exist=new File(Environment.getExternalStorageDirectory()+"/fireinstaller/temp.apk");
-				            Log.d("Fireinstaller2", "filetargt " +exist.toString());
-					        Log.d("Fireinstaller2", "1 "+ exist.exists());
+				            //File exist=new File(Environment.getExternalStorageDirectory()+"/fireinstaller/temp.apk");
+				        	//Log.d("Fireinstaller2", "filetargt " +exist.toString());
+				            //Log.d("Fireinstaller2", "1 "+ exist.exists());
 						    // Set the output file stream up:
-				            myInput = new FileInputStream(file.toString());
-				            OutputStream myOutput = new FileOutputStream(exist.toString());
+					        //myInput = new FileInputStream(file.toString());
+				            //OutputStream myOutput = new FileOutputStream(exist.toString());
 				            // Transfer bytes from the input file to the output file
-				            byte[] buffer = new byte[1024];
-				            int length;
-				            while ((length = myInput.read(buffer)) > 0) {
-				            myOutput.write(buffer, 0, length);
-				            }
+				            //byte[] buffer = new byte[1024];
+				            //int length;
+				            //while ((length = myInput.read(buffer)) > 0) {
+				            	//myOutput.write(buffer, 0, length);
+				            //}
 				            // Close and clear the streams
-				            myOutput.flush();
-				            myOutput.close();
-				            myInput.close();
-				            Toast.makeText(MainActivity.this, "temp.apk created", Toast.LENGTH_LONG)
-				            .show();
+				            // myOutput.flush();
+				            // myOutput.close();
+				            // myInput.close();
+				           // Toast.makeText(MainActivity.this, "temp.apk created", Toast.LENGTH_LONG)
+				            // .show();
 				            
 				        	//move apk to fire tv here
 				    		//Foreach Entry do and show progress thing:
-				            Log.d("Fireinstaller2", "/system/bin/adb install /storage/sdcard0/fireinstaller/temp.apk");
+				            Log.d("Fireinstaller2", "/system/bin/adb install "+spi.sourceDir+"\n");
 				    		//outputStream.writeBytes("/system/bin/adb install "+exist.toString().trim());
-				            outputStream.writeBytes("/system/bin/adb install /storage/sdcard0/fireinstaller/temp.apk");
+				           // outputStream.writeBytes("/system/bin/adb install /storage/sdcard0/fireinstaller/temp.apk");
+				            outputStream.writeBytes("/system/bin/adb install "+spi.sourceDir+"\n");
+				        	Toast.makeText(this, "Pushing now(2/2)"+spi.displayName, Toast.LENGTH_LONG).show();
 				            outputStream.flush();
 				    		
 				    		
@@ -423,8 +430,11 @@ public class MainActivity extends ListActivity implements
 		//After pushing:
 		try {
 			outputStream.close();
-			//adb.waitFor();
+			adb.waitFor();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			Log.e("Fireinstaller", "error");
+		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			Log.e("Fireinstaller", "error");
 		}
