@@ -27,7 +27,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -88,7 +88,7 @@ public class MainActivity extends ListActivity implements
         
         // Create the adView.
         adView = new AdView(this);
-        adView.setAdUnitId("ca-app-pub-8761501900041217/7037219683");
+        adView.setAdUnitId("ca-app-pub-8761501900041217/6245885681");
         adView.setAdSize(AdSize.BANNER);
 
         LinearLayout layout = (LinearLayout)findViewById(R.id.bannerLayout);
@@ -190,7 +190,7 @@ public class MainActivity extends ListActivity implements
 					CharSequence buf = buildOutput();
 
 					String fireip =
-					        ((EditText) getView().findViewById(R.id.editText1)).getText().toString().trim();
+					        ((EditText) findViewById(R.id.editText1)).getText().toString().trim();
 
 					        Log.d("Fireinstaller","IP ausgelesen:"+fireip);
 
