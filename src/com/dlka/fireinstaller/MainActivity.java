@@ -273,7 +273,8 @@ public class MainActivity extends ListActivity implements
 
 				Toast.makeText(this, "Isn't implemented yet.", Toast.LENGTH_LONG).show();
 			
-				return true;
+				//return true;
+				break;
 			} 
 			case (R.id.item_mail):{
 				StringBuffer buffer = new StringBuffer();
@@ -285,20 +286,21 @@ public class MainActivity extends ListActivity implements
 			    String uriString = buffer.toString().replace(" ", "%20");
 
 			    startActivity(Intent.createChooser(new Intent(Intent.ACTION_SENDTO, Uri.parse(uriString)), "Contact Developer"));
+			    break;
 			}
 			case (R.id.item_donate): {
 				//TODO open donate-link or even in-app purchase
 
 				Toast.makeText(this, "Isn't implemented yet. But i'd be happy if you just buy any of my apps @ google play", Toast.LENGTH_LONG).show();
 			
-				return true;
+				break;
 			} 
 			case (R.id.item_settings): {
 				//TODO implement settings screen for setting ip, checkbox for auto-connect adb on app-startup, checkbox disable ads..
 
 				Toast.makeText(this, "Coming soon.", Toast.LENGTH_LONG).show();
 			
-				return true;
+				break;
 			} 
 		}
 		return true;
