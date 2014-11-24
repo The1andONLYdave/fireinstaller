@@ -12,7 +12,9 @@
 	<string name="edit_templates">Template Editor</string>
 	<string name="annotations">Annotations</string>
 	<string name="copy">Push at FireTV</string>
-
+<string name="download_ticker">Pushing to FireTV</string>
+<string name="content_title">Fireinstaller running</string>
+	
 	<string-array name="templatebodyvars">
 		<item>${comment}</item>
 		<item>${datadir}</item>

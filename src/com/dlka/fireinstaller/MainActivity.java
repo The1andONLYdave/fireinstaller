@@ -66,6 +66,8 @@ public class MainActivity extends ListActivity implements
 	public String fireip="";    
 	
 	private final String mailtag="0.7";
+	
+	public int count=1;
 
 	// the helper object
 	//IabHelper mHelper;
@@ -333,46 +335,29 @@ public class MainActivity extends ListActivity implements
 		return true;
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void copyMenuSelect() {
 		
 		if (!isNothingSelected()) {
-			fireip =
-			        ((EditText) findViewById(R.id.editText1)).getText().toString().trim();
-					Toast.makeText(this, "Installing at IP"+fireip, Toast.LENGTH_LONG).show();
-			        Log.d("Fireinstaller","IP ausgelesen:"+fireip);
-
-			        
-			CharSequence buf = buildOutput();
+			fireip =  ((EditText) findViewById(R.id.editText1)).getText().toString().trim();
+			Toast.makeText(this, "Installing at IP"+fireip, Toast.LENGTH_LONG).show();
+			Log.d("Fireinstaller","IP ausgelesen:"+fireip);
+        
+			//CharSequence buf = pushFireTv();
+	        pushFireTv();//TODO make background/async task
 
 	
-			try {
-				String qry=buf.toString(); // TODO: Save IP into prefs or file 
-				String result=PushApk(qry);
-				
-				Log.d(APP_TAG, "qry");
-				Log.d(APP_TAG, qry);
-				Log.d(APP_TAG, result);
-				
-
-				Toast.makeText(this, "App pushed at FireTV", Toast.LENGTH_LONG).show();
-				
-			
-				
-				
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+	        
+	        
+	        //String qry=buf.toString(); // TODO: Save IP into prefs or file 
 		}
-		
-		else{;}
-		Toast.makeText(this, "no app selected", Toast.LENGTH_LONG).show();
-		
+		else{Toast.makeText(this, "no app selected", Toast.LENGTH_LONG).show();}
 	}
-
 	
-	private CharSequence buildOutput() {
+	
+	private void pushFireTv() {
 
-		StringBuilder ret = new StringBuilder();
+//		StringBuilder ret = new StringBuilder();
 		ListAdapter adapter = getListAdapter();
 		int count = adapter.getCount();
 
@@ -402,7 +387,7 @@ public class MainActivity extends ListActivity implements
 			if (spi.selected) {
 				Log.d("Fireinstaller2", " ret.append package: " + spi.packageName + ", sourceDir: " + spi.sourceDir);
 				
-				ret.append(i+" ");
+	//			ret.append(i+" ");
 
 				Toast.makeText(this, "Pushing now()"+spi.displayName, Toast.LENGTH_LONG).show();
 				
@@ -414,12 +399,16 @@ public class MainActivity extends ListActivity implements
 				            Log.d("Fireinstaller2", "/system/bin/adb install "+spi.sourceDir+"\n");
 	
 				            Toast.makeText(this, "Pushing now(2/2)"+spi.displayName, Toast.LENGTH_LONG).show();
+				           
+				            //String command="/system/bin/adb install "+spi.sourceDir+"\n";
+				           // new PushingTask().execute(outputStream, command);
+				            
 				            outputStream.writeBytes("/system/bin/adb install "+spi.sourceDir+"\n");
 				        	
-				            outputStream.flush();
+				           outputStream.flush();
+				    	
 				    		
-				    		
-				            } catch (IOException e) {
+				           } catch (IOException e) {
 				            	Log.e("Fireinstaller", "error");
 				            }
 				    
@@ -437,8 +426,8 @@ public class MainActivity extends ListActivity implements
 		}
 		adb.destroy();
 		
-		return ret;
-			
+		//return ret;
+		return;
 
 }
 	public static String noNull(String input) {
@@ -488,20 +477,7 @@ public class MainActivity extends ListActivity implements
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 			int position, long id) {
-		// AppAdapter aa = (AppAdapter) getListAdapter();
-		// SortablePackageInfo spi = aa.getItem(position);
-		// PackageManager pm = getPackageManager(); 
-		// for (ApplicationInfo app : pm.getInstalledApplications(0)) {
-		// Log.d("Fireinstaller", "package: " + app.packageName + ", sourceDir: " + app.sourceDir);
-
-			
-			
-			
-   
-	//Log.d("Fireinstaller", "package: " + spi.packageName + ", sourceDir: " + spi.sourceDir + ", ip:"+fireip);
-
-		//}
-		return true;
+			return true;
 	}
 	
 
@@ -517,14 +493,7 @@ public class MainActivity extends ListActivity implements
 	}
 	      
 	       
-	        public String PushApk(String data) throws IOException   {
-	            
-		Log.d("Fireinstaller", "pushing to device "+fireip);
-
-//TODO pushing to firetv
-	            return "success";
-	        }
-	        
+	
 	        /**
 	         * Enum used to identify the tracker that needs to be used for tracking.
 	         *
@@ -548,3 +517,4 @@ public class MainActivity extends ListActivity implements
 			  
 	
 }
+
