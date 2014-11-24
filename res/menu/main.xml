@@ -27,4 +27,14 @@
 		android:icon="@drawable/ic_action_help"
 		android:title="@string/mail">
 	</item>
+	<item
+		android:id="@+id/item_donate"
+		android:icon="@drawable/ic_action_help"
+		android:title="@string/donate">
+	</item>
+	<item
+		android:id="@+id/item_settings"
+		android:icon="@drawable/ic_action_help"
+		android:title="@string/settings">
+	</item>
 </menu>

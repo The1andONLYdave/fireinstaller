@@ -109,5 +109,10 @@
 	<string name="url_help">http://show-my-apps.de/faq/</string>
 	<string name="browse">browse</string>
 	<string name="url_browse">http://www.onyxbits.de/listmyapps/browse?suggest=%1$s</string>
+
+
+
+			<string name="donate">Donate!</string>
+			<string name="settings">Goto Settings</string>
 	
 </resources>
