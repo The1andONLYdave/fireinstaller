@@ -17,3 +17,4 @@ build.xml
 assets/build.properties
 .settings/
 .settings/*
+res/xml/app_license.xml

@@ -1,12 +1,7 @@
 package com.dlka.fireinstaller;
 
 import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -20,7 +15,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.StrictMode;
 import android.util.Log;
 import android.view.Menu;
@@ -61,6 +55,7 @@ public class MainActivity extends ListActivity implements
 	public static final String SELECTED = "selected";
 	private static final String APP_TAG = "com.dlka.fireinstaller";
 	private static final String PROPERTY_ID = "App";
+	private static final String TAG = "fireinstaller";
     public enum TrackerName {
         APP_TRACKER, // Tracker used only in this app.
         GLOBAL_TRACKER, // Tracker used by all the apps from a company. eg: roll-up tracking.
@@ -72,6 +67,9 @@ public class MainActivity extends ListActivity implements
 	
 	private final String mailtag="0.7";
 
+	// the helper object
+	//IabHelper mHelper;
+	
       HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
       
 
@@ -115,8 +113,32 @@ public class MainActivity extends ListActivity implements
         adView.loadAd(adRequest);
 
         
+
+//String base64EncodedPublicKey = getString(R.xml.app_license);
+//Log.d(TAG, "Creating IAB helper.");
+//mHelper = new IabHelper(this, base64EncodedPublicKey);
+//mHelper.enableDebugLogging(false);
+
+// Start setup. This is asynchronous and the specified listener
+// will be called once setup completes.
+
+//Log.d(TAG, "Starting setup.");
+
+//mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
+	//public void onIabSetupFinished(IabResult result) {
+	//Log.d(TAG, "Setup finished.");
+        //if (!result.isSuccess()) {
+	// Oh noes, there was a problem.
+        //toast("in app billing error: " + result);
+        //return;
+        //}
+	// Have we been disposed of in the meantime? If so, quit.
+        //if (mHelper == null)
+        //return;
+        //}	
+        //});
         
-	}
+        }
 
 	 @Override
 	  public void onDestroy() {
@@ -137,23 +159,18 @@ public class MainActivity extends ListActivity implements
 		adapter
 				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		SharedPreferences prefs = getSharedPreferences(PREFSFILE, 0);
-		//int selection = 0;
 		Iterator<TemplateData> it = formats.iterator();
-		//int count = 0;
 		while (it.hasNext()) {
 			template = it.next();
 			if (template.id == prefs.getLong(TEMPLATEID, 0)) {
-			//	selection = count;
 				break;
 			}
 			template = null;
-			//count++;
 		}
 		setListAdapter(new AppAdapter(this, R.layout.app_item,
 				new ArrayList<SortablePackageInfo>(), R.layout.app_item));
 		new ListTask(this, R.layout.app_item).execute("");
 		
-		//when button pressed: copyMenuSelect();
 		final Button bs = (Button)findViewById(R.id.button2);
 		bs.setOnClickListener(new View.OnClickListener() {
 		public void onClick(View v) {
@@ -271,9 +288,19 @@ public class MainActivity extends ListActivity implements
 			case (R.id.item_help): {
 				//TODO implement help screen
 
-				Toast.makeText(this, "Isn't implemented yet.", Toast.LENGTH_LONG).show();
-			
-				//return true;
+				 final Dialog dialog = new Dialog(this);
+				    dialog.setContentView(R.layout.dialog);
+				    dialog.setTitle("Hello");
+
+				    Button button = (Button) dialog.findViewById(R.id.Button01);
+				    button.setOnClickListener(new OnClickListener() {  
+				        @Override  
+				        public void onClick(View view) {  
+				            dialog.dismiss();            
+				        }  
+				    });
+
+				    dialog.show();
 				break;
 			} 
 			case (R.id.item_mail):{
@@ -343,11 +370,6 @@ public class MainActivity extends ListActivity implements
 	}
 
 	
-	/**
-	 * Construct what is to be shared/copied to the php parser
-	 * 
-	 * @return the html response
-	 */
 	private CharSequence buildOutput() {
 
 		StringBuilder ret = new StringBuilder();
@@ -361,7 +383,6 @@ public class MainActivity extends ListActivity implements
 			adb = Runtime.getRuntime().exec("sh");
 			
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			Log.e("Fireinstaller", "error");
 		}
 		
@@ -372,7 +393,6 @@ public class MainActivity extends ListActivity implements
 			Log.d("fireinstaller", "/system/bin/adb" +" connect "+fireip+"\n ");
 
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
 			Log.e("Fireinstaller", "error");
 		}
 
@@ -382,61 +402,24 @@ public class MainActivity extends ListActivity implements
 			if (spi.selected) {
 				Log.d("Fireinstaller2", " ret.append package: " + spi.packageName + ", sourceDir: " + spi.sourceDir);
 				
-				//ret.append(spi.packageName);
-				//ret.append(":::");
-				//ret.append(spi.sourceDir);
-				//ret.append("::::");
 				ret.append(i+" ");
 
 				Toast.makeText(this, "Pushing now()"+spi.displayName, Toast.LENGTH_LONG).show();
 				
 				
-				       // File file =new File(spi.sourceDir);
-				        //InputStream myInput;
 				        Log.d("Fireinstaller2", "filesrc " +spi.sourceDir);
-				       // Environment.getExternalStoragePublicDirectory(type)
-				        //String sdpath = Environment.getExternalStorageDirectory().getPath();
 				        try {
-				        	
-				        	// Set the output folder on the Scard
-				        	//File directory = new File(sdpath + "/fireinstaller");
-				            // Create the folder if it doesn't exist:
-				            //if (!directory.exists()) {
-				            	//directory.mkdirs();
-				            //}
-				            
-				        	
-				            //File exist=new File(Environment.getExternalStorageDirectory()+"/fireinstaller/temp.apk");
-				        	//Log.d("Fireinstaller2", "filetargt " +exist.toString());
-				            //Log.d("Fireinstaller2", "1 "+ exist.exists());
-						    // Set the output file stream up:
-					        //myInput = new FileInputStream(file.toString());
-				            //OutputStream myOutput = new FileOutputStream(exist.toString());
-				            // Transfer bytes from the input file to the output file
-				            //byte[] buffer = new byte[1024];
-				            //int length;
-				            //while ((length = myInput.read(buffer)) > 0) {
-				            	//myOutput.write(buffer, 0, length);
-				            //}
-				            // Close and clear the streams
-				            // myOutput.flush();
-				            // myOutput.close();
-				            // myInput.close();
-				           // Toast.makeText(MainActivity.this, "temp.apk created", Toast.LENGTH_LONG)
-				            // .show();
-				            
 				        	//move apk to fire tv here
 				    		//Foreach Entry do and show progress thing:
 				            Log.d("Fireinstaller2", "/system/bin/adb install "+spi.sourceDir+"\n");
-				    		//outputStream.writeBytes("/system/bin/adb install "+exist.toString().trim());
-				           // outputStream.writeBytes("/system/bin/adb install /storage/sdcard0/fireinstaller/temp.apk");
+	
+				            Toast.makeText(this, "Pushing now(2/2)"+spi.displayName, Toast.LENGTH_LONG).show();
 				            outputStream.writeBytes("/system/bin/adb install "+spi.sourceDir+"\n");
-				        	Toast.makeText(this, "Pushing now(2/2)"+spi.displayName, Toast.LENGTH_LONG).show();
+				        	
 				            outputStream.flush();
 				    		
 				    		
 				            } catch (IOException e) {
-				            // TODO Auto-generated catch block
 				            	Log.e("Fireinstaller", "error");
 				            }
 				    
@@ -448,10 +431,8 @@ public class MainActivity extends ListActivity implements
 			outputStream.close();
 			adb.waitFor();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			Log.e("Fireinstaller", "error");
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			Log.e("Fireinstaller", "error");
 		}
 		adb.destroy();
