@@ -66,7 +66,7 @@ public class NotificationHelper {
  
     /**
      * called when the background task is complete, this removes the notification from the status bar.
-     * We could also use this to add a new ‘task complete’ notification
+     * We could also use this to add a new "task complete" notification
      */
     public void completed()    {
         //remove the notification from the status bar
