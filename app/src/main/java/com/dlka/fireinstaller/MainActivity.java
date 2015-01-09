@@ -110,6 +110,7 @@ public class MainActivity extends ListActivity implements
         .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)       
         .addTestDevice("89CADD0B4B609A30ABDCB7ED4E90A8DE")
         .addTestDevice("CCCBB7E354C2E6E64DB5A399A77298ED")  //current Nexus 4
+      //  .addTestDevice("")  /current Note
         .build();
         
         adView.loadAd(adRequest);
