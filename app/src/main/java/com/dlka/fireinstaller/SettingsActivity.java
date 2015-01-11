@@ -178,6 +178,12 @@ public class SettingsActivity extends PreferenceActivity {
         // to reflect the new value, per the Android Design guidelines.
         bindPreferenceSummaryToValue(findPreference("example_text"));
         bindPreferenceSummaryToValue(findPreference("example_list"));
+        getPreferenceScreen().findPreference("example_checkbox2").setEnabled(false);//Disabling
+        getPreferenceScreen().findPreference("example_checkbox").setEnabled(false);//Disabling
+        getPreferenceScreen().findPreference("notifications_new_message").setEnabled(false);//Disabling
+        getPreferenceScreen().findPreference("example_list").setEnabled(false);//Disabling
+
+
     }
 
     /**

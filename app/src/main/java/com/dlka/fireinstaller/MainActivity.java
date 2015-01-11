@@ -37,6 +37,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends ListActivity implements
         OnItemSelectedListener, OnItemClickListener, OnItemLongClickListener {
@@ -114,6 +115,11 @@ public class MainActivity extends ListActivity implements
         });
 
         dialog.show();
+
+        SharedPreferences prefs2 = PreferenceManager.getDefaultSharedPreferences(this);
+
+        // prefs2.registerOnSharedPreferenceChangeListener();
+
     }
 
     @Override
@@ -131,8 +137,6 @@ public class MainActivity extends ListActivity implements
         templateSource.open();
         List<TemplateData> formats = templateSource.list();
         SharedPreferences prefs = getSharedPreferences(PREFSFILE, 0);
-        SharedPreferences prefs2 = PreferenceManager.getDefaultSharedPreferences(this);
-        //  prefs2.registerOnSharedPreferenceChangeListener(this);
         Iterator<TemplateData> it = formats.iterator();
         while (it.hasNext()) {
             template = it.next();
@@ -277,8 +281,13 @@ public class MainActivity extends ListActivity implements
     private void copyMenuSelect() {
 
         if (!isNothingSelected()) {
-            //TODO ip from preference
-            fireip = prefs2.getString("example_text", null);
+
+
+            Map<String, ?> preferences = PreferenceManager.getDefaultSharedPreferences(this).getAll();
+
+            fireip =(String)preferences.get("example_text");
+
+          //  fireip =(String)preferences.get("example_text", "192.168.0.1");
             Toast.makeText(this, "Installing at IP" + fireip, Toast.LENGTH_LONG).show();
             Log.d("Fireinstaller", "IP ausgelesen:" + fireip);
 

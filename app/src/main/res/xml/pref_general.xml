@@ -4,20 +4,23 @@
         android:defaultValue="true"
         android:key="example_checkbox"
         android:summary="@string/pref_description_analytics_google"
-        android:title="@string/pref_title_analytics_google" />
+        android:title="@string/pref_title_analytics_google"
+        />
     <CheckBoxPreference
         android:defaultValue="true"
-        android:key="example_checkbox"
+        android:key="example_checkbox2"
         android:summary="@string/pref_description_ad_support"
-        android:title="@string/pref_title_ad_support" />
+        android:title="@string/pref_title_ad_support"
+        />
 
-    <!-- NOTE: EditTextPreference accepts EditText attributes. -->
+    <!-- android:dependency="donatePref" -->
+
+ <!-- NOTE: EditTextPreference accepts EditText attributes. -->
     <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
     <!-- android:summary="@string/pref_description_ip_fire" -->
     <EditTextPreference
         android:defaultValue="@string/pref_default_ip_fire"
         android:digits="0123456789."
-
         android:inputType="number|numberDecimal"
         android:key="example_text"
         android:maxLines="1"
@@ -36,5 +39,6 @@
         android:negativeButtonText="@null"
         android:positiveButtonText="@null"
         android:title="@string/pref_title_install_method" />
+
 
 </PreferenceScreen>
