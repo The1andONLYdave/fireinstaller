@@ -11,7 +11,10 @@ tools:ignore="TypographyDashes">
     
     <!-- The screen names that will appear in reports -->
     <screenName name="com.dlka.fireinstaller.MainActivity">
-        ShowMyApps MainActivity
+        Fireinstaller MainActivity
+    </screenName>
+    <screenName name="com.dlka.fireinstaller.SettingsActivity">
+        Fireinstaller SettingsActivity
     </screenName>
     <!--  The following value should be replaced with correct property id. -->
     <string name="ga_trackingId">UA-47310419-10</string>

@@ -9,13 +9,13 @@ import java.util.List;
 
 import android.app.Dialog;
 import android.app.ListActivity;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -53,10 +53,8 @@ public class MainActivity extends ListActivity implements
 	private static final String ALWAYS_GOOGLE_PLAY = "always_link_to_google_play";
 	private static final String TEMPLATEID = "templateid";
 	public static final String SELECTED = "selected";
-	private static final String APP_TAG = "com.dlka.fireinstaller";
 	private static final String PROPERTY_ID = "App";
-	private static final String TAG = "fireinstaller";
-    public enum TrackerName {
+	 public enum TrackerName {
         APP_TRACKER, // Tracker used only in this app.
         GLOBAL_TRACKER, // Tracker used by all the apps from a company. eg: roll-up tracking.
         ECOMMERCE_TRACKER, // Tracker used by all ecommerce transactions from a company.
@@ -65,15 +63,10 @@ public class MainActivity extends ListActivity implements
 
 	public String fireip="";    
 	
-	private final String mailtag="0.7";
-	
-	public int count=1;
+	private final String mailtag="0.8";
 
-	// the helper object
-	//IabHelper mHelper;
-	
       HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
-      
+    public SharedPreferences prefs2;
 
 	@Override
 	protected void onCreate(Bundle b) {
@@ -115,33 +108,20 @@ public class MainActivity extends ListActivity implements
         
         adView.loadAd(adRequest);
 
-        
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog);
+        dialog.setTitle("Hello");
 
-//String base64EncodedPublicKey = getString(R.xml.app_license);
-//Log.d(TAG, "Creating IAB helper.");
-//mHelper = new IabHelper(this, base64EncodedPublicKey);
-//mHelper.enableDebugLogging(false);
+        Button button = (Button) dialog.findViewById(R.id.Button01);
+        button.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
 
-// Start setup. This is asynchronous and the specified listener
-// will be called once setup completes.
-
-//Log.d(TAG, "Starting setup.");
-
-//mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
-	//public void onIabSetupFinished(IabResult result) {
-	//Log.d(TAG, "Setup finished.");
-        //if (!result.isSuccess()) {
-	// Oh noes, there was a problem.
-        //toast("in app billing error: " + result);
-        //return;
-        //}
-	// Have we been disposed of in the meantime? If so, quit.
-        //if (mHelper == null)
-        //return;
-        //}	
-        //});
-        
-        }
+        dialog.show();
+       }
 
 	 @Override
 	  public void onDestroy() {
@@ -157,11 +137,9 @@ public class MainActivity extends ListActivity implements
 		templateSource = new TemplateSource(this);
 		templateSource.open();
 		List<TemplateData> formats = templateSource.list();
-		ArrayAdapter<TemplateData> adapter = new ArrayAdapter<TemplateData>(this,
-				android.R.layout.simple_spinner_item, formats);
-		adapter
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		SharedPreferences prefs = getSharedPreferences(PREFSFILE, 0);
+        SharedPreferences prefs2 = PreferenceManager.getDefaultSharedPreferences(this);
+      //  prefs2.registerOnSharedPreferenceChangeListener(this);
 		Iterator<TemplateData> it = formats.iterator();
 		while (it.hasNext()) {
 			template = it.next();
@@ -181,6 +159,14 @@ public class MainActivity extends ListActivity implements
 			}
 		});
 
+        final Button bs2 = (Button)findViewById(R.id.button1);
+        bs2.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                showPreferences();
+            }
+        });
+
+
 	}
 
 	
@@ -190,7 +176,7 @@ public class MainActivity extends ListActivity implements
 		adView.pause();
 		super.onPause();
 		SharedPreferences.Editor editor = getSharedPreferences(PREFSFILE, 0).edit();
-		editor.putBoolean(ALWAYS_GOOGLE_PLAY,true);
+		editor.putBoolean(ALWAYS_GOOGLE_PLAY, true);
 		//TODO editor.sharedprefs for saving/reading ip, make default ip go there if empty first
 		if (template != null) {
 			editor.putLong(TEMPLATEID, template.id);
@@ -204,26 +190,7 @@ public class MainActivity extends ListActivity implements
 		editor.commit();
 	}
 
-	@Override
-	protected void onStart()
-	{
-	super.onStart();
-		
-	 final Dialog dialog = new Dialog(this);
-	    dialog.setContentView(R.layout.dialog);
-	    dialog.setTitle("Hello");
 
-	    Button button = (Button) dialog.findViewById(R.id.Button01);
-	    button.setOnClickListener(new OnClickListener() {  
-	        @Override  
-	        public void onClick(View view) {  
-	            dialog.dismiss();            
-	        }  
-	    });
-
-	    dialog.show();
-	    
-	}
 	@Override
 	protected void onStop()
 	{
@@ -235,30 +202,6 @@ public class MainActivity extends ListActivity implements
 		return true;
 	}
 
-	@Override
-	public boolean dispatchTouchEvent(MotionEvent event) {
-
-	    View v = getCurrentFocus();
-	    boolean ret = super.dispatchTouchEvent(event);
-
-	    if (v instanceof EditText) {
-	        View w = getCurrentFocus();
-	        int scrcoords[] = new int[2];
-	        w.getLocationOnScreen(scrcoords);
-	        float x = event.getRawX() + w.getLeft() - scrcoords[0];
-	        float y = event.getRawY() + w.getTop() - scrcoords[1];
-
-	      //  Log.d("Activity", "Touch event "+event.getRawX()+","+event.getRawY()+" "+x+","+y+" rect "+w.getLeft()+","+w.getTop()+","+w.getRight()+","+w.getBottom()+" coords "+scrcoords[0]+","+scrcoords[1]);
-	        if (event.getAction() == MotionEvent.ACTION_UP && (x < w.getLeft() || x >= w.getRight() || y < w.getTop() || y > w.getBottom()) ) { 
-
-	            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-	            imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
-	        }
-	    }
-	return ret;
-	}
-	
-	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 
@@ -289,11 +232,9 @@ public class MainActivity extends ListActivity implements
 				break;
 			}
 			case (R.id.item_help): {
-				//TODO implement help screen
-
 				 final Dialog dialog = new Dialog(this);
 				    dialog.setContentView(R.layout.dialog);
-				    dialog.setTitle("Hello");
+				    dialog.setTitle("Help Dialog 1");
 
 				    Button button = (Button) dialog.findViewById(R.id.Button01);
 				    button.setOnClickListener(new OnClickListener() {  
@@ -327,20 +268,25 @@ public class MainActivity extends ListActivity implements
 			} 
 			case (R.id.item_settings): {
 				//TODO implement settings screen for setting ip, checkbox for auto-connect adb on app-startup, checkbox disable ads..
-              
-                Toast.makeText(this, "Coming soon.", Toast.LENGTH_LONG).show();
-			
+                showPreferences();
 				break;
 			} 
 		}
 		return true;
 	}
-	
-	@SuppressWarnings("unchecked")
+
+    private void showPreferences() {
+        Intent myIntent = new Intent(MainActivity.this, SettingsActivity.class);
+        //myIntent.putExtra("key", value); //Optional parameters
+        MainActivity.this.startActivity(myIntent);
+    }
+
+    @SuppressWarnings("unchecked")
 	private void copyMenuSelect() {
 		
 		if (!isNothingSelected()) {
-			fireip =  ((EditText) findViewById(R.id.editText1)).getText().toString().trim();
+            //TODO ip from preference
+            fireip = prefs2.getString("example_text", null);
 			Toast.makeText(this, "Installing at IP"+fireip, Toast.LENGTH_LONG).show();
 			Log.d("Fireinstaller","IP ausgelesen:"+fireip);
         
@@ -349,9 +295,7 @@ public class MainActivity extends ListActivity implements
 
 	
 	        
-	        
-	        //String qry=buf.toString(); // TODO: Save IP into prefs or file 
-		}
+	   	}
 		else{Toast.makeText(this, "no app selected", Toast.LENGTH_LONG).show();}
 	}
 	
@@ -388,7 +332,6 @@ public class MainActivity extends ListActivity implements
 			if (spi.selected) {
 				Log.d("Fireinstaller2", " ret.append package: " + spi.packageName + ", sourceDir: " + spi.sourceDir);
 				
-	//			ret.append(i+" ");
 
 				Toast.makeText(this, "Pushing now()"+spi.displayName, Toast.LENGTH_LONG).show();
 				
@@ -401,9 +344,7 @@ public class MainActivity extends ListActivity implements
 	
 				            Toast.makeText(this, "Pushing now(2/2)"+spi.displayName, Toast.LENGTH_LONG).show();
 				           
-				            //String command="/system/bin/adb install "+spi.sourceDir+"\n";
-				           // new PushingTask().execute(outputStream, command);
-				            
+
 				            outputStream.writeBytes("/system/bin/adb install "+spi.sourceDir+"\n");
 				        	
 				           outputStream.flush();
@@ -478,21 +419,14 @@ public class MainActivity extends ListActivity implements
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 			int position, long id) {
-			return true;
+        AppAdapter aa = (AppAdapter) getListAdapter();
+        SortablePackageInfo spi = aa.getItem(position);
+        spi.selected = !spi.selected;
+        aa.notifyDataSetChanged();
+        return true;
 	}
 	
 
-	public static void openUri(Context ctx, Uri uri) {
-		try {
-			Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
-			ctx.startActivity(browserIntent);
-		}
-		catch (ActivityNotFoundException e) {
-			
-			Toast.makeText(ctx, "no webbrowser found", Toast.LENGTH_SHORT).show();
-		}
-	}
-	      
 	       
 	
 	        /**
