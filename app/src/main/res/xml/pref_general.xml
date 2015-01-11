@@ -1,40 +1,40 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <CheckBoxPreference
+        android:defaultValue="true"
         android:key="example_checkbox"
-        android:title="@string/pref_title_analytics_google"
         android:summary="@string/pref_description_analytics_google"
-        android:defaultValue="true" />
+        android:title="@string/pref_title_analytics_google" />
     <CheckBoxPreference
+        android:defaultValue="true"
         android:key="example_checkbox"
-        android:title="@string/pref_title_ad_support"
         android:summary="@string/pref_description_ad_support"
-        android:defaultValue="true" />
+        android:title="@string/pref_title_ad_support" />
 
     <!-- NOTE: EditTextPreference accepts EditText attributes. -->
     <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
     <!-- android:summary="@string/pref_description_ip_fire" -->
     <EditTextPreference
+        android:defaultValue="@string/pref_default_ip_fire"
+        android:digits="0123456789."
+
+        android:inputType="number|numberDecimal"
         android:key="example_text"
-        android:title="@string/pref_title_ip_fire"
+        android:maxLines="1"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        android:title="@string/pref_title_ip_fire" />
 
-     android:defaultValue="@string/pref_default_ip_fire"
-     android:selectAllOnFocus="true"
-     android:inputType="number|numberDecimal"
-     android:digits="0123456789."
-     android:singleLine="true"
-     android:maxLines="1" />
-
- <!-- NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
-      dismiss it. -->
+    <!-- NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
+         dismiss it. -->
     <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
     <ListPreference
-        android:key="example_list"
-        android:title="@string/pref_title_install_method"
         android:defaultValue="-1"
         android:entries="@array/pref_example_install_method"
         android:entryValues="@array/pref_example_install_number"
+        android:key="example_list"
         android:negativeButtonText="@null"
-        android:positiveButtonText="@null" />
+        android:positiveButtonText="@null"
+        android:title="@string/pref_title_install_method" />
 
 </PreferenceScreen>

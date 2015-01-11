@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools"
-tools:ignore="TypographyDashes">
-  <integer name="ga_sessionTimeout">30</integer>
+    tools:ignore="TypographyDashes">
+    <integer name="ga_sessionTimeout">30</integer>
 
     <!-- Enable automatic Activity measurement -->
     <bool name="ga_autoActivityTracking">true</bool>
 
     <!-- Enable uncaught exceptions measurement -->
     <bool name="ga_reportUncaughtExceptions">true</bool>
-    
+
     <!-- The screen names that will appear in reports -->
     <screenName name="com.dlka.fireinstaller.MainActivity">
         Fireinstaller MainActivity
@@ -18,7 +18,7 @@ tools:ignore="TypographyDashes">
     </screenName>
     <!--  The following value should be replaced with correct property id. -->
     <string name="ga_trackingId">UA-47310419-10</string>
-	<bool name="ga_autoActivityTracking">true</bool>
-	<!-- the Local LogLevel for Analytics -->
-<string name="ga_logLevel">verbose</string>
+    <bool name="ga_autoActivityTracking">true</bool>
+    <!-- the Local LogLevel for Analytics -->
+    <string name="ga_logLevel">verbose</string>
 </resources>

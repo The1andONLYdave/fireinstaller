@@ -1,73 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<string name="app_name">Fire Installer</string>
-	<string name="deselect_all">Alles abwählen</string>
-	<string name="share">Teilen</string>
-	<string name="help">Hilfe</string>
-	<string name="mail">Emaile dem Entwickler</string>
-	<string name="copy">Auf FireTV!</string>
-	
-	<string name="Guide">"Kurzanleitung:\n\nSchritt 1 – ADB Debugging Einschalten\nDamit dein Fire TV die Apps annimmt, musst du ADB Debugging aktivieren. Du kannst es nach dem Installieren deiner Apps gerne wieder deaktivieren.\nAuf dem Homebildschirm deines Fire TV gehst du runter bis zu “Einstellungen”\nDann nach rechts zu “SYSTEM”\nDann runter zu den “Entwickler Optionen”\nÄndere sowohl “ADB debugging” auf “Ein”,\nals auch ”Unkbekannte Quellen” zu ”Ein”\n\nSchritt 2 – Erlange die IP-Adresse deines Fire TV\nAuf dem Homebildschirm deines Fire TV gehst du runter bis zu “Einstellungen”\nDann nach rechts zu “SYSTEM”\nDann wählst du “Über” aus,\ngehst runter auf “Netzwerk”\nund nimmst die Nummer bei “IP Adresse”\n\nDiese Beta Version enthält einen bekannten Fehler der in einem der nächsten Updates behoben wird: Wenn du die falsche IP-Adresse eingibst und auf ->FireTV klickst (xxx.xxx.xxx.xxx, keine Leerzeichen aber mit Punkten) wird die App sich aufhängen, was sie auch manchmal nach dem Transfer aller gewählten Apps macht. Wenn alle Apps fertig auf dem Fire TV installiert sind, kannst du die App einfach über das Einstellungsmenü deines Androiden beenden (erzwingen)\n Last but not least: Danke für das testen/benutzen unserer App. Wir freuen uns über emails und market kommentare. Danke!"</string>
-	<string name="GuideOk">Ok</string>
+    <string name="app_name">Fire Installer</string>
+    <string name="deselect_all">Alles abwählen</string>
+    <string name="share">Teilen</string>
+    <string name="help">Hilfe</string>
+    <string name="mail">Emaile dem Entwickler</string>
+    <string name="copy">Auf FireTV!</string>
 
-	<string-array name="stdformattitles">
-	    <item>Einfacher Text</item>
-		<item>HTML Liste</item>
-		<item>BBCode Liste</item>
-		<item>Markdown Liste</item>
-		<item>Market URL</item>
-	</string-array>
-	<string-array name="stdheaders">
-		<item>username:max</item>
-		<item>&lt;ul&gt;\n</item>
-		<item>[list]\n</item>
-		<item>\n</item>
-		<item></item>
-	</string-array>
-	<string-array name="stdformats">
-		<item>${packagename}:::</item>
-		<item>&lt;a href=\"${source}\"&gt;${displayname}&lt;/a&gt; ${comment}\n</item>
-		<item>[*] [url=${source}]${displayname}[/url] ${comment}\n</item>
-		<item>* [${displayname}](${source}) ${comment}\n</item>
-		<item>market://details?id=${packagename}\n</item>
-	</string-array>
-	<string-array name="stdfooters">
-		<item></item>
-		<item>&lt;/ul&gt;\nListe erstellt mit &lt;a href="https://play.google.com/store/apps/details?id=com.dlka.showmyapps"&gt;List My Apps&lt;/a&gt;</item>
-		<item>[/list]\nListe erstellt mit [url=https://play.google.com/store/apps/details?id=com.dlka.showmyapps]List My Apps[/url]</item>
-		<item></item>
-		<item>\nListe erstellt mit [List My Apps](https://play.google.com/store/apps/details?id=com.dlka.showmyapps)</item>
-	</string-array>
+    <string name="Guide">"Kurzanleitung:\n\nSchritt 1 – ADB Debugging Einschalten\nDamit dein Fire TV die Apps annimmt, musst du ADB Debugging aktivieren. Du kannst es nach dem Installieren deiner Apps gerne wieder deaktivieren.\nAuf dem Homebildschirm deines Fire TV gehst du runter bis zu “Einstellungen”\nDann nach rechts zu “SYSTEM”\nDann runter zu den “Entwickler Optionen”\nÄndere sowohl “ADB debugging” auf “Ein”,\nals auch ”Unkbekannte Quellen” zu ”Ein”\n\nSchritt 2 – Erlange die IP-Adresse deines Fire TV\nAuf dem Homebildschirm deines Fire TV gehst du runter bis zu “Einstellungen”\nDann nach rechts zu “SYSTEM”\nDann wählst du “Über” aus,\ngehst runter auf “Netzwerk”\nund nimmst die Nummer bei “IP Adresse”\n\nDiese Beta Version enthält einen bekannten Fehler der in einem der nächsten Updates behoben wird: Wenn du die falsche IP-Adresse eingibst und auf ->FireTV klickst (xxx.xxx.xxx.xxx, keine Leerzeichen aber mit Punkten) wird die App sich aufhängen, was sie auch manchmal nach dem Transfer aller gewählten Apps macht. Wenn alle Apps fertig auf dem Fire TV installiert sind, kannst du die App einfach über das Einstellungsmenü deines Androiden beenden (erzwingen)\n Last but not least: Danke für das testen/benutzen unserer App. Wir freuen uns über emails und market kommentare. Danke!"</string>
+    <string name="GuideOk">Ok</string>
 
-	<string name="lbl_format_as">Kopieren/Teilen als:</string>
-	<string name="lbl_version">Version</string>
-	<string name="lbl_versioncode">Versionsnummer</string>
-	<string name="lbl_installed">Zuerst installiert</string>
-	<string name="lbl_updated">Zuletzt aktualisiert</string>
-	<string name="lbl_uid">Benutzerkennung</string>
-	<string name="lbl_datadir">Datenverzeichnis</string>
-	<string name="lbl_templates">Vorlagen definieren wie Listen formatiert werden. Es muss mindestens eine Vorlage vorhanden sein.</string>
-	<string name="lbl_template_editor">Eine Vorlage besteht aus dem Listeneintrag (App info), sowie einer optionalen Kopf- und Fußzeile. Alle Teile werden genauso wie dargestellt aneinander gefügt, wobei der Listeneintrag einmal pro App wiederholt wird (auf Zeilenumbrüche achten!). Die folgenden Variablen können im Listeneintrag verwendet werden: ${packagename}, ${displayname}, ${source}, ${comment}, ${uid}, ${version}, ${versioncode}, ${firstinstalled}, ${lastupdated}, ${datadir}, ${targetsdk}, ${tags} und ${marketid}. Die folgenden Variablen können im Kopf/Fuß verwendet werden: ${now} und ${count} </string>
-	<string name="lbl_annotations_description">Bemerkungen werden in Vorlagen als ${comment} referenziert und können selber andere Variablen enthalten (${packagename}, ${displayname}, ${source}, ${uid}, ${version}, ${versioncode}, ${firstinstalled}, ${lastupdated}, ${datadir}, ${targetsdk}, ${tags} und ${marketid}). Bemerkungen bleiben erhalten wenn die zugehörige App deinstalliert wird (für den Fall, dass sie später reinstalliert wird). Tags erlauben das Gruppieren von Apps.</string>
-	<string name="lbl_template_name">Vorlage:</string>
-	<string name="apprater_title">App bewerten?</string>
-	<string name="apprater_message">Hi,\nist diese App nützlich? Wenn ja, dann wäre eine Bewertung auf Google Play sehr willkommen. Jetzt eine Bewertung schreiben?</string>
-	<string name="apprater_positive">Sicher!</string>
-	<string name="apprater_negative">Nein, danke</string>
-	<string name="apprater_neutral">Später</string>
-	<string name="title_send_to">Teilen mit</string>
-	<string name="msg_error_no_templates">Whoops! Wo sind denn alle Vorlagen hin?!</string>
-	<string name="msg_error_incomplete">Name und Eintrag dürfen nicht leer sein!</string>
-	<string name="msg_warn_nothing_selected">Es muss mindestens eine App ausgewählt werden!</string>
-	<string name="msg_list_copied_to_clipboard">%1$d/%2$d Einträge in die Zwischenablage kopiert</string>
-	<string name="msg_too_large">Oops! Die Liste war zu groß um in den Puffer zu passen. Sie wurde stattdessen in die Zwischenablage kopiert.</string>
-	<string name="msg_name_does_not_support_variables">Name unterstützt keine Variablen</string>
-	<string name="msg_this_cannot_be_undone">Dies kann nicht rückgängig gemacht werden.</string>
-	<string name="btn_save">Speichern</string>
-	<string name="btn_cancel">Abbrechen</string>
-	<string name="bytag">Gruppenauswahl</string>
-	<string name="donate">Spenden!</string>
-	<string name="settings">Gehe zu den Einstellungen</string>
+    <string-array name="stdformattitles">
+        <item>Einfacher Text</item>
+        <item>HTML Liste</item>
+        <item>BBCode Liste</item>
+        <item>Markdown Liste</item>
+        <item>Market URL</item>
+    </string-array>
+    <string-array name="stdheaders">
+        <item>username:max</item>
+        <item>&lt;ul&gt;\n</item>
+        <item>[list]\n</item>
+        <item>\n</item>
+        <item></item>
+    </string-array>
+    <string-array name="stdformats">
+        <item>${packagename}:::</item>
+        <item>&lt;a href=\"${source}\"&gt;${displayname}&lt;/a&gt; ${comment}\n</item>
+        <item>[*] [url=${source}]${displayname}[/url] ${comment}\n</item>
+        <item>* [${displayname}](${source}) ${comment}\n</item>
+        <item>market://details?id=${packagename}\n</item>
+    </string-array>
+    <string-array name="stdfooters">
+        <item></item>
+        <item>&lt;/ul&gt;\nListe erstellt mit &lt;a href="https://play.google.com/store/apps/details?id=com.dlka.showmyapps"&gt;List My Apps&lt;/a&gt;</item>
+        <item>[/list]\nListe erstellt mit [url=https://play.google.com/store/apps/details?id=com.dlka.showmyapps]List My Apps[/url]</item>
+        <item></item>
+        <item>\nListe erstellt mit [List My Apps](https://play.google.com/store/apps/details?id=com.dlka.showmyapps)</item>
+    </string-array>
+
+    <string name="lbl_format_as">Kopieren/Teilen als:</string>
+    <string name="lbl_version">Version</string>
+    <string name="lbl_versioncode">Versionsnummer</string>
+    <string name="lbl_installed">Zuerst installiert</string>
+    <string name="lbl_updated">Zuletzt aktualisiert</string>
+    <string name="lbl_uid">Benutzerkennung</string>
+    <string name="lbl_datadir">Datenverzeichnis</string>
+    <string name="lbl_templates">Vorlagen definieren wie Listen formatiert werden. Es muss mindestens eine Vorlage vorhanden sein.</string>
+    <string name="lbl_template_editor">Eine Vorlage besteht aus dem Listeneintrag (App info), sowie einer optionalen Kopf- und Fußzeile. Alle Teile werden genauso wie dargestellt aneinander gefügt, wobei der Listeneintrag einmal pro App wiederholt wird (auf Zeilenumbrüche achten!). Die folgenden Variablen können im Listeneintrag verwendet werden: ${packagename}, ${displayname}, ${source}, ${comment}, ${uid}, ${version}, ${versioncode}, ${firstinstalled}, ${lastupdated}, ${datadir}, ${targetsdk}, ${tags} und ${marketid}. Die folgenden Variablen können im Kopf/Fuß verwendet werden: ${now} und ${count} </string>
+    <string name="lbl_annotations_description">Bemerkungen werden in Vorlagen als ${comment} referenziert und können selber andere Variablen enthalten (${packagename}, ${displayname}, ${source}, ${uid}, ${version}, ${versioncode}, ${firstinstalled}, ${lastupdated}, ${datadir}, ${targetsdk}, ${tags} und ${marketid}). Bemerkungen bleiben erhalten wenn die zugehörige App deinstalliert wird (für den Fall, dass sie später reinstalliert wird). Tags erlauben das Gruppieren von Apps.</string>
+    <string name="lbl_template_name">Vorlage:</string>
+    <string name="apprater_title">App bewerten?</string>
+    <string name="apprater_message">Hi,\nist diese App nützlich? Wenn ja, dann wäre eine Bewertung auf Google Play sehr willkommen. Jetzt eine Bewertung schreiben?</string>
+    <string name="apprater_positive">Sicher!</string>
+    <string name="apprater_negative">Nein, danke</string>
+    <string name="apprater_neutral">Später</string>
+    <string name="title_send_to">Teilen mit</string>
+    <string name="msg_error_no_templates">Whoops! Wo sind denn alle Vorlagen hin?!</string>
+    <string name="msg_error_incomplete">Name und Eintrag dürfen nicht leer sein!</string>
+    <string name="msg_warn_nothing_selected">Es muss mindestens eine App ausgewählt werden!</string>
+    <string name="msg_list_copied_to_clipboard">%1$d/%2$d Einträge in die Zwischenablage kopiert</string>
+    <string name="msg_too_large">Oops! Die Liste war zu groß um in den Puffer zu passen. Sie wurde stattdessen in die Zwischenablage kopiert.</string>
+    <string name="msg_name_does_not_support_variables">Name unterstützt keine Variablen</string>
+    <string name="msg_this_cannot_be_undone">Dies kann nicht rückgängig gemacht werden.</string>
+    <string name="btn_save">Speichern</string>
+    <string name="btn_cancel">Abbrechen</string>
+    <string name="bytag">Gruppenauswahl</string>
+    <string name="donate">Spenden!</string>
+    <string name="settings">Gehe zu den Einstellungen</string>
 
 </resources>
