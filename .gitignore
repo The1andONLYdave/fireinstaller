@@ -26,3 +26,5 @@ local.properties
 .idea/libraries
 .DS_Store
 build
+.idea/gradle.xml
+.idea/gradle.xml
