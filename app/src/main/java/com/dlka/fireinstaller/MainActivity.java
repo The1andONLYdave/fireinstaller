@@ -110,7 +110,7 @@ public class MainActivity extends ListActivity implements
         .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)       
         .addTestDevice("89CADD0B4B609A30ABDCB7ED4E90A8DE")
         .addTestDevice("CCCBB7E354C2E6E64DB5A399A77298ED")  //current Nexus 4
-      //  .addTestDevice("")  /current Note
+        .addTestDevice("4DA61F48D168C897127AACD506BF35DF")  //current Note
         .build();
         
         adView.loadAd(adRequest);
@@ -322,13 +322,13 @@ public class MainActivity extends ListActivity implements
 				//TODO open donate-link or even in-app purchase
 
 				Toast.makeText(this, "Isn't implemented yet. But i'd be happy if you just buy any of my apps @ google play", Toast.LENGTH_LONG).show();
-			
+
 				break;
 			} 
 			case (R.id.item_settings): {
 				//TODO implement settings screen for setting ip, checkbox for auto-connect adb on app-startup, checkbox disable ads..
-
-				Toast.makeText(this, "Coming soon.", Toast.LENGTH_LONG).show();
+              
+                Toast.makeText(this, "Coming soon.", Toast.LENGTH_LONG).show();
 			
 				break;
 			} 
