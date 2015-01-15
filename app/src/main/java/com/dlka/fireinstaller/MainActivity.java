@@ -31,13 +31,14 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
+import com.telly.groundy.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 
 public class MainActivity extends ListActivity implements
         OnItemSelectedListener, OnItemClickListener, OnItemLongClickListener {
@@ -291,7 +292,7 @@ public class MainActivity extends ListActivity implements
             Toast.makeText(this, "Installing at IP" + fireip, Toast.LENGTH_LONG).show();
             Log.d("Fireinstaller", "IP ausgelesen:" + fireip);
 
-            //CharSequence buf = pushFireTv();
+            //before we call FireConnector we need ip, packages, and maybe even more
             pushFireTv();//TODO make background/async task
 
 
@@ -304,76 +305,46 @@ public class MainActivity extends ListActivity implements
     private void pushFireTv() {
 
 //		StringBuilder ret = new StringBuilder();
+
         ListAdapter adapter = getListAdapter();
         int count = adapter.getCount();
-
-
-        Log.d("Fireinstaller2", "connecting adb to " + fireip);
-        Process adb = null;
-        try {
-            adb = Runtime.getRuntime().exec("sh");
-
-        } catch (IOException e1) {
-            Log.e("Fireinstaller", "error");
-        }
-
-        DataOutputStream outputStream = new DataOutputStream(adb.getOutputStream());
-        try {
-            outputStream.writeBytes("/system/bin/adb" + " connect " + fireip + "\n ");
-            outputStream.flush();
-            Log.d("fireinstaller", "/system/bin/adb" + " connect " + fireip + "\n ");
-
-        } catch (IOException e1) {
-            Log.e("Fireinstaller", "error");
-        }
-
+        int counter = 0;
+        //String[] packagenameVector=null;
+        //String[] packageVectorDir=null;
+        String dirs=null;
 
         for (int i = 0; i < count; i++) {
             SortablePackageInfo spi = (SortablePackageInfo) adapter.getItem(i);
             if (spi.selected) {
-                Log.d("Fireinstaller2", " ret.append package: " + spi.packageName + ", sourceDir: " + spi.sourceDir);
-
-
-                Toast.makeText(this, "Pushing now()" + spi.displayName, Toast.LENGTH_LONG).show();
-
-
-                Log.d("Fireinstaller2", "filesrc " + spi.sourceDir);
-                try {
-                    //move apk to fire tv here
-                    //Foreach Entry do and show progress thing:
-                    Log.d("Fireinstaller2", "/system/bin/adb install " + spi.sourceDir + "\n");
-
-                    Toast.makeText(this, "Pushing now(2/2)" + spi.displayName, Toast.LENGTH_LONG).show();
-
-
-                    outputStream.writeBytes("/system/bin/adb install " + spi.sourceDir + "\n");
-
-                    outputStream.flush();
-
-
-                } catch (IOException e) {
-                    Log.e("Fireinstaller", "error");
-                }
-
-
+                Log.d("fireconnector", " ret.append package: " + spi.packageName + ", sourceDir: " + spi.sourceDir);
+              //  packagenameVector[counter] = spi.packageName;
+              //  packageVectorDir[counter] = spi.sourceDir;
+                dirs=dirs+":::"+spi.sourceDir;
+                counter++;//how much packages to push
             }
         }
 
-        //After pushing:
-        try {
-            outputStream.close();
-            adb.waitFor();
-        } catch (IOException e) {
-            Log.e("Fireinstaller", "error");
-        } catch (InterruptedException e) {
-            Log.e("Fireinstaller", "error");
-        }
-        adb.destroy();
+            // this is usually performed from within an Activity
+            Groundy.create(FireConnector.class)
+                    //  .callback(this)        // required if you want to get notified of your task lifecycle
+                    .arg("fireip", fireip)       // optional
+                    .arg("counter", count)
+        //            .arg("dirs", packageVectorDir)
+          //          .arg("names", packagenameVector)
+                    .arg("dirs", dirs)
+                    .queueUsing(MainActivity.this);
 
-        //return ret;
-        return;
+
+            //return ret;
+            return;
 
     }
+
+   // @OnSuccess(FireConnector.class)
+   // public void onSuccess(@Param("the_result") String result) {
+   //     // do something with the result
+   //     //TODO make notification and maybe some if you like please donate?
+   // }
 
     public boolean isNothingSelected() {
         ListAdapter adapter = getListAdapter();

@@ -51,6 +51,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.dlka.fireinstaller.MainActivity" />
         </activity>
+        <service android:name="com.telly.groundy.GroundyService" android:exported="false"/>
     </application>
 
 </manifest>
