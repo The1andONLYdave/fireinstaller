@@ -1,20 +1,21 @@
 package com.dlka.fireinstaller;
 
 import android.util.Log;
-import android.widget.ListAdapter;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import com.telly.groundy.*;
+import com.telly.groundy.annotations.OnProgress;
+import com.telly.groundy.annotations.OnSuccess;
 
 
 /**
  * Created by David-Lee on 15.01.2015.
  */
-
 public class FireConnector extends GroundyTask {
     @Override
     protected TaskResult doInBackground() {
+        Log.d("fireconnector","doInBackground starting");
         // you can send parameters to the task using a Bundle (optional)
         String fireip = getStringArg("fireip");
         Integer counter=getIntArg("counter");
@@ -23,7 +24,7 @@ public class FireConnector extends GroundyTask {
 
 
         // lots of code
-
+        updateProgress(0);
         //CONNECTING //should work if we call it only once (singleton making)
         Log.d("fireconnector", "connecting adb to " + fireip);
         Process adb = null;
@@ -44,16 +45,18 @@ public class FireConnector extends GroundyTask {
             Log.e("fireconnector", "error");
         }
 
+
         //INSTALLING //maybe work
         String dir = directory.substring(3);
+        updateProgress(1);
 
         if(!dir.contains(":::")){return succeeded().add("the_result","cant split string");}
         String[] sourceDir = dir.split(":::");
-
+        updateProgress(2);
 
         for (int i = 0; i < counter; i++) {
             //first dirs -- first 3 :
-
+            updateProgress(i + 3);
             //then split as often as ValueOf counter by stripping first chars till :::
 
 
@@ -101,4 +104,11 @@ public class FireConnector extends GroundyTask {
         // and optionally pass some results back
         return succeeded().add("the_result", "some result");
     }
+
+
+
+
+
+
+
 }

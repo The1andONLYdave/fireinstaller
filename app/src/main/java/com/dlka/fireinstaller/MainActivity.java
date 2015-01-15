@@ -32,6 +32,9 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
 import com.telly.groundy.*;
+import com.telly.groundy.annotations.OnProgress;
+import com.telly.groundy.annotations.OnSuccess;
+import com.telly.groundy.annotations.Param;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,7 +58,8 @@ public class MainActivity extends ListActivity implements
     private TemplateSource templateSource;
     private TemplateData template;
     private AdView adView;
-
+   // int completed = 0; // this is the value for the notification percentage
+    public NotificationHelper mNotificationHelper;
     public static String noNull(String input) {
         if (input == null) {
             return "";
@@ -120,6 +124,9 @@ public class MainActivity extends ListActivity implements
         SharedPreferences prefs2 = PreferenceManager.getDefaultSharedPreferences(this);
 
         // prefs2.registerOnSharedPreferenceChangeListener();
+
+        mNotificationHelper = new NotificationHelper(this);
+
 
     }
 
@@ -311,7 +318,7 @@ public class MainActivity extends ListActivity implements
         int counter = 0;
         //String[] packagenameVector=null;
         //String[] packageVectorDir=null;
-        String dirs=null;
+        String dirs="";
 
         for (int i = 0; i < count; i++) {
             SortablePackageInfo spi = (SortablePackageInfo) adapter.getItem(i);
@@ -323,14 +330,15 @@ public class MainActivity extends ListActivity implements
                 counter++;//how much packages to push
             }
         }
+        Log.d("fireconnector", " counter package: " + counter + ", dirs package: " + dirs);
 
-            // this is usually performed from within an Activity
+        mNotificationHelper.createNotification();
+
+        // this is usually performed from within an Activity
             Groundy.create(FireConnector.class)
-                    //  .callback(this)        // required if you want to get notified of your task lifecycle
+                    .callback(this)        // required if you want to get notified of your task lifecycle
                     .arg("fireip", fireip)       // optional
-                    .arg("counter", count)
-        //            .arg("dirs", packageVectorDir)
-          //          .arg("names", packagenameVector)
+                    .arg("counter", counter)
                     .arg("dirs", dirs)
                     .queueUsing(MainActivity.this);
 
@@ -340,11 +348,22 @@ public class MainActivity extends ListActivity implements
 
     }
 
-   // @OnSuccess(FireConnector.class)
-   // public void onSuccess(@Param("the_result") String result) {
-   //     // do something with the result
-   //     //TODO make notification and maybe some if you like please donate?
-   // }
+    @OnSuccess(FireConnector.class)
+    public void onSuccess(@Param("the_result") String result) {
+        // do something with the result
+        //TODO make notification and maybe some if you like please donate?
+        mNotificationHelper.completed();
+
+    }
+
+    @OnProgress(FireConnector.class)
+    public void onProgress(int bla) {
+        // do something with the result
+        //TODO make notification and maybe some if you like please donate?
+        mNotificationHelper.progressUpdate(bla);
+
+
+    }
 
     public boolean isNothingSelected() {
         ListAdapter adapter = getListAdapter();
