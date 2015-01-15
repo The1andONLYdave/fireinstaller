@@ -5,6 +5,7 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
@@ -36,11 +37,15 @@ import com.telly.groundy.annotations.OnProgress;
 import com.telly.groundy.annotations.OnSuccess;
 import com.telly.groundy.annotations.Param;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import com.dlka.fireinstaller.NotificationHelper;
 
 
 public class MainActivity extends ListActivity implements
@@ -58,8 +63,11 @@ public class MainActivity extends ListActivity implements
     private TemplateSource templateSource;
     private TemplateData template;
     private AdView adView;
-   // int completed = 0; // this is the value for the notification percentage
-    public NotificationHelper mNotificationHelper;
+    int completed = 0; // this is the value for the notification percentage
+    NotificationHelper notificationHelper= new NotificationHelper(this);
+
+
+
     public static String noNull(String input) {
         if (input == null) {
             return "";
@@ -125,7 +133,7 @@ public class MainActivity extends ListActivity implements
 
         // prefs2.registerOnSharedPreferenceChangeListener();
 
-        mNotificationHelper = new NotificationHelper(this);
+       // mNotificationHelper = new NotificationHelper(this);
 
 
     }
@@ -313,6 +321,8 @@ public class MainActivity extends ListActivity implements
 
 //		StringBuilder ret = new StringBuilder();
 
+               //we will pass the context and our random notification ID to the helper class constructor, our notification object will be created on the UI thread
+
         ListAdapter adapter = getListAdapter();
         int count = adapter.getCount();
         int counter = 0;
@@ -332,15 +342,22 @@ public class MainActivity extends ListActivity implements
         }
         Log.d("fireconnector", " counter package: " + counter + ", dirs package: " + dirs);
 
-        mNotificationHelper.createNotification();
+//        mNotificationHelper.createNotification();
 
         // this is usually performed from within an Activity
-            Groundy.create(FireConnector.class)
-                    .callback(this)        // required if you want to get notified of your task lifecycle
-                    .arg("fireip", fireip)       // optional
-                    .arg("counter", counter)
-                    .arg("dirs", dirs)
-                    .queueUsing(MainActivity.this);
+  //          Groundy.create(FireConnector.class)
+    //                .callback(this)        // required if you want to get notified of your task lifecycle
+      //              .arg("fireip", fireip)       // optional
+        //            .arg("counter", counter)
+          //          .arg("dirs", dirs)
+            //        .queueUsing(MainActivity.this);
+
+        //TODO Backgroundtask without groundy
+        //TODO give fireip, counter and dirs as string, int, string
+//lets start our long running process Asyncronous Task
+        new LongRunningTask().execute(fireip,counter,dirs);
+
+
 
 
             //return ret;
@@ -348,22 +365,8 @@ public class MainActivity extends ListActivity implements
 
     }
 
-    @OnSuccess(FireConnector.class)
-    public void onSuccess(@Param("the_result") String result) {
-        // do something with the result
-        //TODO make notification and maybe some if you like please donate?
-        mNotificationHelper.completed();
-
-    }
-
-    @OnProgress(FireConnector.class)
-    public void onProgress(int bla) {
-        // do something with the result
-        //TODO make notification and maybe some if you like please donate?
-        mNotificationHelper.progressUpdate(bla);
 
 
-    }
 
     public boolean isNothingSelected() {
         ListAdapter adapter = getListAdapter();
@@ -439,5 +442,134 @@ public class MainActivity extends ListActivity implements
     }
 
 
+    private class LongRunningTask extends AsyncTask <String, Integer, String>{
+
+
+            @Override
+            protected String doInBackground(String... params) {
+
+                Log.d("fireconnector","doInBackground starting");
+                String fireip=params[0];
+                int counter = 1;//TODO cast params[1];
+                String dirs = params[2];
+
+                //working with big strings
+
+
+
+                // lots of code
+                publishProgress(0);
+                //CONNECTING //should work if we call it only once (singleton making)
+                Log.d("fireconnector", "connecting adb to " + fireip);
+                Process adb = null;
+                try {
+                    adb = Runtime.getRuntime().exec("sh");
+
+                } catch (IOException e1) {
+                    Log.e("fireconnector", "error");
+                }
+
+                DataOutputStream outputStream = new DataOutputStream(adb.getOutputStream());
+                try {
+                    outputStream.writeBytes("/system/bin/adb" + " connect " + fireip + "\n ");
+                    outputStream.flush();
+                    Log.d("fireconnector", "/system/bin/adb" + " connect " + fireip + "\n ");
+
+                } catch (IOException e1) {
+                    Log.e("fireconnector", "error");
+                }
+
+
+                //INSTALLING //maybe work
+                String dir = dirs.substring(3);
+                publishProgress(1);
+
+                //if(!dir.contains(":::")){return succeeded().add("the_result","cant split string");}
+                String[] sourceDir = dir.split(":::");
+                publishProgress(2);
+
+                for (int i = 0; i < counter; i++) {
+                    //first dirs -- first 3 :
+                    publishProgress(i + 3);
+                    //then split as often as ValueOf counter by stripping first chars till :::
+
+
+                    try {
+                        //move apk to fire tv here
+                        //Foreach Entry do and show progress thing:
+                        Log.d("fireconnector", "/system/bin/adb install " + sourceDir[i] + "\n");
+
+                        outputStream.writeBytes("/system/bin/adb install " + sourceDir[i] + "\n");
+
+                        outputStream.flush();
+
+
+                    } catch (IOException e) {
+                        Log.e("fireconnector", "error");
+                    }
+
+
+                } //end for loop
+
+
+
+
+
+
+                //CLOSINGCONNECTION //should work
+
+                //TODO better logging with errorcontent too
+
+                //After pushing:
+                try {
+                    outputStream.close();
+                    adb.waitFor();
+                } catch (IOException e) {
+                    Log.e("fireconnector", "error");
+                } catch (InterruptedException e) {
+                    Log.e("fireconnector", "error");
+                }
+                adb.destroy();
+
+
+
+
+
+
+
+
+                completed += 10;
+
+                //lets call our onProgressUpdate() method which runs on the UI thread
+                publishProgress();
+                return null;
+            }
+
+
+
+
+        @Override
+            protected void onPreExecute() {
+//Since this is the UI thread we can disable our button so that it is not pressed again!
+                completed = 0;
+//Create our notification via the helper class
+                notificationHelper.createNotification();
+            }
+
+
+        protected void onProgressUpdate(Void... v) {
+//lets format a string from the the 'completed' variable
+                notificationHelper.progressUpdate(completed);
+            }
+
+        protected void onPostExecute(final Void result) {
+//this should be self explanatory
+                notificationHelper.completed();
+
+            }
+
+        public void execute(String fireip, int counter, String dirs) {
+        }//TODO params here?
+    }
 }
 
