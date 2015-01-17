@@ -45,7 +45,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="1.1: Open Settings" />
+                    android:text="1: Open Settings" />
 
 
             </LinearLayout>
@@ -57,7 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
-            android:text="1.2: Select apps for copy @ Fire TV"
+            android:text="2: Select apps for copy @ Fire TV"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <ListView
@@ -65,21 +65,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:paddingTop="0dp"></ListView>
+            android:paddingTop="0dp"/>
 
         <Button
             android:id="@+id/button2"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
-            android:text="2: ->FireTV" />
+            android:text="3: ->FireTV" />
 
         <LinearLayout
             android:id="@+id/bannerLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="bottom|center_vertical|end"
-            android:padding="15dp"></LinearLayout>
+            android:padding="15dp"/>
 
     </LinearLayout>
 

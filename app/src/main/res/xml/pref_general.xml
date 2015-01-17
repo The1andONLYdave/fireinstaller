@@ -2,18 +2,10 @@
 
     <CheckBoxPreference
         android:defaultValue="true"
-        android:key="example_checkbox"
-        android:summary="@string/pref_description_analytics_google"
-        android:title="@string/pref_title_analytics_google"
-        />
-    <CheckBoxPreference
-        android:defaultValue="true"
         android:key="example_checkbox2"
         android:summary="@string/pref_description_ad_support"
         android:title="@string/pref_title_ad_support"
         />
-
-    <!-- android:dependency="donatePref" -->
 
  <!-- NOTE: EditTextPreference accepts EditText attributes. -->
     <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
@@ -27,18 +19,6 @@
         android:selectAllOnFocus="true"
         android:singleLine="true"
         android:title="@string/pref_title_ip_fire" />
-
-    <!-- NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
-         dismiss it. -->
-    <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
-    <ListPreference
-        android:defaultValue="-1"
-        android:entries="@array/pref_example_install_method"
-        android:entryValues="@array/pref_example_install_number"
-        android:key="example_list"
-        android:negativeButtonText="@null"
-        android:positiveButtonText="@null"
-        android:title="@string/pref_title_install_method" />
 
 
 </PreferenceScreen>

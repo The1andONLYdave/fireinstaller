@@ -3,7 +3,7 @@
     <!-- A 'parent' preference, which enables/disables child preferences (below)
          when checked/unchecked. -->
     <CheckBoxPreference
-        android:defaultValue="false"
+        android:defaultValue="true"
         android:key="notifications_new_message"
         android:title="@string/pref_title_statusbar_notification" />
 

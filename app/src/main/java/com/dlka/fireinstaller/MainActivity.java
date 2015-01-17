@@ -49,7 +49,7 @@ public class MainActivity extends ListActivity implements
     public static final String SELECTED = "selected";
     private static final String TEMPLATEID = "templateid";
     private static final String PROPERTY_ID = "App";
-    private final String mailtag = "0.8";
+    private static final String mailtag = "0.8";
     public String fireip = "";
     HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
     private TemplateSource templateSource = new TemplateSource(this);
@@ -217,16 +217,6 @@ public class MainActivity extends ListActivity implements
                 ((AppAdapter) adapter).notifyDataSetChanged();
                 break;
             }
-            case (R.id.select_all): {
-                ListAdapter adapter = getListAdapter();
-                int count = adapter.getCount();
-                for (int i = 0; i < count; i++) {
-                    SortablePackageInfo spi = (SortablePackageInfo) adapter.getItem(i);
-                    spi.selected = true;
-                }
-                ((AppAdapter) adapter).notifyDataSetChanged();
-                break;
-            }
             case (R.id.item_help): {
                 final Dialog dialog = new Dialog(this);
                 dialog.setContentView(R.layout.dialog);
@@ -257,17 +247,17 @@ public class MainActivity extends ListActivity implements
             }
             case (R.id.item_donate): {
                 //TODO open donate-link or even in-app purchase
-                Toast.makeText(this, "Isn't implemented yet. But i'd be happy if you just buy any of my apps @ google play", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Isn't implemented yet. But you can buy donate-version @ google play. Or wait for in-app option with chooseable amount.", Toast.LENGTH_LONG).show();
                 break;
             }
             case (R.id.item_settings): {
                 showPreferences();
                 break;
             }
-            case (R.id.item_debug_items): {
-                showDebugDialog();
-                break;
-            }
+           // case (R.id.item_debug_items): {
+           //     showDebugDialog();
+           //     break;
+          //   }
         }
         return true;
     }
@@ -409,6 +399,7 @@ public class MainActivity extends ListActivity implements
 
         private ProgressDialog dialog = null;
 
+        //TODO: disallow orientation change while running
             @Override
             protected String doInBackground(String... params) {
 
@@ -459,20 +450,23 @@ public class MainActivity extends ListActivity implements
 
                 //INSTALLING //maybe work
                 String dir = dirs.substring(3);
-                publishProgress(1);
+                completed=1;
+                publishProgress();//connection established
                 Log.e("fireconnector", "1");
 
                 //if(!dir.contains(":::")){return succeeded().add("the_result","cant split string");}
                 String[] sourceDir = dir.split(":::");
-                publishProgress(2);
+                completed=2;
+                publishProgress();//get packages ready
                 Log.e("fireconnector", "2");
 
                 for (int i = 0; i < counter; i++) {
                     //first dirs -- first 3 :
-                    publishProgress(i + 3);
+                    completed = i+3;
+                    publishProgress();//do package nr i
                     Log.e("fireconnector", "3");
                     //then split as often as ValueOf counter by stripping first chars till :::
-                    completed += 10;
+
 
                     try {
                         //move apk to fire tv here
@@ -530,10 +524,10 @@ public class MainActivity extends ListActivity implements
                 }
 
 
-                completed += 10;
+                completed = 100;
 
                 //lets call our onProgressUpdate() method which runs on the UI thread
-                publishProgress(100);
+                publishProgress();
                 Log.e("fireconnector", "100");
                 return null;
             }
@@ -556,6 +550,8 @@ public class MainActivity extends ListActivity implements
 
         protected void onProgressUpdate(Void... v) {
 //lets format a string from the the 'completed' variable
+
+            //TODO Switch-case(0 start, 1 connected, 2 prepared packages, 3 installing first app, 4 installing next app, 100 finished
                 notificationHelper.progressUpdate(completed);
             }
         protected void onPostExecute(final Void result) {
@@ -565,6 +561,7 @@ public class MainActivity extends ListActivity implements
             }
         public void onCancel(DialogInterface theDialog) {
             cancel(true);
+            //TODO stop installertask
         }
 
         }

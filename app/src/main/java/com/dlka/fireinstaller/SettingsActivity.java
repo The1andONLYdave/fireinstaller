@@ -173,6 +173,11 @@ public class SettingsActivity extends PreferenceActivity {
         getPreferenceScreen().addPreference(fakeHeader);
         addPreferencesFromResource(R.xml.pref_notification);
 
+        PreferenceCategory fakeHeader2 = new PreferenceCategory(this);
+        fakeHeader2.setTitle(R.string.pref_header_donations);
+        getPreferenceScreen().addPreference(fakeHeader2);
+        addPreferencesFromResource(R.xml.pref_donation);
+
         // Bind the summaries of EditText/List/Dialog/Ringtone preferences to
         // their values. When their values change, their summaries are updated
         // to reflect the new value, per the Android Design guidelines.
@@ -235,12 +240,11 @@ public class SettingsActivity extends PreferenceActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_notification);
-
+            addPreferencesFromResource(R.xml.pref_donation);
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences
             // to their values. When their values change, their summaries are
             // updated to reflect the new value, per the Android Design
             // guidelines.
         }
     }
-
 }

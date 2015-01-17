@@ -114,3 +114,11 @@ ADDED from AndroidManifest.xml:50:13
 		ADDED from AndroidManifest.xml:51:17
 	android:value
 		ADDED from AndroidManifest.xml:52:17
+activity#com.dlka.fireinstaller.DebugActivity
+ADDED from AndroidManifest.xml:54:9
+	android:label
+		ADDED from AndroidManifest.xml:56:13
+	android:parentActivityName
+		ADDED from AndroidManifest.xml:57:13
+	android:name
+		ADDED from AndroidManifest.xml:55:13

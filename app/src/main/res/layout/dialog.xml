@@ -3,6 +3,13 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
+<ScrollView  android:layout_width="wrap_content"
+    android:layout_height="wrap_content">>
+    <LinearLayout android:orientation="vertical"
+            android:scrollbars="vertical"
+            android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">>
     <TextView
         android:id="@+id/TextView01"
         android:layout_width="wrap_content"
@@ -16,4 +23,6 @@
         android:layout_below="@id/TextView01"
         android:layout_centerHorizontal="true"
         android:text="@string/GuideOk" />
+    </LinearLayout>
+</ScrollView>
 </RelativeLayout>
