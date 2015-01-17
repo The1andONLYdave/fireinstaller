@@ -53,7 +53,6 @@ public class MainActivity extends ListActivity implements
 
     public static final String PREFSFILE = "settings";
     public static final String SELECTED = "selected";
-    private static final String ALWAYS_GOOGLE_PLAY = "always_link_to_google_play";
     private static final String TEMPLATEID = "templateid";
     private static final String PROPERTY_ID = "App";
     private final String mailtag = "0.8";
@@ -133,7 +132,6 @@ public class MainActivity extends ListActivity implements
 
         // prefs2.registerOnSharedPreferenceChangeListener();
 
-       // mNotificationHelper = new NotificationHelper(this);
 
 
     }
@@ -188,8 +186,6 @@ public class MainActivity extends ListActivity implements
         adView.pause();
         super.onPause();
         SharedPreferences.Editor editor = getSharedPreferences(PREFSFILE, 0).edit();
-        editor.putBoolean(ALWAYS_GOOGLE_PLAY, true);
-        //TODO editor.sharedprefs for saving/reading ip, make default ip go there if empty first
         if (template != null) {
             editor.putLong(TEMPLATEID, template.id);
         }
@@ -219,7 +215,6 @@ public class MainActivity extends ListActivity implements
 
         switch (item.getItemId()) {
             case R.id.copy: {
-
                 copyMenuSelect();
                 break;
             }
@@ -247,7 +242,6 @@ public class MainActivity extends ListActivity implements
                 final Dialog dialog = new Dialog(this);
                 dialog.setContentView(R.layout.dialog);
                 dialog.setTitle("Help Dialog 1");
-
                 Button button = (Button) dialog.findViewById(R.id.Button01);
                 button.setOnClickListener(new OnClickListener() {
                     @Override
@@ -273,13 +267,10 @@ public class MainActivity extends ListActivity implements
             }
             case (R.id.item_donate): {
                 //TODO open donate-link or even in-app purchase
-
                 Toast.makeText(this, "Isn't implemented yet. But i'd be happy if you just buy any of my apps @ google play", Toast.LENGTH_LONG).show();
-
                 break;
             }
             case (R.id.item_settings): {
-                //TODO implement settings screen for setting ip, checkbox for auto-connect adb on app-startup, checkbox disable ads..
                 showPreferences();
                 break;
             }
@@ -289,27 +280,19 @@ public class MainActivity extends ListActivity implements
 
     private void showPreferences() {
         Intent myIntent = new Intent(MainActivity.this, SettingsActivity.class);
-        //myIntent.putExtra("key", value); //Optional parameters
         MainActivity.this.startActivity(myIntent);
     }
 
     @SuppressWarnings("unchecked")
     private void copyMenuSelect() {
-
         if (!isNothingSelected()) {
-
-
             Map<String, ?> preferences = PreferenceManager.getDefaultSharedPreferences(this).getAll();
-
             fireip =(String)preferences.get("example_text");
 
-          //  fireip =(String)preferences.get("example_text", "192.168.0.1");
             Toast.makeText(this, "Installing at IP" + fireip, Toast.LENGTH_LONG).show();
             Log.d("Fireinstaller", "IP ausgelesen:" + fireip);
 
-            //before we call FireConnector we need ip, packages, and maybe even more
-            pushFireTv();//TODO make background/async task
-
+            pushFireTv();
 
         } else {
             Toast.makeText(this, "no app selected", Toast.LENGTH_LONG).show();
@@ -319,30 +302,21 @@ public class MainActivity extends ListActivity implements
 
     private void pushFireTv() {
 
-//		StringBuilder ret = new StringBuilder();
-
-               //we will pass the context and our random notification ID to the helper class constructor, our notification object will be created on the UI thread
-
         ListAdapter adapter = getListAdapter();
         int count = adapter.getCount();
         int counter = 0;
-        //String[] packagenameVector=null;
-        //String[] packageVectorDir=null;
         String dirs="";
 
         for (int i = 0; i < count; i++) {
             SortablePackageInfo spi = (SortablePackageInfo) adapter.getItem(i);
             if (spi.selected) {
                 Log.d("fireconnector", " ret.append package: " + spi.packageName + ", sourceDir: " + spi.sourceDir);
-              //  packagenameVector[counter] = spi.packageName;
-              //  packageVectorDir[counter] = spi.sourceDir;
                 dirs=dirs+":::"+spi.sourceDir;
                 counter++;//how much packages to push
             }
         }
         Log.d("fireconnector", " counter package: " + counter + ", dirs package: " + dirs);
 
-//        mNotificationHelper.createNotification();
 
         // this is usually performed from within an Activity
   //          Groundy.create(FireConnector.class)
@@ -355,10 +329,7 @@ public class MainActivity extends ListActivity implements
         //TODO Backgroundtask without groundy
         //TODO give fireip, counter and dirs as string, int, string
 //lets start our long running process Asyncronous Task
-        new LongRunningTask().execute(fireip,counter,dirs);
-
-
-
+        new LongRunningTask().execute(); //fireip,counter,dirs
 
             //return ret;
             return;
@@ -449,9 +420,9 @@ public class MainActivity extends ListActivity implements
             protected String doInBackground(String... params) {
 
                 Log.d("fireconnector","doInBackground starting");
-                String fireip=params[0];
-                int counter = 1;//TODO cast params[1];
-                String dirs = params[2];
+                //String fireip=params[0];
+                //int counter = 1;//TODO cast params[1];
+                //String dirs = params[2];
 
                 //working with big strings
 
@@ -459,6 +430,7 @@ public class MainActivity extends ListActivity implements
 
                 // lots of code
                 publishProgress(0);
+                Log.e("fireconnector", "0");
                 //CONNECTING //should work if we call it only once (singleton making)
                 Log.d("fireconnector", "connecting adb to " + fireip);
                 Process adb = null;
@@ -483,16 +455,19 @@ public class MainActivity extends ListActivity implements
                 //INSTALLING //maybe work
                 String dir = dirs.substring(3);
                 publishProgress(1);
+                Log.e("fireconnector", "1");
 
                 //if(!dir.contains(":::")){return succeeded().add("the_result","cant split string");}
                 String[] sourceDir = dir.split(":::");
                 publishProgress(2);
+                Log.e("fireconnector", "2");
 
                 for (int i = 0; i < counter; i++) {
                     //first dirs -- first 3 :
                     publishProgress(i + 3);
+                    Log.e("fireconnector", i+3);
                     //then split as often as ValueOf counter by stripping first chars till :::
-
+                    completed += 10;
 
                     try {
                         //move apk to fire tv here
@@ -541,7 +516,8 @@ public class MainActivity extends ListActivity implements
                 completed += 10;
 
                 //lets call our onProgressUpdate() method which runs on the UI thread
-                publishProgress();
+                publishProgress(100);
+                Log.e("fireconnector", "100");
                 return null;
             }
 
@@ -567,9 +543,7 @@ public class MainActivity extends ListActivity implements
                 notificationHelper.completed();
 
             }
-
-        public void execute(String fireip, int counter, String dirs) {
-        }//TODO params here?
-    }
+        }
 }
+
 

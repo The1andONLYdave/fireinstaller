@@ -22,6 +22,6 @@ dependencies {
     compile 'com.google.android.gms:play-services:6.5.87'
     compile 'com.android.support:support-v4:21.0.3'
     //compile project(':groundylibrary')
-    compile 'com.telly:groundy:1.5'
-    provided 'com.telly:groundy-compiler:1.5'
+    //compile 'com.telly:groundy:1.5'
+    //provided 'com.telly:groundy-compiler:1.5'
 }
