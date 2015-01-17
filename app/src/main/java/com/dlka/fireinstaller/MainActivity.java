@@ -2,6 +2,8 @@ package com.dlka.fireinstaller;
 
 import android.app.Dialog;
 import android.app.ListActivity;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -40,9 +42,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import com.dlka.fireinstaller.NotificationHelper;
-
-
 public class MainActivity extends ListActivity implements
         OnItemSelectedListener, OnItemClickListener, OnItemLongClickListener {
 
@@ -52,9 +51,8 @@ public class MainActivity extends ListActivity implements
     private static final String PROPERTY_ID = "App";
     private final String mailtag = "0.8";
     public String fireip = "";
-    public SharedPreferences prefs2;
     HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
-    private TemplateSource templateSource;
+    private TemplateSource templateSource = new TemplateSource(this);
     private TemplateData template;
     private AdView adView;
     int completed = 0; // this is the value for the notification percentage
@@ -110,7 +108,8 @@ public class MainActivity extends ListActivity implements
 
         adView.loadAd(adRequest);
 
-        final Dialog dialog = new Dialog(this);
+        final Dialog dialog;
+        dialog = new Dialog(this);
         dialog.setContentView(R.layout.dialog);
         dialog.setTitle("Hello");
 
@@ -123,11 +122,6 @@ public class MainActivity extends ListActivity implements
         });
 
         dialog.show();
-
-        SharedPreferences prefs2 = PreferenceManager.getDefaultSharedPreferences(this);
-
-        // prefs2.registerOnSharedPreferenceChangeListener();
-
 
 
     }
@@ -143,7 +137,6 @@ public class MainActivity extends ListActivity implements
     protected void onResume() {
         super.onResume();
         adView.resume();
-        templateSource = new TemplateSource(this);
         templateSource.open();
         List<TemplateData> formats = templateSource.list();
         SharedPreferences prefs = getSharedPreferences(PREFSFILE, 0);
@@ -250,7 +243,8 @@ public class MainActivity extends ListActivity implements
                 break;
             }
             case (R.id.item_mail): {
-                StringBuffer buffer = new StringBuffer();
+                StringBuilder buffer;
+                buffer = new StringBuilder();
                 buffer.append("mailto:");
                 buffer.append("feedback@kulsch-it.de");
                 buffer.append("?subject=");
@@ -335,12 +329,7 @@ public class MainActivity extends ListActivity implements
         new LongRunningTask().execute(); //fireip,counter,dirs
 
             //return ret;
-            return;
-
     }
-
-
-
 
     public boolean isNothingSelected() {
         ListAdapter adapter = getListAdapter();
@@ -418,6 +407,7 @@ public class MainActivity extends ListActivity implements
 
     private class LongRunningTask extends AsyncTask <String, Integer, String>{
 
+        private ProgressDialog dialog = null;
 
             @Override
             protected String doInBackground(String... params) {
@@ -441,17 +431,29 @@ public class MainActivity extends ListActivity implements
                     adb = Runtime.getRuntime().exec("sh");
 
                 } catch (IOException e1) {
-                    Log.e("fireconnector", "error");
+                    Log.e("fireconnector", "IOException error e "+e1);
                 }
 
-                DataOutputStream outputStream = new DataOutputStream(adb.getOutputStream());
+                DataOutputStream outputStream = null;
+                if (adb != null) {
+                    outputStream = new DataOutputStream(adb.getOutputStream());
+                }
+                else{
+                    Log.e("fireconnector", "abd == null");
+                }
                 try {
-                    outputStream.writeBytes("/system/bin/adb" + " connect " + fireip + "\n ");
-                    outputStream.flush();
-                    Log.d("fireconnector", "/system/bin/adb" + " connect " + fireip + "\n ");
+                    if (outputStream != null) {
+                        outputStream.writeBytes("/system/bin/adb" + " connect " + fireip + "\n ");
+                        outputStream.flush();
+                        Log.d("fireconnector", "/system/bin/adb" + " connect " + fireip + "\n ");
+                    }
+                    else{
+                        Log.e("fireconnector", "outputStream == null");
+                    }
+
 
                 } catch (IOException e1) {
-                    Log.e("fireconnector", "error");
+                    Log.e("fireconnector", "IOException error 1"+e1);
                 }
 
 
@@ -475,15 +477,18 @@ public class MainActivity extends ListActivity implements
                     try {
                         //move apk to fire tv here
                         //Foreach Entry do and show progress thing:
-                        Log.d("fireconnector", "/system/bin/adb install " + sourceDir[i] + "\n");
 
-                        outputStream.writeBytes("/system/bin/adb install " + sourceDir[i] + "\n");
-
-                        outputStream.flush();
-
+                        if (outputStream != null) {
+                            Log.d("fireconnector", "/system/bin/adb install " + sourceDir[i] + "\n");
+                            outputStream.writeBytes("/system/bin/adb install " + sourceDir[i] + "\n");
+                            outputStream.flush();
+                        }
+                        else{
+                            Log.e("fireconnector", "outputStream == null (occurence 2)");
+                        }
 
                     } catch (IOException e) {
-                        Log.e("fireconnector", "error");
+                        Log.e("fireconnector", " IOException error "+e);
                     }
 
 
@@ -500,20 +505,29 @@ public class MainActivity extends ListActivity implements
 
                 //After pushing:
                 try {
-                    outputStream.close();
-                    adb.waitFor();
+                    if (outputStream != null) {
+                        outputStream.close();
+                    }
+                    else{
+                        Log.e("fireconnector", "outputStream closed already ");
+                    }
+                    if (adb != null) {
+                        adb.waitFor();
+                    }
+                    else{
+                        Log.e("fireconnector", "adb closed already ");
+                    }
                 } catch (IOException e) {
-                    Log.e("fireconnector", "error");
+                    Log.e("fireconnector", "IOException error 2 "+e);
                 } catch (InterruptedException e) {
-                    Log.e("fireconnector", "error");
+                    Log.e("fireconnector", "InterruptedException error 5 "+e);
                 }
-                adb.destroy();
-
-
-
-
-
-
+                if (adb != null) {
+                    adb.destroy();
+                }
+                else{
+                    Log.e("fireconnector", "adb already destroyed ");
+                }
 
 
                 completed += 10;
@@ -528,24 +542,31 @@ public class MainActivity extends ListActivity implements
 
 
         @Override
-            protected void onPreExecute() {
+        protected void onPreExecute() {
 //Since this is the UI thread we can disable our button so that it is not pressed again!
-                completed = 0;
-//Create our notification via the helper class
-                notificationHelper.createNotification();
-            }
+            completed = 0;
+            //TODO disable Buttons
 
+//Create our notification via the helper class
+            notificationHelper.createNotification();
+
+            dialog = ProgressDialog.show(MainActivity.this, "Loading", "Please Wait", true);
+            dialog.setCancelable(true);
+        }
 
         protected void onProgressUpdate(Void... v) {
 //lets format a string from the the 'completed' variable
                 notificationHelper.progressUpdate(completed);
             }
-
         protected void onPostExecute(final Void result) {
 //this should be self explanatory
                 notificationHelper.completed();
 
             }
+        public void onCancel(DialogInterface theDialog) {
+            cancel(true);
+        }
+
         }
 }
 
