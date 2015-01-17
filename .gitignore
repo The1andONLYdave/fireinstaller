@@ -18,8 +18,6 @@ assets/build.properties
 .settings/
 .settings/*
 res/xml/app_license.xml
-
-#http://stackoverflow.com/questions/16736856/what-should-be-in-my-gitignore-for-an-android-studio-project
 .gradle
 local.properties
 .idea/workspace.xml
@@ -27,5 +25,4 @@ local.properties
 .DS_Store
 build
 .idea/gradle.xml
-.idea/gradle.xml
-.idea/gradle.xml
+#http://stackoverflow.com/questions/16736856/what-should-be-in-my-gitignore-for-an-android-studio-project
