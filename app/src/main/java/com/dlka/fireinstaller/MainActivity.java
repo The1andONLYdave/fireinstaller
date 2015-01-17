@@ -32,11 +32,6 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
-import com.telly.groundy.*;
-import com.telly.groundy.annotations.OnProgress;
-import com.telly.groundy.annotations.OnSuccess;
-import com.telly.groundy.annotations.Param;
-
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -64,7 +59,8 @@ public class MainActivity extends ListActivity implements
     private AdView adView;
     int completed = 0; // this is the value for the notification percentage
     NotificationHelper notificationHelper= new NotificationHelper(this);
-
+    int counter = 0;
+    String dirs="";
 
 
     public static String noNull(String input) {
@@ -274,8 +270,17 @@ public class MainActivity extends ListActivity implements
                 showPreferences();
                 break;
             }
+            case (R.id.item_debug_items): {
+                showDebugDialog();
+                break;
+            }
         }
         return true;
+    }
+
+    private void showDebugDialog() {
+        Intent myIntent = new Intent(MainActivity.this, DebugActivity.class);
+        MainActivity.this.startActivity(myIntent);
     }
 
     private void showPreferences() {
@@ -304,8 +309,6 @@ public class MainActivity extends ListActivity implements
 
         ListAdapter adapter = getListAdapter();
         int count = adapter.getCount();
-        int counter = 0;
-        String dirs="";
 
         for (int i = 0; i < count; i++) {
             SortablePackageInfo spi = (SortablePackageInfo) adapter.getItem(i);
@@ -465,7 +468,7 @@ public class MainActivity extends ListActivity implements
                 for (int i = 0; i < counter; i++) {
                     //first dirs -- first 3 :
                     publishProgress(i + 3);
-                    Log.e("fireconnector", i+3);
+                    Log.e("fireconnector", "3");
                     //then split as often as ValueOf counter by stripping first chars till :::
                     completed += 10;
 

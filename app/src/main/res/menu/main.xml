@@ -3,13 +3,12 @@
     <item
         android:id="@+id/copy"
         android:icon="@drawable/ic_menu_upload"
-        android:showAsAction="always|withText"
+        android:showAsAction="never|withText"
         android:title="@string/copy"></item>
     <item
         android:id="@+id/select_all"
         android:icon="@drawable/ic_action_select_all"
         android:title="@android:string/selectAll"></item>
-
     <item
         android:id="@+id/deselect_all"
         android:icon="@drawable/ic_action_deselect_all"
@@ -20,7 +19,6 @@
         android:title="@string/help"></item>
     <item
         android:id="@+id/item_mail"
-        android:icon="@drawable/ic_action_help"
         android:title="@string/mail"></item>
     <item
         android:id="@+id/item_donate"
@@ -30,4 +28,7 @@
         android:id="@+id/item_settings"
         android:icon="@drawable/ic_action_help"
         android:title="@string/settings"></item>
+    <item
+        android:id="@+id/item_debug_items"
+        android:title="debug_items"></item>
 </menu>
