@@ -66,8 +66,12 @@
     <string name="msg_this_cannot_be_undone">Dies kann nicht rückgängig gemacht werden.</string>
     <string name="btn_save">Speichern</string>
     <string name="btn_cancel">Abbrechen</string>
-    <string name="bytag">Gruppenauswahl</string>
     <string name="donate">Spenden!</string>
-    <string name="settings">Gehe zu den Einstellungen</string>
+    <string name="settings">Einstellungen</string>
+    <string name="about_sum">Lizenziert als Open-Source</string>
+    <string name="about_text">Entwickelt von Kulsch-iT.de</string>
+    <string name="action_settings">Einstellungen</string>
+    <string name="add">Hinzufügen</string>
+    <string name="always_link">1.) Gebe in den Einstellungen die Fire TV IP Adresse ein. \n2.) Wähle Apps von der Liste unten \n3.) Drücke den \"->FireTV\" Button \n4.) Warte (minimieren via Homebutton)\n5.) Spende, wenn du willst!</string>
 
 </resources>

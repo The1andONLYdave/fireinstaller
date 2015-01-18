@@ -13,7 +13,7 @@
     <string name="pref_description_ad_support">Donaters (possible in next Update) can disable displaying ads.
     </string>
 
-    <string name="pref_title_ip_fire">Fire TV IP Address (Example: 192.168.0.1 or 192.168.001.003)</string>
+    <string name="pref_title_ip_fire">Fire TV IP Address (Like: 192.0.0.1 or 192.168.001.003)</string>
     <string name="pref_default_ip_fire">192.0.0.0</string>
     <string name="pref_description_ip_fire">IP v4 address, each number (0-254) with a dot \'.\'. Example: 192.168.0.1 or 192.168.001.003</string>
 
