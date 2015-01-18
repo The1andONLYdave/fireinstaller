@@ -537,14 +537,10 @@ public class MainActivity extends ListActivity implements
 
         @Override
         protected void onPreExecute() {
-//Since this is the UI thread we can disable our button so that it is not pressed again!
             completed = 0;
-            //TODO disable Buttons
-
-//Create our notification via the helper class
             notificationHelper.createNotification();
 
-            dialog = ProgressDialog.show(MainActivity.this, "Loading", "Please Wait, \nProgress in Notification Bar. 3% = 1.App, 4% = 2.App ...", true);
+            dialog = ProgressDialog.show(MainActivity.this, "Loading", "Please Wait, \nProgress in Notification Bar. \n", true);
             dialog.setCancelable(false); //no cancel dialog while installing
         }
 
@@ -554,16 +550,41 @@ public class MainActivity extends ListActivity implements
             Log.d("fireinstaller","completed "+completed+" v "+v);
             //TODO Switch-case(0 start, 1 connected, 2 prepared packages, 3 installing first app, 4 installing next app, 100 finished
                 notificationHelper.progressUpdate(completed);
-                dialog.setProgress(completed);
+
+            String dialogMessage="Please Wait, \nProgress in Notification Bar. \n";
+            String contentText;
+
+            if(completed==0){
+                contentText = "Connecting to Fire TV...";
             }
+            else if(completed==1){
+                contentText = "Fire TV connected... Preparing apps to push.";
+            }
+            else if(completed==2){
+                contentText = "Begin installing";
+            }
+            else if((completed>2)&(completed<100)){
+                contentText = "Installing App Number "+completed + ". May take long time.";
+            }
+            else if(completed==100){
+                contentText = "Installing complete. Thank you!";
+            }
+            else{
+                contentText = "Unallowed percentageComplete. Please report error via email";
+            }
+
+                dialog.setMessage(dialogMessage+contentText);
+            }
+
         protected void onPostExecute(final Void result) {
-//this should be self explanatory
+        //this should be self explanatory
                 notificationHelper.completed();
-            dialog.setCancelable(false);
+            dialog.setCancelable(true);
             dialog.setProgress(100);
             dialog.dismiss();
 
             }
+        
         public void onCancel(DialogInterface theDialog) {
             cancel(true);
             //TODO stop installertask
