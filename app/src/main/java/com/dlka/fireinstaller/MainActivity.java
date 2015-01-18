@@ -6,6 +6,8 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -537,6 +539,8 @@ public class MainActivity extends ListActivity implements
 
         @Override
         protected void onPreExecute() {
+            lockScreenOrientation();
+
             completed = 0;
             notificationHelper.createNotification();
 
@@ -582,9 +586,23 @@ public class MainActivity extends ListActivity implements
             dialog.setCancelable(true);
             dialog.setProgress(100);
             dialog.dismiss();
+            unlockScreenOrientation();
 
+        }
+
+        private void lockScreenOrientation() {
+            int currentOrientation = getResources().getConfiguration().orientation;
+            if (currentOrientation == Configuration.ORIENTATION_PORTRAIT) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            } else {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
             }
-        
+        }
+
+        private void unlockScreenOrientation() {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+        }
+
         public void onCancel(DialogInterface theDialog) {
             cancel(true);
             //TODO stop installertask
