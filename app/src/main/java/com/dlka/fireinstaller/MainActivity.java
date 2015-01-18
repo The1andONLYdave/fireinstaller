@@ -124,21 +124,8 @@ public class MainActivity extends ListActivity implements
         });
 
         dialog.show();
+        //while showing helpdialog we build list in background for ready when user read.
 
-
-    }
-
-    @Override
-    public void onDestroy() {
-        adView.destroy();
-        super.onDestroy();
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        adView.resume();
         templateSource.open();
         List<TemplateData> formats = templateSource.list();
         SharedPreferences prefs = getSharedPreferences(PREFSFILE, 0);
@@ -167,6 +154,21 @@ public class MainActivity extends ListActivity implements
                 showPreferences();
             }
         });
+
+
+    }
+
+    @Override
+    public void onDestroy() {
+        adView.destroy();
+        super.onDestroy();
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        adView.resume();
 
 
     }
@@ -544,7 +546,7 @@ public class MainActivity extends ListActivity implements
             completed = 0;
             notificationHelper.createNotification();
 
-            dialog = ProgressDialog.show(MainActivity.this, "Loading", "Please Wait, \nProgress in Notification Bar. \n", true);
+            dialog = ProgressDialog.show(MainActivity.this, "doing my work...", "Please Wait, \nProgress in Notification Bar. \n", true);
             dialog.setCancelable(false); //no cancel dialog while installing
         }
 
@@ -568,7 +570,7 @@ public class MainActivity extends ListActivity implements
                 contentText = "Begin installing";
             }
             else if((completed>2)&(completed<100)){
-                contentText = "Installing App Number "+completed + ". May take long time.";
+                contentText = "Installing App Number "+(completed-2) + " of "+counter+".\n May take long time.\nIf no progress after some Minutes: Check if IP "+fireip+" is correct on your Fire TV. If it's wrong, just restart this app. Then open Settings and enter correct IP (see menu: help for more).\nWhen this window disappears everything is installed.";
             }
             else if(completed==100){
                 contentText = "Installing complete. Thank you!";
@@ -587,7 +589,9 @@ public class MainActivity extends ListActivity implements
             dialog.setProgress(100);
             dialog.dismiss();
             unlockScreenOrientation();
-
+            //fix for increasing number when more installations without app closing in between.
+            completed=0;
+            counter=0;
         }
 
         private void lockScreenOrientation() {

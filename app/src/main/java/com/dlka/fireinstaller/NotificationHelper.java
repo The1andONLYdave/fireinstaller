@@ -72,7 +72,7 @@ public class NotificationHelper {
             contentText = "Begin installing";
         }
         else if((percentageComplete>2)&(percentageComplete<100)){
-            contentText = "Installing App Number "+percentageComplete + ". May take long time.";
+            contentText = "Installing App Number "+(percentageComplete-2) + ". May take long time.";
         }
         else if(percentageComplete==100){
             contentText = "Installing complete. Thank you!";

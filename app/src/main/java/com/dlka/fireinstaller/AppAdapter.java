@@ -48,19 +48,10 @@ public class AppAdapter extends ArrayAdapter<SortablePackageInfo> {
         viewHolder.appPackage.setText(spi.packageName);
         new IconLoaderTask(getContext().getPackageManager(), viewHolder.appIcon).execute(spi.appInfo);
 
-        switch (layout) {
-            case R.layout.app_item: {
-                CheckBox sel = ((CheckBox) ret.findViewById(R.id.selected));
-                sel.setChecked(spi.selected);
-                sel.setOnClickListener(spi);
-                break;
-            }
-            case R.layout.app_item_annotation: {
-                viewHolder.tags.setVisibility(View.GONE);
-                viewHolder.comment.setVisibility(View.GONE);
+        CheckBox sel = ((CheckBox) ret.findViewById(R.id.selected));
+        sel.setChecked(spi.selected);
+        sel.setOnClickListener(spi);
 
-            }
-        }
         return ret;
     }
 
