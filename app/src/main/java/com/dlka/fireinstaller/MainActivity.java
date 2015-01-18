@@ -49,7 +49,7 @@ public class MainActivity extends ListActivity implements
     public static final String SELECTED = "selected";
     private static final String TEMPLATEID = "templateid";
     private static final String PROPERTY_ID = "App";
-    private static final String mailtag = "0.8";
+    private static final String mailtag = "0.8_fixed";
     public String fireip = "";
     HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
     private TemplateSource templateSource = new TemplateSource(this);
@@ -395,13 +395,13 @@ public class MainActivity extends ListActivity implements
     }
 
 
-    private class LongRunningTask extends AsyncTask <String, Integer, String>{
+    private class LongRunningTask extends AsyncTask <String, Integer, Void>{
 
         private ProgressDialog dialog = null;
 
         //TODO: disallow orientation change while running
             @Override
-            protected String doInBackground(String... params) {
+            protected Void doInBackground(String... params) {
 
                 Log.d("fireconnector","doInBackground starting");
                 //String fireip=params[0];
@@ -451,7 +451,7 @@ public class MainActivity extends ListActivity implements
                 //INSTALLING //maybe work
                 String dir = dirs.substring(3);
                 completed=1;
-                publishProgress();//connection established
+                publishProgress(1);//connection established
                 Log.e("fireconnector", "1");
 
                 //if(!dir.contains(":::")){return succeeded().add("the_result","cant split string");}
@@ -527,7 +527,7 @@ public class MainActivity extends ListActivity implements
                 completed = 100;
 
                 //lets call our onProgressUpdate() method which runs on the UI thread
-                publishProgress();
+                publishProgress(100);
                 Log.e("fireconnector", "100");
                 return null;
             }
@@ -544,19 +544,24 @@ public class MainActivity extends ListActivity implements
 //Create our notification via the helper class
             notificationHelper.createNotification();
 
-            dialog = ProgressDialog.show(MainActivity.this, "Loading", "Please Wait", true);
-            dialog.setCancelable(true);
+            dialog = ProgressDialog.show(MainActivity.this, "Loading", "Please Wait, \nProgress in Notification Bar. 3% = 1.App, 4% = 2.App ...", true);
+            dialog.setCancelable(false); //no cancel dialog while installing
         }
 
-        protected void onProgressUpdate(Void... v) {
+        protected void onProgressUpdate(Integer... v) {
 //lets format a string from the the 'completed' variable
 
+            Log.d("fireinstaller","completed "+completed+" v "+v);
             //TODO Switch-case(0 start, 1 connected, 2 prepared packages, 3 installing first app, 4 installing next app, 100 finished
                 notificationHelper.progressUpdate(completed);
+                dialog.setProgress(completed);
             }
         protected void onPostExecute(final Void result) {
 //this should be self explanatory
                 notificationHelper.completed();
+            dialog.setCancelable(false);
+            dialog.setProgress(100);
+            dialog.dismiss();
 
             }
         public void onCancel(DialogInterface theDialog) {

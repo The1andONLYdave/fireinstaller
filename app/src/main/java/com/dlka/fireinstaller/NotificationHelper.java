@@ -59,7 +59,7 @@ public class NotificationHelper {
      */
     public void progressUpdate(int percentageComplete) {
         //build up the new status message
-        CharSequence contentText = percentageComplete + "% complete";
+        CharSequence contentText = "Installing: "+percentageComplete + "% complete. May take long time.";
         //publish it to the status bar
         mNotification.setLatestEventInfo(mContext, mContentTitle, contentText, mContentIntent);
         mNotificationManager.notify(NOTIFICATION_ID, mNotification);
