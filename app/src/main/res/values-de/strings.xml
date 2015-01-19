@@ -40,30 +40,12 @@
         <item>\nListe erstellt mit [List My Apps](https://play.google.com/store/apps/details?id=com.dlka.showmyapps)</item>
     </string-array>
 
-    <string name="lbl_format_as">Kopieren/Teilen als:</string>
-    <string name="lbl_version">Version</string>
-    <string name="lbl_versioncode">Versionsnummer</string>
-    <string name="lbl_installed">Zuerst installiert</string>
-    <string name="lbl_updated">Zuletzt aktualisiert</string>
-    <string name="lbl_uid">Benutzerkennung</string>
-    <string name="lbl_datadir">Datenverzeichnis</string>
-    <string name="lbl_templates">Vorlagen definieren wie Listen formatiert werden. Es muss mindestens eine Vorlage vorhanden sein.</string>
-    <string name="lbl_template_editor">Eine Vorlage besteht aus dem Listeneintrag (App info), sowie einer optionalen Kopf- und Fußzeile. Alle Teile werden genauso wie dargestellt aneinander gefügt, wobei der Listeneintrag einmal pro App wiederholt wird (auf Zeilenumbrüche achten!). Die folgenden Variablen können im Listeneintrag verwendet werden: ${packagename}, ${displayname}, ${source}, ${comment}, ${uid}, ${version}, ${versioncode}, ${firstinstalled}, ${lastupdated}, ${datadir}, ${targetsdk}, ${tags} und ${marketid}. Die folgenden Variablen können im Kopf/Fuß verwendet werden: ${now} und ${count} </string>
-    <string name="lbl_annotations_description">Bemerkungen werden in Vorlagen als ${comment} referenziert und können selber andere Variablen enthalten (${packagename}, ${displayname}, ${source}, ${uid}, ${version}, ${versioncode}, ${firstinstalled}, ${lastupdated}, ${datadir}, ${targetsdk}, ${tags} und ${marketid}). Bemerkungen bleiben erhalten wenn die zugehörige App deinstalliert wird (für den Fall, dass sie später reinstalliert wird). Tags erlauben das Gruppieren von Apps.</string>
-    <string name="lbl_template_name">Vorlage:</string>
     <string name="apprater_title">App bewerten?</string>
     <string name="apprater_message">Hi,\nist diese App nützlich? Wenn ja, dann wäre eine Bewertung auf Google Play sehr willkommen. Jetzt eine Bewertung schreiben?</string>
     <string name="apprater_positive">Sicher!</string>
     <string name="apprater_negative">Nein, danke</string>
     <string name="apprater_neutral">Später</string>
     <string name="title_send_to">Teilen mit</string>
-    <string name="msg_error_no_templates">Whoops! Wo sind denn alle Vorlagen hin?!</string>
-    <string name="msg_error_incomplete">Name und Eintrag dürfen nicht leer sein!</string>
-    <string name="msg_warn_nothing_selected">Es muss mindestens eine App ausgewählt werden!</string>
-    <string name="msg_list_copied_to_clipboard">%1$d/%2$d Einträge in die Zwischenablage kopiert</string>
-    <string name="msg_too_large">Oops! Die Liste war zu groß um in den Puffer zu passen. Sie wurde stattdessen in die Zwischenablage kopiert.</string>
-    <string name="msg_name_does_not_support_variables">Name unterstützt keine Variablen</string>
-    <string name="msg_this_cannot_be_undone">Dies kann nicht rückgängig gemacht werden.</string>
     <string name="btn_save">Speichern</string>
     <string name="btn_cancel">Abbrechen</string>
     <string name="donate">Spenden!</string>
@@ -72,6 +54,28 @@
     <string name="about_text">Entwickelt von Kulsch-iT.de</string>
     <string name="action_settings">Einstellungen</string>
     <string name="add">Hinzufügen</string>
-    <string name="always_link">1.) Gebe in den Einstellungen die Fire TV IP Adresse ein. \n2.) Wähle Apps von der Liste unten \n3.) Drücke den \"->FireTV\" Button \n4.) Warte (minimieren via Homebutton)\n5.) Spende, wenn du willst!</string>
+    <string name="always_link">Wichtig: Starte deinen Fire TV und gehe mit diesem Gerät in das gleiche Wlan\n1.) Gebe in den Einstellungen die Fire TV IP Adresse ein. \n2.) Wähle Apps von der Liste unten \n3.) Drücke den \"->FireTV\" Button \n4.) Warte (minimieren via Homebutton)\n5.) Spende, wenn du willst!</string>
+    <string name="content_title">Fireinstaller läuft</string>
+    <string name="download_ticker">Sende an FireTV</string>
+    <string name="msg_no_webbrowser">Kein Webbrowser installiert!</string>
+    <string name="msg_warn_nothing_selected">Wähle die Apps zum installieren!</string>
+    <string name="pref_default_ip_fire">192.0.0.0</string>
+    <string name="pref_description_ad_support">Spende zum entfernen der Webung. Oder kauf die Premium Version bei Google Play.</string>
+    <string name="pref_description_ad_support">S</string>
+    <string name="pref_description_ad_support">S</string>
+    <string name="pref_description_analytics_google">Nur für Entwickler. Unterstütze die App besser zu machen und bei Fehlern.</string>
+    <string name="pref_description_ip_fire">IP v4 Adresse, jede Nummer (0-254) mit Punkten. Beispiel: 192.168.0.1 oder 192.168.001.003</string>
+    <string name="pref_header_donations">Entwickleraccount erforderlich</string>
+    <string name="pref_header_general">Generell</string>
+    <string name="pref_header_notifications">Statusbar Benachrichtigung</string>
+    <string name="pref_title_ad_support">Werbung aktivieren</string>
+    <string name="pref_title_analytics_google">Aktiviere Release Modus</string>
+    <string name="pref_title_install_method">Verbindungs und Installationsmethode (noch nicht implementiert)</string>
+    <string name="pref_title_ip_fire">Deine Fire TV IP Adresse (Wie: 192.1.3.4)</string>
+    <string name="pref_title_statusbar_notification">Statusbar Benachrichtigung</string>
+    <string name="save">Speichern</string>
+    <string name="title_activity_settings">Einstellungen</string>
+    <string name="title_select_apps_by_tag">Wähle apps mit Tags</string>
+    <string name="title_activity_debug">DebugActivity</string>
 
 </resources>

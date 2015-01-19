@@ -328,7 +328,7 @@ public class MainActivity extends ListActivity implements
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View v, int pos, long id) {
-        template = (TemplateData) parent.getAdapter().getItem(pos);
+        //template = (TemplateData) parent.getAdapter().getItem(pos);
     }
 
     @Override
