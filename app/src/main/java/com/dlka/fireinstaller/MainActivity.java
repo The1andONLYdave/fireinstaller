@@ -55,13 +55,11 @@ public class MainActivity extends ListActivity implements
     public String fireip = "";
     HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
     private TemplateSource templateSource = new TemplateSource(this);
-    private TemplateData template;
     private AdView adView;
     int completed = 0; // this is the value for the notification percentage
     NotificationHelper notificationHelper= new NotificationHelper(this);
     int counter = 0;
     String dirs="";
-
 
     public static String noNull(String input) {
         if (input == null) {
@@ -84,9 +82,7 @@ public class MainActivity extends ListActivity implements
                 TrackerName.APP_TRACKER));
 
         t.setScreenName("MainView");
-
         t.send(new HitBuilders.AppViewBuilder().build());
-
 
         GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
         Tracker t1 = analytics.newTracker(R.xml.global_tracker);
@@ -130,13 +126,7 @@ public class MainActivity extends ListActivity implements
         List<TemplateData> formats = templateSource.list();
         SharedPreferences prefs = getSharedPreferences(PREFSFILE, 0);
         Iterator<TemplateData> it = formats.iterator();
-        while (it.hasNext()) {
-            template = it.next();
-            if (template.id == prefs.getLong(TEMPLATEID, 0)) {
-                break;
-            }
-            template = null;
-        }
+       
         setListAdapter(new AppAdapter(this, R.layout.app_item,
                 new ArrayList<SortablePackageInfo>(), R.layout.app_item));
         new ListTask(this, R.layout.app_item).execute("");
@@ -154,8 +144,6 @@ public class MainActivity extends ListActivity implements
                 showPreferences();
             }
         });
-
-
     }
 
     @Override
@@ -169,8 +157,6 @@ public class MainActivity extends ListActivity implements
     protected void onResume() {
         super.onResume();
         adView.resume();
-
-
     }
 
 
@@ -179,9 +165,9 @@ public class MainActivity extends ListActivity implements
         adView.pause();
         super.onPause();
         SharedPreferences.Editor editor = getSharedPreferences(PREFSFILE, 0).edit();
-        if (template != null) {
-            editor.putLong(TEMPLATEID, template.id);
-        }
+       // if (template != null) {
+         //   editor.putLong(TEMPLATEID, template.id);
+     //   }
         ListAdapter adapter = getListAdapter();
         int count = adapter.getCount();
         for (int i = 0; i < count; i++) {
@@ -276,7 +262,6 @@ public class MainActivity extends ListActivity implements
         MainActivity.this.startActivity(myIntent);
     }
 
-    @SuppressWarnings("unchecked")
     private void copyMenuSelect() {
         if (!isNothingSelected()) {
             Map<String, ?> preferences = PreferenceManager.getDefaultSharedPreferences(this).getAll();
