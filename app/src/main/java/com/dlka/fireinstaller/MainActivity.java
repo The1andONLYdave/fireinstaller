@@ -47,7 +47,7 @@ import java.util.Map;
 public class MainActivity extends ListActivity implements
         OnItemSelectedListener, OnItemClickListener, OnItemLongClickListener {
 
-    public static final String PREFSFILE = "settings";
+    public static final String PREFSFILE = "settings2";
     public static final String SELECTED = "selected";
     private static final String TEMPLATEID = "templateid";
     private static final String PROPERTY_ID = "App";
@@ -73,11 +73,27 @@ public class MainActivity extends ListActivity implements
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         super.onCreate(b);
-        requestWindowFeature(Window.FEATURE_PROGRESS);
         setContentView(R.layout.activity_main);
+
+        final Dialog dialog;
+        dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog);
+        dialog.setTitle("Hello");
+
+        Button button = (Button) dialog.findViewById(R.id.Button01);
+        button.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+
+        requestWindowFeature(Window.FEATURE_PROGRESS);
         ListView listView = getListView();
         listView.setOnItemClickListener(this);
-        listView.setOnItemLongClickListener(this);
+
         Tracker t = (getTracker(
                 TrackerName.APP_TRACKER));
 
@@ -106,20 +122,7 @@ public class MainActivity extends ListActivity implements
 
         adView.loadAd(adRequest);
 
-        final Dialog dialog;
-        dialog = new Dialog(this);
-        dialog.setContentView(R.layout.dialog);
-        dialog.setTitle("Hello");
 
-        Button button = (Button) dialog.findViewById(R.id.Button01);
-        button.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-
-        dialog.show();
         //while showing helpdialog we build list in background for ready when user read.
 
         templateSource.open();
@@ -165,9 +168,7 @@ public class MainActivity extends ListActivity implements
         adView.pause();
         super.onPause();
         SharedPreferences.Editor editor = getSharedPreferences(PREFSFILE, 0).edit();
-       // if (template != null) {
-         //   editor.putLong(TEMPLATEID, template.id);
-     //   }
+
         ListAdapter adapter = getListAdapter();
         int count = adapter.getCount();
         for (int i = 0; i < count; i++) {

@@ -31,8 +31,8 @@ public class Schema extends SQLiteOpenHelper {
     public static final String COLUMN_SELECTED = "selected";
     public static final String COLUMN_SLOTID = "slotid";
 
-    private static final String DATABASE_NAME = "lma.db";
-    private static final int DATABASE_VERSION = 2;
+    private static final String DATABASE_NAME = "fire.db";
+    private static final int DATABASE_VERSION = 3;
 
     private Context context;
 
@@ -48,14 +48,8 @@ public class Schema extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        switch (oldVersion + 1) {
-            case 1: {
-                v1(db);
-            }
-            case 2: {
-                v2(db);
-            }
-        }
+        v1(db);
+        v2(db);
     }
 
     private void v1(SQLiteDatabase database) {
