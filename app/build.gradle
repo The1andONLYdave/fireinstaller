@@ -4,16 +4,24 @@ android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
 
-    defaultConfig {
-        applicationId "com.dlka.fireinstaller"
-        minSdkVersion 10
-        targetSdkVersion 21
-    }
-
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+    productFlavors {
+        vanilla {
+            applicationId "com.dlka.fireinstaller"
+            minSdkVersion 10
+            targetSdkVersion 21
+            versionName 'free'
+        }
+        donateVersion {
+            minSdkVersion 10
+            applicationId 'com.dlka.fireinstaller2'
+            targetSdkVersion 21
+            versionName 'pro'
         }
     }
 }

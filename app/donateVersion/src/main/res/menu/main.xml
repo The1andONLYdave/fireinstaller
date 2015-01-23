@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/copy"
+        android:icon="@drawable/ic_menu_upload"
+        android:showAsAction="never|withText"
+        android:title="@string/copy"></item>
+    <item
+        android:id="@+id/deselect_all"
+        android:icon="@drawable/ic_action_deselect_all"
+        android:title="@string/deselect_all"></item>
+    <item
+        android:id="@id/item_help"
+        android:icon="@drawable/ic_action_help"
+        android:title="@string/help"></item>
+    <item
+        android:id="@+id/item_mail"
+        android:title="@string/mail"></item>
+    <item
+        android:id="@+id/item_settings"
+        android:icon="@drawable/ic_action_help"
+        android:title="@string/settings"></item>
+</menu>
