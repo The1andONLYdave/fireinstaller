@@ -15,7 +15,7 @@ android {
             applicationId "com.dlka.fireinstaller"
             minSdkVersion 10
             targetSdkVersion 21
-            versionName 'free'
+            versionName '0.8.8.7 free'
         }
         donateVersion {
             minSdkVersion 10
