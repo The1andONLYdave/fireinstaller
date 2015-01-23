@@ -71,24 +71,10 @@ public class MainActivity extends ListActivity implements
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         super.onCreate(b);
+        requestWindowFeature(Window.FEATURE_PROGRESS);
         setContentView(R.layout.activity_main);
 
-        final Dialog dialog;
-        dialog = new Dialog(this);
-        dialog.setContentView(R.layout.dialog);
-        dialog.setTitle("Hello");
 
-        Button button = (Button) dialog.findViewById(R.id.Button01);
-        button.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-
-        dialog.show();
-
-        requestWindowFeature(Window.FEATURE_PROGRESS);
         ListView listView = getListView();
         listView.setOnItemClickListener(this);
 
@@ -102,7 +88,9 @@ public class MainActivity extends ListActivity implements
         Tracker t1 = analytics.newTracker(R.xml.global_tracker);
         t1.send(new HitBuilders.AppViewBuilder().build());
 
-        // Create the adView.
+        if(!BuildConfig.IS_PRO_VERSION) {
+
+            // Create the adView.
         adView = new AdView(this);
         adView.setAdUnitId("ca-app-pub-8761501900041217/6245885681");
         adView.setAdSize(AdSize.BANNER);
@@ -118,7 +106,9 @@ public class MainActivity extends ListActivity implements
                 .addTestDevice("4DA61F48D168C897127AACD506BF35DF")  //current Note
                 .build();
 
-        adView.loadAd(adRequest);
+            adView.loadAd(adRequest);
+        }
+
 
 
         //while showing helpdialog we build list in background for ready when user read.
@@ -141,11 +131,29 @@ public class MainActivity extends ListActivity implements
                 showPreferences();
             }
         });
+
+        final Dialog dialog;
+        dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog);
+        dialog.setTitle("Hello");
+
+        Button button = (Button) dialog.findViewById(R.id.Button01);
+        button.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+
     }
 
     @Override
     public void onDestroy() {
-        adView.destroy();
+        if(!BuildConfig.IS_PRO_VERSION) {
+            adView.destroy();
+        }
         super.onDestroy();
     }
 
@@ -153,13 +161,17 @@ public class MainActivity extends ListActivity implements
     @Override
     protected void onResume() {
         super.onResume();
-        adView.resume();
+        if(!BuildConfig.IS_PRO_VERSION) {
+            adView.resume();
+        }
     }
 
 
     @Override
     public void onPause() {
-        adView.pause();
+        if(!BuildConfig.IS_PRO_VERSION) {
+            adView.pause();
+        }
         super.onPause();
         SharedPreferences.Editor editor = getSharedPreferences(PREFSFILE, 0).edit();
 
@@ -230,11 +242,11 @@ public class MainActivity extends ListActivity implements
                 startActivity(Intent.createChooser(new Intent(Intent.ACTION_SENDTO, Uri.parse(uriString)), "Contact Developer"));
                 break;
             }
-            case (R.id.item_donate): {
-                //TODO open donate-link or even in-app purchase
-                Toast.makeText(this, "Isn't implemented yet. But you can buy donate-version @ google play. Or wait for in-app option with chooseable amount.", Toast.LENGTH_LONG).show();
-                break;
-            }
+          //  case (R.id.item_donate): {
+          //      //TODO open donate-link or even in-app purchase
+          //      Toast.makeText(this, "Isn't implemented yet. But you can buy donate-version @ google play. Or wait for in-app option with chooseable amount.", Toast.LENGTH_LONG).show();
+          //      break;
+            // }
             case (R.id.item_settings): {
                 showPreferences();
                 break;
