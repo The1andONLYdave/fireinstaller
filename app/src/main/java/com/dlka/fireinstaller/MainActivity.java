@@ -49,17 +49,15 @@ public class MainActivity extends ListActivity implements
 
     public static final String PREFSFILE = "settings2";
     public static final String SELECTED = "selected";
-    private static final String TEMPLATEID = "templateid";
     private static final String PROPERTY_ID = "App";
     private static final String mailtag = "0.8_fixed";
     public String fireip = "";
-    HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
-    private TemplateSource templateSource = new TemplateSource(this);
     private AdView adView;
     int completed = 0; // this is the value for the notification percentage
     NotificationHelper notificationHelper= new NotificationHelper(this);
     int counter = 0;
     String dirs="";
+    HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
 
     public static String noNull(String input) {
         if (input == null) {
@@ -125,11 +123,7 @@ public class MainActivity extends ListActivity implements
 
         //while showing helpdialog we build list in background for ready when user read.
 
-        templateSource.open();
-        List<TemplateData> formats = templateSource.list();
-        SharedPreferences prefs = getSharedPreferences(PREFSFILE, 0);
-        Iterator<TemplateData> it = formats.iterator();
-       
+
         setListAdapter(new AppAdapter(this, R.layout.app_item,
                 new ArrayList<SortablePackageInfo>(), R.layout.app_item));
         new ListTask(this, R.layout.app_item).execute("");

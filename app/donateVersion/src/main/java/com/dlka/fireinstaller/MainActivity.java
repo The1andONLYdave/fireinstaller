@@ -29,9 +29,6 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -49,17 +46,14 @@ public class MainActivity extends ListActivity implements
 
     public static final String PREFSFILE = "settings2";
     public static final String SELECTED = "selected";
-    private static final String TEMPLATEID = "templateid";
     private static final String PROPERTY_ID = "App";
     private static final String mailtag = "0.8_fixed";
     public String fireip = "";
-    HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
-    private TemplateSource templateSource = new TemplateSource(this);
-    private AdView adView;
     int completed = 0; // this is the value for the notification percentage
     NotificationHelper notificationHelper= new NotificationHelper(this);
     int counter = 0;
     String dirs="";
+    HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
 
     public static String noNull(String input) {
         if (input == null) {
@@ -104,23 +98,9 @@ public class MainActivity extends ListActivity implements
         Tracker t1 = analytics.newTracker(R.xml.global_tracker);
         t1.send(new HitBuilders.AppViewBuilder().build());
 
-        // Create the adView.
-        adView = new AdView(this);
-        adView.setAdUnitId("ca-app-pub-8761501900041217/6245885681");
-        adView.setAdSize(AdSize.BANNER);
 
         LinearLayout layout = (LinearLayout) findViewById(R.id.bannerLayout);
 
-        layout.addView(adView);
-
-        AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .addTestDevice("89CADD0B4B609A30ABDCB7ED4E90A8DE")
-                .addTestDevice("CCCBB7E354C2E6E64DB5A399A77298ED")  //current Nexus 4
-                .addTestDevice("4DA61F48D168C897127AACD506BF35DF")  //current Note
-                .build();
-
-        adView.loadAd(adRequest);
 
 
         //while showing helpdialog we build list in background for ready when user read.
@@ -149,23 +129,10 @@ public class MainActivity extends ListActivity implements
         });
     }
 
-    @Override
-    public void onDestroy() {
-        adView.destroy();
-        super.onDestroy();
-    }
-
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        adView.resume();
-    }
 
 
     @Override
     public void onPause() {
-        adView.pause();
         super.onPause();
         SharedPreferences.Editor editor = getSharedPreferences(PREFSFILE, 0).edit();
 
