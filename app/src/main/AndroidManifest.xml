@@ -43,7 +43,7 @@
             android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.dlka.fireinstaller.MainActivity" />
+                android:value=".MainActivity" />
         </activity>
         <activity
             android:name=".DebugActivity"
@@ -51,7 +51,7 @@
             android:parentActivityName=".MainActivity" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.dlka.fireinstaller.MainActivity" />
+                android:value=".MainActivity" />
         </activity>
     </application>
 
