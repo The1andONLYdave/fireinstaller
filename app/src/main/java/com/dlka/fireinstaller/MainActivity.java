@@ -71,7 +71,7 @@ public class MainActivity extends ListActivity implements
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         super.onCreate(b);
-        requestWindowFeature(Window.FEATURE_PROGRESS);
+       // requestWindowFeature(Window.FEATURE_PROGRESS);
         setContentView(R.layout.activity_main);
 
 
@@ -86,7 +86,6 @@ public class MainActivity extends ListActivity implements
 
         GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
         Tracker t1 = analytics.newTracker(R.xml.global_tracker);
-        t1.send(new HitBuilders.AppViewBuilder().build());
 
         if(!BuildConfig.IS_PRO_VERSION) {
 
@@ -131,6 +130,8 @@ public class MainActivity extends ListActivity implements
                 showPreferences();
             }
         });
+
+        t1.send(new HitBuilders.AppViewBuilder().build());
 
         final Dialog dialog;
         dialog = new Dialog(this);
