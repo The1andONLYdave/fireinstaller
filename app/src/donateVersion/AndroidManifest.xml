@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:versionCode="${applicationCode}" tools:node="replace">
+
+<uses-sdk
+        android:minSdkVersion="10"
+        android:targetSdkVersion="21" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <application tools:replace="android:label"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="Fireinstaller Donate"
+        android:theme="@style/AppTheme" >
+        <activity tools:replace="android:name,android:label"
+            android:name="com.dlka.fireinstaller.MainActivity"
+            android:label="Fireinstaller Donate">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.google.android.gms.ads.AdActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
+            android:theme="@android:style/Theme.Translucent" />
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.gms.analytics.globalConfigResource"
+            android:resource="@xml/global_tracker" />
+
+        <activity tools:replace="android:parentActivityName"
+            android:name="com.dlka.fireinstaller.SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName="com.dlka.fireinstaller.MainActivity" >
+            <meta-data tools:replace="android:value"
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.dlka.fireinstaller.MainActivity" />
+        </activity>
+    </application>
+
+</manifest>

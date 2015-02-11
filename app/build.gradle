@@ -4,20 +4,40 @@ android {
     compileSdkVersion 21
     buildToolsVersion "21.1.2"
 
-    defaultConfig {
-        applicationId "com.dlka.fireinstaller"
-        minSdkVersion 10
-        targetSdkVersion 21
-    }
-
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
+    productFlavors {
+        vanilla {
+            applicationId "com.dlka.fireinstaller"
+            minSdkVersion 10
+            targetSdkVersion 21
+            versionName '0.8.13 free'
+            manifestPlaceholders = [ applicationName:"Fireinstaller" ]
+            manifestPlaceholders = [ applicationCode:"36" ]
+            buildConfigField "boolean", "IS_PRO_VERSION", "false"
+        }
+        donateVersion {
+            minSdkVersion 10
+            applicationId 'com.dlka.fireinstaller2'
+            targetSdkVersion 21
+            versionName '0.8.13 pro'
+            manifestPlaceholders = [ applicationName:"Fireinstaller Donate" ]
+            manifestPlaceholders = [ applicationCode:"36" ]
+            buildConfigField "boolean", "IS_PRO_VERSION", "true"
+
+
+        }
+    }
 }
 
 dependencies {
-    compile 'com.google.android.gms:play-services:+'
+    compile 'com.google.android.gms:play-services:6.5.87'
+    compile 'com.android.support:support-v4:21.0.3'
+    //compile project(':groundylibrary')
+    //compile 'com.telly:groundy:1.5'
+    //provided 'com.telly:groundy-compiler:1.5'
 }

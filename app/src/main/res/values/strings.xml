@@ -1,120 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-	<string name="app_name">Fire Installer</string>
-	<string name="deselect_all">Deselect all</string>
-	<string name="share">Share</string>
-	<string name="add">Add</string>
-	<string name="remove">Remove</string>
-	<string name="save">Save</string>
-	<string name="help">Help</string>
-	<string name="mail">Send Developer Email</string>
-	<string name="edit_templates">Template Editor</string>
-	<string name="annotations">Annotations</string>
-	<string name="copy">Push at FireTV</string>
-<string name="download_ticker">Pushing to FireTV</string>
-<string name="content_title">Fireinstaller running</string>
-	
-	<string-array name="templatebodyvars">
-		<item>${comment}</item>
-		<item>${datadir}</item>
-		<item>${displayname}</item>
-		<item>${firstinstalled}</item>
-		<item>${lastupdated}</item>
-		<item>${marketid}</item>
-		<item>${packagename}</item>
-		<item>${source}</item>
-		<item>${tags}</item>
-		<item>${targetsdk}</item>
-		<item>${uid}</item>
-		<item>${versioncode}</item>
-		<item>${version}</item>
-	</string-array>
-	<string-array name="templateheaderfootervars">
-		<item>${count}</item>
-		<item>${now}</item>
-	</string-array>
-	
-	<string-array name="stdformattitles">
-		<item>Plain Text</item>
-		<item>HTML List</item>
-		<item>BBCode List</item>
-		<item>Markdown List</item>
-		<item>Market URL</item>
-	</string-array>
-	<string-array name="stdheaders">
-		<item></item>
-		<item>&lt;ul&gt;\n</item>
-		<item>[list]\n</item>
-		<item>\n</item>
-		<item></item>
-	</string-array>
-	<string-array name="stdformats">
-		<item>${displayname}\n\t${packagename}\n</item>
-		<item>\u003cli\u003e \u003ca href=\"${source}\"\u003e${displayname}\u003c/a\u003e ${comment}\n</item>
-		<item>[*] [url=${source}]${displayname}[/url] ${comment}\n</item>
-		<item>* [${displayname}](${source}) ${comment}\n</item>
-		<item>market://details?id=${packagename}\n</item>
-	</string-array>
-	<string-array name="stdfooters">
-		<item></item>
-		<item>&lt;/ul&gt;\nList made using &lt;a href="https://play.google.com/store/apps/details?id=com.dlka.showmyapps"&gt;List My Apps&lt;/a&gt;</item>
-		<item>[/list]\nList made using [url=https://play.google.com/store/apps/details?id=com.dlka.showmyapps]List My Apps[/url]</item>
-		<item>\nList made using [List My Apps](https://play.google.com/store/apps/details?id=com.dlka.showmyapps)</item>
-		<item>\n</item>
-	</string-array>
-
-	<string name="Guide">"Quick Guide:\n\nStep 1 – Enable ADB Debugging\nIn order for the Fire TV to accept sideloaded apps, you must enable ADB Debugging. You may turn it back off once you’re done sideloading apps.\nFrom the home screen, scroll down to “Settings”\nScroll right to “SYSTEM”\nScroll down to “Developer Options”\nChange “ADB debugging” to “ON”\nChange ”Unknown Sources” to ”ON”\n\nStep 2 – Obtain your Fire TV’s IP Address\nFrom the home screen, scroll down to “Settings”\nScroll right to “SYSTEM”\nSelect “About”\nScroll down to “Network”\nWrite down the numbers next to “IP Address”\n\nBeta Version with a known bug: if you write wrong ip adress (xxx.xxx.xxx.xxx, no spaces, input with “.”) app will hang, also sometimes after transfering all apps too. if all apps installed on your firetv you may safely force-close the app from your phone's settings menu. will be fixed in next releases.\n Last but not least: thanks for trying/using our app. We are happy for emails and market comments. Thank you!"</string>
-	<string name="GuideOk">Ok</string>
-	
-	<string name="always_link">1.)Input FireTV IP Adress and press \"IP Ok\" 2.)Select Apps 3.)Press \"->FireTV\" 4.)Wait (you can minimize app with home button)</string>
-	<string name="lbl_format_as">Copy/Share as:</string>
-	<string name="lbl_version">Version</string>
-	<string name="lbl_versioncode">Version code</string>
-	<string name="lbl_installed">First installed</string>
-	<string name="lbl_updated">Last updated</string>
-	<string name="lbl_uid">User ID</string>
-	<string name="lbl_datadir">Data directory</string>
-	<string name="lbl_templates">Templates define how lists will be formated. You can create as many as you like, but you must have at least one.</string>
-	<string name="lbl_template_editor">A template consists of the list item (to be filled with app info), as well as an optional header and footer. All parts will be concatenated \"as-is\", with the item being repeated once per app. Supply newlines as needed. Header, item and footer may contain variables.</string>
-	<string name="lbl_template_name">Template Name:</string>
-	<string name="apprater_title">Rate this app?</string>
-	<string name="apprater_message">Hi,\nseems like you find this app useful. Would you consider rating it? This will only take a minute of your time, but encourages further development.</string>
-	<string name="apprater_positive">Sure!</string>
-	<string name="apprater_negative">No thanks</string>
-	<string name="apprater_neutral">Later</string>
-	<string name="title_activity_templates">Templates</string>
-	<string name="title_activity_annotations">Annotations</string>
-	<string name="title_activity_template_editor">Template Editor</string>
-	<string name="title_send_to">Share with</string>
-	<string name="title_really_delete">Really delete?</string>
-	<string name="title_variable_to_insert">Variable to insert</string>
-	<string name="hint_header">List header, may be blank</string>
-	<string name="hint_item">Item format, may not be blank</string>
-	<string name="hint_footer">List footer, may be blank</string>
-	<string name="hint_my_notes">My notes</string>
-	<string name="msg_error_no_templates">Yikes! How did you manage to delete all your templates?!</string>
-	<string name="msg_error_incomplete">Name and item are required!</string>
-	<string name="msg_warn_nothing_selected">Select the apps you want to list!</string>
-	<string name="msg_too_large">Whoops! Your list was too large for sharing. Copied to clipboard instead.</string>
-	<string name="msg_list_copied_to_clipboard">%1$d/%2$d items copied to clipboard</string>
-	<string name="msg_name_does_not_support_variables">Name does not support variables</string>
-	<string name="msg_this_cannot_be_undone">This cannot be undone</string>
-	<string name="lbl_annotations_description">Annotations can be referenced in templates as ${comment} and may themselves contain other variables (${packagename}, ${displayname}, ${source}, ${uid}, ${version}, ${versioncode}, ${firstinstalled}, ${lastupdated}, ${datadir}, $targetsdk}, ${tags} and ${marketid}). Annotations are kept when their app is deinstalled in case it gets reinstalled later. Tags allow for grouping apps for faster selection.</string>
-	<string name="btn_save">Save</string>
-	<string name="btn_cancel">Cancel</string>
-	<string name="hint_my_tags">Tags (comma separated)</string>
-	<string name="bytag">Select by tag</string>
-	<string name="title_select_apps_by_tag">Select apps with tag</string>
-	<string name="msg_no_apps_tagged">No apps tagged! Apps can be tagged via the \'Annotations\' screen.</string>
-	<string name="msg_no_webbrowser">No webbrowser installed!</string>
-	<string name="url_help">http://show-my-apps.de/faq/</string>
-	<string name="browse">browse</string>
-	<string name="url_browse">http://www.onyxbits.de/listmyapps/browse?suggest=%1$s</string>
-
-
-
-			<string name="donate">Donate!</string>
-			<string name="settings">Goto Settings</string>
-	
+    <string name="app_name">Fire Installer</string>
+    <string name="deselect_all">Deselect all</string>
+    <string name="share">Sharing</string>
+    <string name="help">Help</string>
+    <string name="mail">Send Developer Email</string>
+    <string name="copy">Push at FireTV</string>
+    <string name="Guide">"Quick Guide:\n\nStep 1 – Enable ADB Debugging\nIn order for the Fire TV to accept sideloaded apps, you must enable ADB Debugging. You may turn it back off once you’re done sideloading apps.\nFrom the home screen, scroll down to “Settings”\nScroll right to “SYSTEM”\nScroll down to “Developer Options”\nChange “ADB debugging” to “ON”\nChange ”Unknown Sources” to ”ON”\n\nStep 2 – Obtain your Fire TV’s IP Address\nFrom the home screen, scroll down to “Settings”\nScroll right to “SYSTEM”\nSelect “About”\nScroll down to “Network”\nWrite down the numbers next to “IP Address”\n\nBeta Version with a known bug: if you write wrong ip adress (xxx.xxx.xxx.xxx, no spaces, input with “.”) app will hang, also sometimes after transfering all apps too. if all apps installed on your firetv you may safely force-close the app from your phone's settings menu. will be fixed in next releases.\n Last but not least: thanks for trying/using our app. We are happy for emails and market comments. Thank you! - Progress Information for the Notificationsystem: 0 start, 1 connected, 2 prepared packages, 3 installing first app, 4 installing next app,..., 100 finished"</string>
+    <string name="GuideOk">Ok</string>
+    <string name="apprater_title">Rate this app?</string>
+    <string name="apprater_message">Hi,\nis this App usefull? Then it would be amazing if you could write a comment on Google Play. Wanna open Google Play Entry?</string>
+    <string name="apprater_positive">Shure!</string>
+    <string name="apprater_negative">No, thanks</string>
+    <string name="apprater_neutral">Later</string>
+    <string name="title_send_to">Share with</string>
+    <string name="btn_save">Save</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="donate">Donate!</string>
+    <string name="settings">Preferences</string>
+    <string name="about_sum">Licensed as Open-Source</string>
+    <string name="about_text">Developed by Kulsch-iT.de</string>
+    <string name="action_settings">Settings</string>
+    <string name="add">Add</string>
+    <string name="always_link">Attention: Start your Fire TV and use same Wifi with this device\n1.) Input FireTV IP Address in Settings. \n2.) Select Apps from List below \n3.) Press \"->FireTV\" Button \n4.) Wait (minimize with home button)\n5.) Donate, if you want!</string>
+    <string name="content_title">Fireinstaller running</string>
+    <string name="download_ticker">Pushing to FireTV</string>
+    <string name="msg_no_webbrowser">No webbrowser installed!</string>
+    <string name="msg_warn_nothing_selected">Select the apps you want to push!</string>
+    <string name="pref_default_ip_fire">192.0.0.0</string>
+    <string name="pref_description_ad_support">Donate or buy DonateVersion at Google Play to disable Ads.</string>
+    <string name="pref_description_analytics_google">Developersettings. Support us with fixing bugs and making this app better..</string>
+    <string name="pref_description_ip_fire">IP v4 Address, separate each number (0-254) with dots. Example: 192.168.0.1 oder 192.168.001.003</string>
+    <string name="pref_header_donations">Developeraccount necessary</string>
+    <string name="pref_header_general">Generell</string>
+    <string name="pref_header_notifications">Statusbar Notification</string>
+    <string name="pref_title_ad_support">Ads deactivate</string>
+    <string name="pref_title_analytics_google">Activate Release Mode</string>
+    <string name="pref_title_install_method">Connect- and Installationmethod (noch nicht implementiert)</string>
+    <string name="pref_title_ip_fire">Your FireTV IP Address (Like: 192.1.3.4)</string>
+    <string name="pref_title_statusbar_notification">Statusbar Notification</string>
+    <string name="save">Save</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="title_select_apps_by_tag">Select apps with tag</string>
+    <string name="title_activity_debug">DebugActivity</string>
+    <string-array name="pref_example_install_method">
+        <item>Default (connect on installation)</item>
+        <item>Single mode (connect before app)</item>
+        <item>SU (need Superuser and rooted device, more stable)</item>
+    </string-array>
+    <string-array name="pref_example_install_number">
+        <item>-1</item>
+        <item>0</item>
+        <item>1</item>
+    </string-array>
 </resources>

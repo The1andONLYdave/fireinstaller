@@ -1,36 +1,29 @@
 package com.dlka.fireinstaller;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-
 import android.app.Dialog;
 import android.app.ListActivity;
-import android.content.ActivityNotFoundException;
-import android.content.Context;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -43,478 +36,576 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 public class MainActivity extends ListActivity implements
-		OnItemSelectedListener, OnItemClickListener, OnItemLongClickListener {
+        OnItemSelectedListener, OnItemClickListener, OnItemLongClickListener {
 
-	private TemplateSource templateSource;
-	private TemplateData template;
-
-	public static final String PREFSFILE = "settings";
-	private static final String ALWAYS_GOOGLE_PLAY = "always_link_to_google_play";
-	private static final String TEMPLATEID = "templateid";
-	public static final String SELECTED = "selected";
-	private static final String APP_TAG = "com.dlka.fireinstaller";
-	private static final String PROPERTY_ID = "App";
-	private static final String TAG = "fireinstaller";
-    public enum TrackerName {
-        APP_TRACKER, // Tracker used only in this app.
-        GLOBAL_TRACKER, // Tracker used by all the apps from a company. eg: roll-up tracking.
-        ECOMMERCE_TRACKER, // Tracker used by all ecommerce transactions from a company.
-      }
+    public static final String PREFSFILE = "settings2";
+    public static final String SELECTED = "selected";
+    private static final String PROPERTY_ID = "App";
+    private static final String mailtag = "0.8_fixed";
+    public String fireip = "";
     private AdView adView;
+    int completed = 0; // this is the value for the notification percentage
+    NotificationHelper notificationHelper= new NotificationHelper(this);
+    int counter = 0;
+    String dirs="";
+    HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
 
-	public String fireip="";    
-	
-	private final String mailtag="0.7";
-	
-	public int count=1;
+    public static String noNull(String input) {
+        if (input == null) {
+            return "";
+        }
+        return input;
+    }
 
-	// the helper object
-	//IabHelper mHelper;
-	
-      HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
-      
+    @Override
+    protected void onCreate(Bundle b) {
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+        super.onCreate(b);
+       // requestWindowFeature(Window.FEATURE_PROGRESS);
+        setContentView(R.layout.activity_main);
 
-	@Override
-	protected void onCreate(Bundle b) {
-		  StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-	        StrictMode.setThreadPolicy(policy);
-		super.onCreate(b);
-		requestWindowFeature(Window.FEATURE_PROGRESS);
-		setContentView(R.layout.activity_main);
-		ListView listView = getListView();
-		listView.setOnItemClickListener(this);
-		listView.setOnItemLongClickListener(this);
-	  Tracker t = (getTracker(
-            TrackerName.APP_TRACKER));
+
+        ListView listView = getListView();
+        listView.setOnItemClickListener(this);
+
+        Tracker t = (getTracker(
+                TrackerName.APP_TRACKER));
 
         t.setScreenName("MainView");
-
         t.send(new HitBuilders.AppViewBuilder().build());
-        
-        
+
         GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
         Tracker t1 = analytics.newTracker(R.xml.global_tracker);
-        t1.send(new HitBuilders.AppViewBuilder().build());
-        
-        // Create the adView.
+
+        if(!BuildConfig.IS_PRO_VERSION) {
+
+            // Create the adView.
         adView = new AdView(this);
         adView.setAdUnitId("ca-app-pub-8761501900041217/6245885681");
         adView.setAdSize(AdSize.BANNER);
 
-        LinearLayout layout = (LinearLayout)findViewById(R.id.bannerLayout);
+        LinearLayout layout = (LinearLayout) findViewById(R.id.bannerLayout);
 
         layout.addView(adView);
 
         AdRequest adRequest = new AdRequest.Builder()
-        .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)       
-        .addTestDevice("89CADD0B4B609A30ABDCB7ED4E90A8DE")
-        .addTestDevice("CCCBB7E354C2E6E64DB5A399A77298ED")  //current Nexus 4
-        .build();
-        
-        adView.loadAd(adRequest);
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .addTestDevice("89CADD0B4B609A30ABDCB7ED4E90A8DE")
+                .addTestDevice("CCCBB7E354C2E6E64DB5A399A77298ED")  //current Nexus 4
+                .addTestDevice("4DA61F48D168C897127AACD506BF35DF")  //current Note
+                .build();
 
-        
-
-//String base64EncodedPublicKey = getString(R.xml.app_license);
-//Log.d(TAG, "Creating IAB helper.");
-//mHelper = new IabHelper(this, base64EncodedPublicKey);
-//mHelper.enableDebugLogging(false);
-
-// Start setup. This is asynchronous and the specified listener
-// will be called once setup completes.
-
-//Log.d(TAG, "Starting setup.");
-
-//mHelper.startSetup(new IabHelper.OnIabSetupFinishedListener() {
-	//public void onIabSetupFinished(IabResult result) {
-	//Log.d(TAG, "Setup finished.");
-        //if (!result.isSuccess()) {
-	// Oh noes, there was a problem.
-        //toast("in app billing error: " + result);
-        //return;
-        //}
-	// Have we been disposed of in the meantime? If so, quit.
-        //if (mHelper == null)
-        //return;
-        //}	
-        //});
-        
+            adView.loadAd(adRequest);
         }
 
-	 @Override
-	  public void onDestroy() {
-	    adView.destroy();
-	    super.onDestroy();
-	  }
 
-	 
-	@Override
-	protected void onResume() {
-		super.onResume();
-		adView.resume();
-		templateSource = new TemplateSource(this);
-		templateSource.open();
-		List<TemplateData> formats = templateSource.list();
-		ArrayAdapter<TemplateData> adapter = new ArrayAdapter<TemplateData>(this,
-				android.R.layout.simple_spinner_item, formats);
-		adapter
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		SharedPreferences prefs = getSharedPreferences(PREFSFILE, 0);
-		Iterator<TemplateData> it = formats.iterator();
-		while (it.hasNext()) {
-			template = it.next();
-			if (template.id == prefs.getLong(TEMPLATEID, 0)) {
-				break;
-			}
-			template = null;
-		}
-		setListAdapter(new AppAdapter(this, R.layout.app_item,
-				new ArrayList<SortablePackageInfo>(), R.layout.app_item));
-		new ListTask(this, R.layout.app_item).execute("");
-		
-		final Button bs = (Button)findViewById(R.id.button2);
-		bs.setOnClickListener(new View.OnClickListener() {
-		public void onClick(View v) {
-			copyMenuSelect();
-			}
-		});
 
-	}
+        //while showing helpdialog we build list in background for ready when user read.
 
-	
-	
-	@Override
-	public void onPause() {
-		adView.pause();
-		super.onPause();
-		SharedPreferences.Editor editor = getSharedPreferences(PREFSFILE, 0).edit();
-		editor.putBoolean(ALWAYS_GOOGLE_PLAY,true);
-		//TODO editor.sharedprefs for saving/reading ip, make default ip go there if empty first
-		if (template != null) {
-			editor.putLong(TEMPLATEID, template.id);
-		}
-		ListAdapter adapter = getListAdapter();
-		int count = adapter.getCount();
-		for (int i = 0; i < count; i++) {
-			SortablePackageInfo spi = (SortablePackageInfo) adapter.getItem(i);
-			editor.putBoolean(SELECTED + "." + spi.packageName, spi.selected);
-		}
-		editor.commit();
-	}
 
-	@Override
-	protected void onStart()
-	{
-	super.onStart();
-		
-	 final Dialog dialog = new Dialog(this);
-	    dialog.setContentView(R.layout.dialog);
-	    dialog.setTitle("Hello");
+        setListAdapter(new AppAdapter(this, R.layout.app_item,
+                new ArrayList<SortablePackageInfo>(), R.layout.app_item));
+        new ListTask(this, R.layout.app_item).execute("");
 
-	    Button button = (Button) dialog.findViewById(R.id.Button01);
-	    button.setOnClickListener(new OnClickListener() {  
-	        @Override  
-	        public void onClick(View view) {  
-	            dialog.dismiss();            
-	        }  
-	    });
+        final Button bs = (Button) findViewById(R.id.button2);
+        bs.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                copyMenuSelect();
+            }
+        });
 
-	    dialog.show();
-	    
-	}
-	@Override
-	protected void onStop()
-	{
-	super.onStop();	
-	}
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
+        final Button bs2 = (Button) findViewById(R.id.button1);
+        bs2.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                showPreferences();
+            }
+        });
 
-	@Override
-	public boolean dispatchTouchEvent(MotionEvent event) {
+        t1.send(new HitBuilders.AppViewBuilder().build());
 
-	    View v = getCurrentFocus();
-	    boolean ret = super.dispatchTouchEvent(event);
+        final Dialog dialog;
+        dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog);
+        dialog.setTitle("Hello");
 
-	    if (v instanceof EditText) {
-	        View w = getCurrentFocus();
-	        int scrcoords[] = new int[2];
-	        w.getLocationOnScreen(scrcoords);
-	        float x = event.getRawX() + w.getLeft() - scrcoords[0];
-	        float y = event.getRawY() + w.getTop() - scrcoords[1];
+        Button button = (Button) dialog.findViewById(R.id.Button01);
+        button.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
 
-	      //  Log.d("Activity", "Touch event "+event.getRawX()+","+event.getRawY()+" "+x+","+y+" rect "+w.getLeft()+","+w.getTop()+","+w.getRight()+","+w.getBottom()+" coords "+scrcoords[0]+","+scrcoords[1]);
-	        if (event.getAction() == MotionEvent.ACTION_UP && (x < w.getLeft() || x >= w.getRight() || y < w.getTop() || y > w.getBottom()) ) { 
+        dialog.show();
 
-	            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-	            imm.hideSoftInputFromWindow(getWindow().getCurrentFocus().getWindowToken(), 0);
-	        }
-	    }
-	return ret;
-	}
-	
-	
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
+    }
 
-		switch (item.getItemId()) {
-			case R.id.copy: { 
-				
-			copyMenuSelect();	
-				break;
-			}
-			case (R.id.deselect_all): {
-				ListAdapter adapter = getListAdapter();
-				int count = adapter.getCount();
-				for (int i = 0; i < count; i++) {
-					SortablePackageInfo spi = (SortablePackageInfo) adapter.getItem(i);
-					spi.selected = false;
-				}
-				((AppAdapter) adapter).notifyDataSetChanged();
-				break;
-			}
-			case (R.id.select_all): {
-				ListAdapter adapter = getListAdapter();
-				int count = adapter.getCount();
-				for (int i = 0; i < count; i++) {
-					SortablePackageInfo spi = (SortablePackageInfo) adapter.getItem(i);
-					spi.selected = true;
-				}
-				((AppAdapter) adapter).notifyDataSetChanged();
-				break;
-			}
-			case (R.id.item_help): {
-				//TODO implement help screen
+    @Override
+    public void onDestroy() {
+        if(!BuildConfig.IS_PRO_VERSION) {
+            adView.destroy();
+        }
+        super.onDestroy();
+    }
 
-				 final Dialog dialog = new Dialog(this);
-				    dialog.setContentView(R.layout.dialog);
-				    dialog.setTitle("Hello");
 
-				    Button button = (Button) dialog.findViewById(R.id.Button01);
-				    button.setOnClickListener(new OnClickListener() {  
-				        @Override  
-				        public void onClick(View view) {  
-				            dialog.dismiss();            
-				        }  
-				    });
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(!BuildConfig.IS_PRO_VERSION) {
+            adView.resume();
+        }
+    }
 
-				    dialog.show();
-				break;
-			} 
-			case (R.id.item_mail):{
-				StringBuffer buffer = new StringBuffer();
-			    buffer.append("mailto:");
-			    buffer.append("feedback@kulsch-it.de");
-			    buffer.append("?subject=");
-			    buffer.append("Fireinstaller"+mailtag);
-			    buffer.append("&body=Please provide Androidversion and Device Model for Bugreport if you know it.");
-			    String uriString = buffer.toString().replace(" ", "%20");
 
-			    startActivity(Intent.createChooser(new Intent(Intent.ACTION_SENDTO, Uri.parse(uriString)), "Contact Developer"));
-			    break;
-			}
-			case (R.id.item_donate): {
-				//TODO open donate-link or even in-app purchase
+    @Override
+    public void onPause() {
+        if(!BuildConfig.IS_PRO_VERSION) {
+            adView.pause();
+        }
+        super.onPause();
+        SharedPreferences.Editor editor = getSharedPreferences(PREFSFILE, 0).edit();
 
-				Toast.makeText(this, "Isn't implemented yet. But i'd be happy if you just buy any of my apps @ google play", Toast.LENGTH_LONG).show();
-			
-				break;
-			} 
-			case (R.id.item_settings): {
-				//TODO implement settings screen for setting ip, checkbox for auto-connect adb on app-startup, checkbox disable ads..
+        ListAdapter adapter = getListAdapter();
+        int count = adapter.getCount();
+        for (int i = 0; i < count; i++) {
+            SortablePackageInfo spi = (SortablePackageInfo) adapter.getItem(i);
+            editor.putBoolean(SELECTED + "." + spi.packageName, spi.selected);
+        }
+        editor.commit();
+    }
 
-				Toast.makeText(this, "Coming soon.", Toast.LENGTH_LONG).show();
-			
-				break;
-			} 
-		}
-		return true;
-	}
-	
-	@SuppressWarnings("unchecked")
-	private void copyMenuSelect() {
-		
-		if (!isNothingSelected()) {
-			fireip =  ((EditText) findViewById(R.id.editText1)).getText().toString().trim();
-			Toast.makeText(this, "Installing at IP"+fireip, Toast.LENGTH_LONG).show();
-			Log.d("Fireinstaller","IP ausgelesen:"+fireip);
-        
-			//CharSequence buf = pushFireTv();
-	        pushFireTv();//TODO make background/async task
 
-	
-	        
-	        
-	        //String qry=buf.toString(); // TODO: Save IP into prefs or file 
-		}
-		else{Toast.makeText(this, "no app selected", Toast.LENGTH_LONG).show();}
-	}
-	
-	
-	private void pushFireTv() {
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
 
-//		StringBuilder ret = new StringBuilder();
-		ListAdapter adapter = getListAdapter();
-		int count = adapter.getCount();
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
 
-		
-		Log.d("Fireinstaller2", "connecting adb to "+fireip);
-		Process adb = null;
-		try {
-			adb = Runtime.getRuntime().exec("sh");
-			
-		} catch (IOException e1) {
-			Log.e("Fireinstaller", "error");
-		}
-		
-		DataOutputStream outputStream = new DataOutputStream(adb.getOutputStream());
-		try {
-			outputStream.writeBytes("/system/bin/adb" +" connect "+fireip+"\n ");
-			outputStream.flush();
-			Log.d("fireinstaller", "/system/bin/adb" +" connect "+fireip+"\n ");
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
 
-		} catch (IOException e1) {
-			Log.e("Fireinstaller", "error");
-		}
+        switch (item.getItemId()) {
+            case R.id.copy: {
+                copyMenuSelect();
+                break;
+            }
+            case (R.id.deselect_all): {
+                ListAdapter adapter = getListAdapter();
+                int count = adapter.getCount();
+                for (int i = 0; i < count; i++) {
+                    SortablePackageInfo spi = (SortablePackageInfo) adapter.getItem(i);
+                    spi.selected = false;
+                }
+                ((AppAdapter) adapter).notifyDataSetChanged();
+                break;
+            }
+            case (R.id.item_help): {
+                final Dialog dialog = new Dialog(this);
+                dialog.setContentView(R.layout.dialog);
+                dialog.setTitle("Help Dialog 1");
+                Button button = (Button) dialog.findViewById(R.id.Button01);
+                button.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
 
-		
-		for (int i = 0; i < count; i++) {
-			SortablePackageInfo spi = (SortablePackageInfo) adapter.getItem(i);
-			if (spi.selected) {
-				Log.d("Fireinstaller2", " ret.append package: " + spi.packageName + ", sourceDir: " + spi.sourceDir);
-				
-	//			ret.append(i+" ");
+                dialog.show();
+                break;
+            }
+            case (R.id.item_mail): {
+                StringBuilder buffer;
+                buffer = new StringBuilder();
+                buffer.append("mailto:");
+                buffer.append("feedback@kulsch-it.de");
+                buffer.append("?subject=");
+                buffer.append("Fireinstaller" + mailtag);
+                buffer.append("&body=Please provide Androidversion and Device Model for Bugreport if you know it.");
+                String uriString = buffer.toString().replace(" ", "%20");
 
-				Toast.makeText(this, "Pushing now()"+spi.displayName, Toast.LENGTH_LONG).show();
-				
-				
-				        Log.d("Fireinstaller2", "filesrc " +spi.sourceDir);
-				        try {
-				        	//move apk to fire tv here
-				    		//Foreach Entry do and show progress thing:
-				            Log.d("Fireinstaller2", "/system/bin/adb install "+spi.sourceDir+"\n");
-	
-				            Toast.makeText(this, "Pushing now(2/2)"+spi.displayName, Toast.LENGTH_LONG).show();
-				           
-				            //String command="/system/bin/adb install "+spi.sourceDir+"\n";
-				           // new PushingTask().execute(outputStream, command);
-				            
-				            outputStream.writeBytes("/system/bin/adb install "+spi.sourceDir+"\n");
-				        	
-				           outputStream.flush();
-				    	
-				    		
-				           } catch (IOException e) {
-				            	Log.e("Fireinstaller", "error");
-				            }
-				    
-		
-		}}
+                startActivity(Intent.createChooser(new Intent(Intent.ACTION_SENDTO, Uri.parse(uriString)), "Contact Developer"));
+                break;
+            }
+          //  case (R.id.item_donate): {
+          //      //TODO open donate-link or even in-app purchase
+          //      Toast.makeText(this, "Isn't implemented yet. But you can buy donate-version @ google play. Or wait for in-app option with chooseable amount.", Toast.LENGTH_LONG).show();
+          //      break;
+            // }
+            case (R.id.item_settings): {
+                showPreferences();
+                break;
+            }
+           // case (R.id.item_debug_items): {
+           //     showDebugDialog();
+           //     break;
+          //   }
+        }
+        return true;
+    }
 
-		//After pushing:
-		try {
-			outputStream.close();
-			adb.waitFor();
-		} catch (IOException e) {
-			Log.e("Fireinstaller", "error");
-		} catch (InterruptedException e) {
-			Log.e("Fireinstaller", "error");
-		}
-		adb.destroy();
-		
-		//return ret;
-		return;
+    private void showDebugDialog() {
+        Intent myIntent = new Intent(MainActivity.this, DebugActivity.class);
+        MainActivity.this.startActivity(myIntent);
+    }
 
+    private void showPreferences() {
+        Intent myIntent = new Intent(MainActivity.this, SettingsActivity.class);
+        MainActivity.this.startActivity(myIntent);
+    }
+
+    private void copyMenuSelect() {
+        if (!isNothingSelected()) {
+            Map<String, ?> preferences = PreferenceManager.getDefaultSharedPreferences(this).getAll();
+            fireip =(String)preferences.get("example_text");
+
+            Toast.makeText(this, "Installing at IP" + fireip, Toast.LENGTH_LONG).show();
+            Log.d("Fireinstaller", "IP ausgelesen:" + fireip);
+
+            pushFireTv();
+
+        } else {
+            Toast.makeText(this, "no app selected", Toast.LENGTH_LONG).show();
+        }
+    }
+
+
+    private void pushFireTv() {
+
+        ListAdapter adapter = getListAdapter();
+        int count = adapter.getCount();
+
+        for (int i = 0; i < count; i++) {
+            SortablePackageInfo spi = (SortablePackageInfo) adapter.getItem(i);
+            if (spi.selected) {
+                Log.d("fireconnector", " ret.append package: " + spi.packageName + ", sourceDir: " + spi.sourceDir);
+                dirs=dirs+":::"+spi.sourceDir;
+                counter++;//how much packages to push
+            }
+        }
+        Log.d("fireconnector", " counter package: " + counter + ", dirs package: " + dirs);
+
+
+        // this is usually performed from within an Activity
+  //          Groundy.create(FireConnector.class)
+    //                .callback(this)        // required if you want to get notified of your task lifecycle
+      //              .arg("fireip", fireip)       // optional
+        //            .arg("counter", counter)
+          //          .arg("dirs", dirs)
+            //        .queueUsing(MainActivity.this);
+
+        //TODO Backgroundtask without groundy
+        //TODO give fireip, counter and dirs as string, int, string
+//lets start our long running process Asyncronous Task
+        new LongRunningTask().execute(); //fireip,counter,dirs
+
+            //return ret;
+    }
+
+    public boolean isNothingSelected() {
+        ListAdapter adapter = getListAdapter();
+        if (adapter != null) {
+            int count = adapter.getCount();
+            for (int i = 0; i < count; i++) {
+                SortablePackageInfo spi = (SortablePackageInfo) adapter.getItem(i);
+                if (spi.selected) {
+                    return false;
+                }
+            }
+        }
+        Toast.makeText(this, R.string.msg_warn_nothing_selected, Toast.LENGTH_LONG)
+                .show();
+        return true;
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View v, int pos, long id) {
+        //template = (TemplateData) parent.getAdapter().getItem(pos);
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position,
+                            long id) {
+        AppAdapter aa = (AppAdapter) getListAdapter();
+        SortablePackageInfo spi = aa.getItem(position);
+        spi.selected = !spi.selected;
+        aa.notifyDataSetChanged();
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view,
+                                   int position, long id) {
+        AppAdapter aa = (AppAdapter) getListAdapter();
+        SortablePackageInfo spi = aa.getItem(position);
+        spi.selected = !spi.selected;
+        aa.notifyDataSetChanged();
+        return true;
+    }
+
+    /**
+     * Enum used to identify the tracker that needs to be used for tracking.
+     * <p/>
+     * A single tracker is usually enough for most purposes. In case you do need multiple trackers,
+     * storing them all in Application object helps ensure that they are created only once per
+     * application instance.
+     */
+
+    synchronized Tracker getTracker(TrackerName trackerId) {
+        if (!mTrackers.containsKey(trackerId)) {
+
+            GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
+            Tracker t = (trackerId == TrackerName.APP_TRACKER) ? analytics.newTracker(PROPERTY_ID)
+                    : (trackerId == TrackerName.GLOBAL_TRACKER) ? analytics.newTracker(R.xml.global_tracker)
+                    : analytics.newTracker(R.xml.global_tracker);
+            mTrackers.put(trackerId, t);
+
+        }
+        return mTrackers.get(trackerId);
+    }
+
+
+    public enum TrackerName {
+        APP_TRACKER, // Tracker used only in this app.
+        GLOBAL_TRACKER, // Tracker used by all the apps from a company. eg: roll-up tracking.
+        ECOMMERCE_TRACKER, // Tracker used by all ecommerce transactions from a company.
+    }
+
+
+    private class LongRunningTask extends AsyncTask <String, Integer, Void>{
+
+        private ProgressDialog dialog = null;
+
+        //TODO: disallow orientation change while running
+            @Override
+            protected Void doInBackground(String... params) {
+
+                Log.d("fireconnector","doInBackground starting");
+                //String fireip=params[0];
+                //int counter = 1;//TODO cast params[1];
+                //String dirs = params[2];
+
+                //working with big strings
+
+
+
+                // lots of code
+                publishProgress(0);
+                Log.e("fireconnector", "0");
+                //CONNECTING //should work if we call it only once (singleton making)
+                Log.d("fireconnector", "connecting adb to " + fireip);
+                Process adb = null;
+                try {
+                    adb = Runtime.getRuntime().exec("sh");
+
+                } catch (IOException e1) {
+                    Log.e("fireconnector", "IOException error e "+e1);
+                }
+
+                DataOutputStream outputStream = null;
+                if (adb != null) {
+                    outputStream = new DataOutputStream(adb.getOutputStream());
+                }
+                else{
+                    Log.e("fireconnector", "abd == null");
+                }
+                try {
+                    if (outputStream != null) {
+                        outputStream.writeBytes("/system/bin/adb" + " connect " + fireip + "\n ");
+                        outputStream.flush();
+                        Log.d("fireconnector", "/system/bin/adb" + " connect " + fireip + "\n ");
+                    }
+                    else{
+                        Log.e("fireconnector", "outputStream == null");
+                    }
+
+
+                } catch (IOException e1) {
+                    Log.e("fireconnector", "IOException error 1"+e1);
+                }
+
+
+                //INSTALLING //maybe work
+                String dir = dirs.substring(3);
+                completed=1;
+                publishProgress(1);//connection established
+                Log.e("fireconnector", "1");
+
+                //if(!dir.contains(":::")){return succeeded().add("the_result","cant split string");}
+                String[] sourceDir = dir.split(":::");
+                completed=2;
+                publishProgress();//get packages ready
+                Log.e("fireconnector", "2");
+
+                for (int i = 0; i < counter; i++) {
+                    //first dirs -- first 3 :
+                    completed = i+3;
+                    publishProgress();//do package nr i
+                    Log.e("fireconnector", "3");
+                    //then split as often as ValueOf counter by stripping first chars till :::
+
+
+                    try {
+                        //move apk to fire tv here
+                        //Foreach Entry do and show progress thing:
+
+                        if (outputStream != null) {
+                            Log.d("fireconnector", "/system/bin/adb install " + sourceDir[i] + "\n");
+                            outputStream.writeBytes("/system/bin/adb install " + sourceDir[i] + "\n");
+                            outputStream.flush();
+                        }
+                        else{
+                            Log.e("fireconnector", "outputStream == null (occurence 2)");
+                        }
+
+                    } catch (IOException e) {
+                        Log.e("fireconnector", " IOException error "+e);
+                    }
+
+
+                } //end for loop
+
+
+
+
+
+
+                //CLOSINGCONNECTION //should work
+
+                //TODO better logging with errorcontent too
+
+                //After pushing:
+                try {
+                    if (outputStream != null) {
+                        outputStream.close();
+                    }
+                    else{
+                        Log.e("fireconnector", "outputStream closed already ");
+                    }
+                    if (adb != null) {
+                        adb.waitFor();
+                    }
+                    else{
+                        Log.e("fireconnector", "adb closed already ");
+                    }
+                } catch (IOException e) {
+                    Log.e("fireconnector", "IOException error 2 "+e);
+                } catch (InterruptedException e) {
+                    Log.e("fireconnector", "InterruptedException error 5 "+e);
+                }
+                if (adb != null) {
+                    adb.destroy();
+                }
+                else{
+                    Log.e("fireconnector", "adb already destroyed ");
+                }
+
+
+                completed = 100;
+
+                //lets call our onProgressUpdate() method which runs on the UI thread
+                publishProgress(100);
+                Log.e("fireconnector", "100");
+                return null;
+            }
+
+
+
+
+        @Override
+        protected void onPreExecute() {
+            lockScreenOrientation();
+
+            completed = 0;
+            notificationHelper.createNotification();
+
+            dialog = ProgressDialog.show(MainActivity.this, "doing my work...", "Please Wait, \nProgress in Notification Bar. \n", true);
+            dialog.setCancelable(false); //no cancel dialog while installing
+        }
+
+        protected void onProgressUpdate(Integer... v) {
+//lets format a string from the the 'completed' variable
+
+            Log.d("fireinstaller","completed "+completed+" v "+v);
+            //TODO Switch-case(0 start, 1 connected, 2 prepared packages, 3 installing first app, 4 installing next app, 100 finished
+                notificationHelper.progressUpdate(completed);
+
+            String dialogMessage="Please Wait, \nProgress in Notification Bar. \n";
+            String contentText;
+
+            if(completed==0){
+                contentText = "Connecting to Fire TV...";
+            }
+            else if(completed==1){
+                contentText = "Fire TV connected... Preparing apps to push.";
+            }
+            else if(completed==2){
+                contentText = "Begin installing";
+            }
+            else if((completed>2)&(completed<100)){
+                contentText = "Installing App Number "+(completed-2) + " of "+counter+".\n May take long time.\nIf no progress after some Minutes: Check if IP "+fireip+" is correct on your Fire TV. If it's wrong, just restart this app. Then open Settings and enter correct IP (see menu: help for more).\nWhen this window disappears everything is installed.";
+            }
+            else if(completed==100){
+                contentText = "Installing complete. Thank you!";
+            }
+            else{
+                contentText = "Unallowed percentageComplete. Please report error via email";
+            }
+
+                dialog.setMessage(dialogMessage+contentText);
+            }
+
+        protected void onPostExecute(final Void result) {
+        //this should be self explanatory
+                notificationHelper.completed();
+            dialog.setCancelable(true);
+            dialog.setProgress(100);
+            dialog.dismiss();
+            unlockScreenOrientation();
+            //fix for increasing number when more installations without app closing in between.
+            completed=0;
+            counter=0;
+        }
+
+        private void lockScreenOrientation() {
+            int currentOrientation = getResources().getConfiguration().orientation;
+            if (currentOrientation == Configuration.ORIENTATION_PORTRAIT) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            } else {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+            }
+        }
+
+        private void unlockScreenOrientation() {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+        }
+
+        public void onCancel(DialogInterface theDialog) {
+            cancel(true);
+            //TODO stop installertask
+        }
+
+        }
 }
-	public static String noNull(String input) {
-		if (input == null) {
-			return "";
-		}
-		return input;
-	}
 
-	public boolean isNothingSelected() {
-		ListAdapter adapter = getListAdapter();
-		if (adapter != null) {
-			int count = adapter.getCount();
-			for (int i = 0; i < count; i++) {
-				SortablePackageInfo spi = (SortablePackageInfo) adapter.getItem(i);
-				if (spi.selected) {
-					return false;
-				}
-			}
-		}
-		Toast.makeText(this, R.string.msg_warn_nothing_selected, Toast.LENGTH_LONG)
-				.show();
-		return true;
-	}
-
-
-	
-	@Override
-	public void onItemSelected(AdapterView<?> parent, View v, int pos, long id) {
-		template = (TemplateData) parent.getAdapter().getItem(pos);
-	}
-
-	@Override
-	public void onNothingSelected(AdapterView<?> parent) {
-
-	}
-
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position,
-			long id) {
-		AppAdapter aa = (AppAdapter) getListAdapter();
-		SortablePackageInfo spi = aa.getItem(position);
-		spi.selected = !spi.selected;
-		aa.notifyDataSetChanged();
-	}
-
-	@Override
-	public boolean onItemLongClick(AdapterView<?> parent, View view,
-			int position, long id) {
-			return true;
-	}
-	
-
-	public static void openUri(Context ctx, Uri uri) {
-		try {
-			Intent browserIntent = new Intent(Intent.ACTION_VIEW, uri);
-			ctx.startActivity(browserIntent);
-		}
-		catch (ActivityNotFoundException e) {
-			
-			Toast.makeText(ctx, "no webbrowser found", Toast.LENGTH_SHORT).show();
-		}
-	}
-	      
-	       
-	
-	        /**
-	         * Enum used to identify the tracker that needs to be used for tracking.
-	         *
-	         * A single tracker is usually enough for most purposes. In case you do need multiple trackers,
-	         * storing them all in Application object helps ensure that they are created only once per
-	         * application instance.
-	         */
-	  
-	        synchronized Tracker getTracker(TrackerName trackerId) {
-	            if (!mTrackers.containsKey(trackerId)) {
-
-	              GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
-	              Tracker t = (trackerId == TrackerName.APP_TRACKER) ? analytics.newTracker(PROPERTY_ID)
-	                  : (trackerId == TrackerName.GLOBAL_TRACKER) ? analytics.newTracker(R.xml.global_tracker)
-	                      : analytics.newTracker(R.xml.global_tracker);
-	              mTrackers.put(trackerId, t);
-
-	            }
-	            return mTrackers.get(trackerId);
-	          }
-			  
-	
-}
 
