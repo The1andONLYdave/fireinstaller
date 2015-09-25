@@ -286,9 +286,13 @@ public class MainActivity extends ListActivity implements
             notificationDisplay =  prefs.getBoolean("notifications_new_message", true); //we check this on running remote install, so no need for a onPrefChange Listener
             if (notificationDisplay==true) {
                 Log.d("Fireinstaller", "Notifications enabled");
+                Toast.makeText(this, "notification on", Toast.LENGTH_LONG).show();
+
             }
             if (notificationDisplay==false) {
                 Log.d("Fireinstaller", "Notifications disabled");
+                Toast.makeText(this, "notification off", Toast.LENGTH_LONG).show();
+
             }
             Toast.makeText(this, "Installing at IP" + fireip, Toast.LENGTH_LONG).show();
             Log.d("Fireinstaller", "IP ausgelesen:" + fireip);
