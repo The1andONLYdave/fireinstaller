@@ -30,12 +30,7 @@
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@android:style/Theme.Translucent" />
 
-        <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-        <meta-data
-            android:name="com.google.android.gms.analytics.globalConfigResource"
-            android:resource="@xml/global_tracker" />
+        //fix for white or black empty screen on app startup, see https://code.google.com/p/android/issues/detail?id=82157
 
         <activity
             android:name=".SettingsActivity"

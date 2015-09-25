@@ -50,7 +50,7 @@ public class MainActivity extends ListActivity implements
     public static final String PREFSFILE = "settings2";
     public static final String SELECTED = "selected";
     private static final String PROPERTY_ID = "App";
-    private static final String mailtag = "0.8_fixed";
+    private static final String mailtag = "0.9";
     public String fireip = "";
     private AdView adView;
     int completed = 0; // this is the value for the notification percentage
@@ -86,6 +86,11 @@ public class MainActivity extends ListActivity implements
 
         GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
         Tracker t1 = analytics.newTracker(R.xml.global_tracker);
+
+        //fix for white or black empty screen on app startup, see https://code.google.com/p/android/issues/detail?id=82157
+        t.enableExceptionReporting(false);
+        //fix for white or black empty screen on app startup, see https://code.google.com/p/android/issues/detail?id=82157
+        t1.enableExceptionReporting(false);
 
         if(!BuildConfig.IS_PRO_VERSION) {
 
