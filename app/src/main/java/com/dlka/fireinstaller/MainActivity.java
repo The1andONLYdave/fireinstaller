@@ -50,8 +50,9 @@ public class MainActivity extends ListActivity implements
     public static final String PREFSFILE = "settings2";
     public static final String SELECTED = "selected";
     private static final String PROPERTY_ID = "App";
-    private static final String mailtag = "0.9";
+    private static final String mailtag = "0.9.1";
     public String fireip = "";
+    public boolean notificationDisplay=true;
     private AdView adView;
     int completed = 0; // this is the value for the notification percentage
     NotificationHelper notificationHelper= new NotificationHelper(this);
@@ -108,6 +109,7 @@ public class MainActivity extends ListActivity implements
                 .addTestDevice("89CADD0B4B609A30ABDCB7ED4E90A8DE")
                 .addTestDevice("CCCBB7E354C2E6E64DB5A399A77298ED")  //current Nexus 4
                 .addTestDevice("4DA61F48D168C897127AACD506BF35DF")  //current Note
+                //TODO current tablet
                 .build();
 
             adView.loadAd(adRequest);
@@ -279,7 +281,7 @@ public class MainActivity extends ListActivity implements
         if (!isNothingSelected()) {
             Map<String, ?> preferences = PreferenceManager.getDefaultSharedPreferences(this).getAll();
             fireip =(String)preferences.get("example_text");
-
+            notificationDisplay = (boolean)preferences.get("notifications_new_message"); //we check this on running remote install, so no need for a onPrefChange Listener
             Toast.makeText(this, "Installing at IP" + fireip, Toast.LENGTH_LONG).show();
             Log.d("Fireinstaller", "IP ausgelesen:" + fireip);
 
@@ -307,15 +309,6 @@ public class MainActivity extends ListActivity implements
         Log.d("fireconnector", " counter package: " + counter + ", dirs package: " + dirs);
 
 
-        // this is usually performed from within an Activity
-  //          Groundy.create(FireConnector.class)
-    //                .callback(this)        // required if you want to get notified of your task lifecycle
-      //              .arg("fireip", fireip)       // optional
-        //            .arg("counter", counter)
-          //          .arg("dirs", dirs)
-            //        .queueUsing(MainActivity.this);
-
-        //TODO Backgroundtask without groundy
         //TODO give fireip, counter and dirs as string, int, string
 //lets start our long running process Asyncronous Task
         new LongRunningTask().execute(); //fireip,counter,dirs
@@ -341,12 +334,10 @@ public class MainActivity extends ListActivity implements
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View v, int pos, long id) {
-        //template = (TemplateData) parent.getAdapter().getItem(pos);
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-
     }
 
     @Override
@@ -542,7 +533,9 @@ public class MainActivity extends ListActivity implements
             lockScreenOrientation();
 
             completed = 0;
-            notificationHelper.createNotification();
+            if(notificationDisplay==true){
+                notificationHelper.createNotification();
+            }
 
             dialog = ProgressDialog.show(MainActivity.this, "doing my work...", "Please Wait, \nProgress in Notification Bar. \n", true);
             dialog.setCancelable(false); //no cancel dialog while installing
@@ -553,8 +546,9 @@ public class MainActivity extends ListActivity implements
 
             Log.d("fireinstaller","completed "+completed+" v "+v);
             //TODO Switch-case(0 start, 1 connected, 2 prepared packages, 3 installing first app, 4 installing next app, 100 finished
+            if(notificationDisplay==true){
                 notificationHelper.progressUpdate(completed);
-
+            }
             String dialogMessage="Please Wait, \nProgress in Notification Bar. \n";
             String contentText;
 
@@ -582,7 +576,9 @@ public class MainActivity extends ListActivity implements
 
         protected void onPostExecute(final Void result) {
         //this should be self explanatory
+            if(notificationDisplay==true){
                 notificationHelper.completed();
+            }
             dialog.setCancelable(true);
             dialog.setProgress(100);
             dialog.dismiss();
