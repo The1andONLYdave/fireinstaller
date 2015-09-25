@@ -281,7 +281,15 @@ public class MainActivity extends ListActivity implements
         if (!isNothingSelected()) {
             Map<String, ?> preferences = PreferenceManager.getDefaultSharedPreferences(this).getAll();
             fireip =(String)preferences.get("example_text");
-            notificationDisplay = (boolean)preferences.get("notifications_new_message"); //we check this on running remote install, so no need for a onPrefChange Listener
+
+            SharedPreferences prefs = getSharedPreferences("SettingsActivity", 0);
+            notificationDisplay =  prefs.getBoolean("notifications_new_message", true); //we check this on running remote install, so no need for a onPrefChange Listener
+            if (notificationDisplay==true) {
+                Log.d("Fireinstaller", "Notifications enabled");
+            }
+            if (notificationDisplay==false) {
+                Log.d("Fireinstaller", "Notifications disabled");
+            }
             Toast.makeText(this, "Installing at IP" + fireip, Toast.LENGTH_LONG).show();
             Log.d("Fireinstaller", "IP ausgelesen:" + fireip);
 
