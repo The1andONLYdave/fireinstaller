@@ -30,6 +30,7 @@
     <string name="msg_warn_nothing_selected">Wähle die Apps zum installieren!</string>
     <string name="pref_default_ip_fire">192.0.0.0</string>
     <string name="pref_description_ad_support">Spende zum entfernen der Webung. Oder kauf die Premium Version bei Google Play.</string>
+    <string name="pref_description_ad_support2">Danke für den Kauf der Premium Version!</string>
     <string name="pref_description_analytics_google">Nur für Entwickler. Unterstütze die App besser zu machen und bei Fehlern.</string>
     <string name="pref_description_ip_fire">IP v4 Adresse, jede Nummer (0-254) mit Punkten. Beispiel: 192.168.0.1 oder 192.168.001.003</string>
     <string name="pref_header_donations">Entwickleraccount erforderlich</string>

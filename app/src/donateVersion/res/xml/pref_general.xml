@@ -3,7 +3,7 @@
     <CheckBoxPreference
         android:defaultValue="false"
         android:key="example_checkbox2"
-        android:summary="@string/pref_description_ad_support"
+        android:summary="@string/pref_description_ad_support2"
         android:title="@string/pref_title_ad_support"
         />
 
