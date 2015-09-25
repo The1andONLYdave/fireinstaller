@@ -52,7 +52,7 @@ public class MainActivity extends ListActivity implements
     private static final String PROPERTY_ID = "App";
     private static final String mailtag = "0.9.1";
     public String fireip = "";
-    public boolean notificationDisplay=true;
+    public boolean notificationDisplay=false;
     private AdView adView;
     int completed = 0; // this is the value for the notification percentage
     NotificationHelper notificationHelper= new NotificationHelper(this);
@@ -282,18 +282,20 @@ public class MainActivity extends ListActivity implements
             Map<String, ?> preferences = PreferenceManager.getDefaultSharedPreferences(this).getAll();
             fireip =(String)preferences.get("example_text");
 
-            SharedPreferences prefs = getSharedPreferences("SettingsActivity", 0);
-            notificationDisplay =  prefs.getBoolean("notifications_new_message", true); //we check this on running remote install, so no need for a onPrefChange Listener
-            if (notificationDisplay==true) {
-                Log.d("Fireinstaller", "Notifications enabled");
-                Toast.makeText(this, "notification on", Toast.LENGTH_LONG).show();
+           /* for(Map.Entry<String,?> entry : preferences.entrySet()){
+                String output = "map values" + entry.getKey() + ": " +
+                        entry.getValue().toString();
+                Toast.makeText(this, output, Toast.LENGTH_LONG).show();
 
-            }
-            if (notificationDisplay==false) {
-                Log.d("Fireinstaller", "Notifications disabled");
+            }*/
+            notificationDisplay=(Boolean)preferences.get("notifications_new_message");
+            if (!notificationDisplay){
                 Toast.makeText(this, "notification off", Toast.LENGTH_LONG).show();
-
             }
+            else if (notificationDisplay){
+                Toast.makeText(this, "notification on", Toast.LENGTH_LONG).show();
+            }
+
             Toast.makeText(this, "Installing at IP" + fireip, Toast.LENGTH_LONG).show();
             Log.d("Fireinstaller", "IP ausgelesen:" + fireip);
 
@@ -574,7 +576,7 @@ public class MainActivity extends ListActivity implements
                 contentText = "Begin installing";
             }
             else if((completed>2)&(completed<100)){
-                contentText = "Installing App Number "+(completed-2) + " of "+counter+".\n May take long time.\nIf no progress after some Minutes: Check if IP "+fireip+" is correct on your Fire TV. If it's wrong, just restart this app. Then open Settings and enter correct IP (see menu: help for more).\nWhen this window disappears everything is installed.";
+                contentText = "Installing App Number "+(completed-2) + " of "+counter+".\n May take long time.\nIf no progress after some Minutes: Check if IP "+fireip+" is correct on your Fire TV. If it's wrong, just (force close and) restart this app. Then open Settings and enter correct IP (see menu: help for more).\nWhen this window disappears everything is installed. You can also enable (sometimes bugged) notifications for progress in settings of the app. Thank you for using my app!";
             }
             else if(completed==100){
                 contentText = "Installing complete. Thank you!";
