@@ -50,8 +50,9 @@ public class MainActivity extends ListActivity implements
     public static final String PREFSFILE = "settings2";
     public static final String SELECTED = "selected";
     private static final String PROPERTY_ID = "App";
-    private static final String mailtag = "0.8_fixed";
+    private static final String mailtag = "0.9.1";
     public String fireip = "";
+    public boolean notificationDisplay=false;
     private AdView adView;
     int completed = 0; // this is the value for the notification percentage
     NotificationHelper notificationHelper= new NotificationHelper(this);
@@ -87,6 +88,11 @@ public class MainActivity extends ListActivity implements
         GoogleAnalytics analytics = GoogleAnalytics.getInstance(this);
         Tracker t1 = analytics.newTracker(R.xml.global_tracker);
 
+        //fix for white or black empty screen on app startup, see https://code.google.com/p/android/issues/detail?id=82157
+        t.enableExceptionReporting(false);
+        //fix for white or black empty screen on app startup, see https://code.google.com/p/android/issues/detail?id=82157
+        t1.enableExceptionReporting(false);
+
         if(!BuildConfig.IS_PRO_VERSION) {
 
             // Create the adView.
@@ -103,6 +109,7 @@ public class MainActivity extends ListActivity implements
                 .addTestDevice("89CADD0B4B609A30ABDCB7ED4E90A8DE")
                 .addTestDevice("CCCBB7E354C2E6E64DB5A399A77298ED")  //current Nexus 4
                 .addTestDevice("4DA61F48D168C897127AACD506BF35DF")  //current Note
+                //TODO current tablet
                 .build();
 
             adView.loadAd(adRequest);
@@ -275,6 +282,20 @@ public class MainActivity extends ListActivity implements
             Map<String, ?> preferences = PreferenceManager.getDefaultSharedPreferences(this).getAll();
             fireip =(String)preferences.get("example_text");
 
+           /* for(Map.Entry<String,?> entry : preferences.entrySet()){
+                String output = "map values" + entry.getKey() + ": " +
+                        entry.getValue().toString();
+                Toast.makeText(this, output, Toast.LENGTH_LONG).show();
+
+            }*/
+            notificationDisplay=(Boolean)preferences.get("notifications_new_message");
+            if (!notificationDisplay){
+                Toast.makeText(this, "notification off", Toast.LENGTH_LONG).show();
+            }
+            else if (notificationDisplay){
+                Toast.makeText(this, "notification on", Toast.LENGTH_LONG).show();
+            }
+
             Toast.makeText(this, "Installing at IP" + fireip, Toast.LENGTH_LONG).show();
             Log.d("Fireinstaller", "IP ausgelesen:" + fireip);
 
@@ -302,15 +323,6 @@ public class MainActivity extends ListActivity implements
         Log.d("fireconnector", " counter package: " + counter + ", dirs package: " + dirs);
 
 
-        // this is usually performed from within an Activity
-  //          Groundy.create(FireConnector.class)
-    //                .callback(this)        // required if you want to get notified of your task lifecycle
-      //              .arg("fireip", fireip)       // optional
-        //            .arg("counter", counter)
-          //          .arg("dirs", dirs)
-            //        .queueUsing(MainActivity.this);
-
-        //TODO Backgroundtask without groundy
         //TODO give fireip, counter and dirs as string, int, string
 //lets start our long running process Asyncronous Task
         new LongRunningTask().execute(); //fireip,counter,dirs
@@ -336,12 +348,10 @@ public class MainActivity extends ListActivity implements
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View v, int pos, long id) {
-        //template = (TemplateData) parent.getAdapter().getItem(pos);
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
-
     }
 
     @Override
@@ -537,7 +547,9 @@ public class MainActivity extends ListActivity implements
             lockScreenOrientation();
 
             completed = 0;
-            notificationHelper.createNotification();
+            if(notificationDisplay==true){
+                notificationHelper.createNotification();
+            }
 
             dialog = ProgressDialog.show(MainActivity.this, "doing my work...", "Please Wait, \nProgress in Notification Bar. \n", true);
             dialog.setCancelable(false); //no cancel dialog while installing
@@ -548,8 +560,9 @@ public class MainActivity extends ListActivity implements
 
             Log.d("fireinstaller","completed "+completed+" v "+v);
             //TODO Switch-case(0 start, 1 connected, 2 prepared packages, 3 installing first app, 4 installing next app, 100 finished
+            if(notificationDisplay==true){
                 notificationHelper.progressUpdate(completed);
-
+            }
             String dialogMessage="Please Wait, \nProgress in Notification Bar. \n";
             String contentText;
 
@@ -563,7 +576,7 @@ public class MainActivity extends ListActivity implements
                 contentText = "Begin installing";
             }
             else if((completed>2)&(completed<100)){
-                contentText = "Installing App Number "+(completed-2) + " of "+counter+".\n May take long time.\nIf no progress after some Minutes: Check if IP "+fireip+" is correct on your Fire TV. If it's wrong, just restart this app. Then open Settings and enter correct IP (see menu: help for more).\nWhen this window disappears everything is installed.";
+                contentText = "Installing App Number "+(completed-2) + " of "+counter+".\n May take long time.\nIf no progress after some Minutes: Check if IP "+fireip+" is correct on your Fire TV. If it's wrong, just (force close and) restart this app. Then open Settings and enter correct IP (see menu: help for more).\nWhen this window disappears everything is installed. You can also enable (sometimes bugged) notifications for progress in settings of the app. Thank you for using my app!";
             }
             else if(completed==100){
                 contentText = "Installing complete. Thank you!";
@@ -577,7 +590,9 @@ public class MainActivity extends ListActivity implements
 
         protected void onPostExecute(final Void result) {
         //this should be self explanatory
+            if(notificationDisplay==true){
                 notificationHelper.completed();
+            }
             dialog.setCancelable(true);
             dialog.setProgress(100);
             dialog.dismiss();

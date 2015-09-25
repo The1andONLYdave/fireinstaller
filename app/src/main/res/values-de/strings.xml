@@ -6,7 +6,7 @@
     <string name="share">Teilen</string>
     <string name="help">Hilfe</string>
     <string name="mail">Emaile dem Entwickler</string>
-    <string name="copy">Auf FireTV!</string>
+    <string name="copy">Ausgewählte Apps auf FireTV kopieren!</string>
     <string name="Guide">"Kurzanleitung:\n\nSchritt 1 – ADB Debugging Einschalten\nDamit dein Fire TV die Apps annimmt, musst du ADB Debugging aktivieren. Du kannst es nach dem Installieren deiner Apps gerne wieder deaktivieren.\nAuf dem Homebildschirm deines Fire TV gehst du runter bis zu “Einstellungen”\nDann nach rechts zu “SYSTEM”\nDann runter zu den “Entwickler Optionen”\nÄndere sowohl “ADB debugging” auf “Ein”,\nals auch ”Unkbekannte Quellen” zu ”Ein”\n\nSchritt 2 – Erlange die IP-Adresse deines Fire TV\nAuf dem Homebildschirm deines Fire TV gehst du runter bis zu “Einstellungen”\nDann nach rechts zu “SYSTEM”\nDann wählst du “Über” aus,\ngehst runter auf “Netzwerk”\nund nimmst die Nummer bei “IP Adresse”\n\nDiese Beta Version enthält einen bekannten Fehler der in einem der nächsten Updates behoben wird: Wenn du die falsche IP-Adresse eingibst und auf ->FireTV klickst (xxx.xxx.xxx.xxx, keine Leerzeichen aber mit Punkten) wird die App sich aufhängen, was sie auch manchmal nach dem Transfer aller gewählten Apps macht. Wenn alle Apps fertig auf dem Fire TV installiert sind, kannst du die App einfach über das Einstellungsmenü deines Androiden beenden (erzwingen)\n Last but not least: Danke für das testen/benutzen unserer App. Wir freuen uns über emails und market kommentare. Danke! Die Notification Prozentzahlen: 0 start, 1 connected, 2 prepared packages, 3 installing first app, 4 installing next app, usw, 100 finished"</string>
     <string name="GuideOk">Ok</string>
     <string name="apprater_title">App bewerten?</string>
@@ -30,6 +30,7 @@
     <string name="msg_warn_nothing_selected">Wähle die Apps zum installieren!</string>
     <string name="pref_default_ip_fire">192.0.0.0</string>
     <string name="pref_description_ad_support">Spende zum entfernen der Webung. Oder kauf die Premium Version bei Google Play.</string>
+    <string name="pref_description_ad_support2">Danke für den Kauf der Premium Version!</string>
     <string name="pref_description_analytics_google">Nur für Entwickler. Unterstütze die App besser zu machen und bei Fehlern.</string>
     <string name="pref_description_ip_fire">IP v4 Adresse, jede Nummer (0-254) mit Punkten. Beispiel: 192.168.0.1 oder 192.168.001.003</string>
     <string name="pref_header_donations">Entwickleraccount erforderlich</string>

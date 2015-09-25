@@ -47,7 +47,6 @@ public class NotificationHelper {
 
         //make this notification appear in the 'Ongoing events' section
         mNotification.flags = Notification.FLAG_ONGOING_EVENT;
-
         //show the notification
         mNotificationManager.notify(NOTIFICATION_ID, mNotification);
     }
