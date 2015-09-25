@@ -1,0 +1,10 @@
+Fireinstaller
+
+Version 0.8.12 no download
+Version 0.8.13 january, now for all available
+version 0.9 fix, phasing in slowly
+version 0.9.1 open beta test
+
+
+v0.9
+Hope to finally fixed black empty or white empty Screen on Startup - turns out some google library blocked after first starting.
