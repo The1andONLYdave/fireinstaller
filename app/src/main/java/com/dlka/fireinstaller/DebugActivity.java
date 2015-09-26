@@ -28,8 +28,7 @@ public class DebugActivity extends Activity {
             }
         });
         bs.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                notificationHelper.progressUpdate(completed);
+            public void onClick(View v) {notificationHelper.progressUpdate(completed);
             }
         });
         bt.setOnClickListener(new View.OnClickListener() {
@@ -39,7 +38,7 @@ public class DebugActivity extends Activity {
         });
         bv.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-              //TODO implement
+
             }
         });
 

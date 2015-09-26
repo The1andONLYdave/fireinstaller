@@ -1,59 +1,44 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <!-- NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
-         dismiss it. -->
-    <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
-    <ListPreference
-        android:defaultValue="-1"
-        android:entries="@array/pref_example_install_method"
-        android:entryValues="@array/pref_example_install_number"
-        android:key="example_list"
-        android:negativeButtonText="@null"
-        android:positiveButtonText="@null"
-        android:title="@string/pref_title_install_method" />
-
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="example_checkbox"
-        android:summary="@string/pref_description_analytics_google"
-        android:title="@string/pref_title_analytics_google"
-        />
-
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="debug_view_enabled"
-        android:title="Enable Debug Window" />
-
-     <Preference
+        <!-- NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
+            dismiss it. -->
+        <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
+        <ListPreference
+            android:defaultValue="-1"
+            android:entries="@array/pref_example_install_method"
+            android:entryValues="@array/pref_example_install_number"
+            android:key="example_list"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/pref_title_install_method" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="example_checkbox"
+            android:summary="@string/pref_description_analytics_google"
+            android:title="@string/pref_title_analytics_google" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="debug_view_enabled"
+            android:title="Enable Debug Window" />
+        <Preference
             android:title="More Apps from us @ Google Play"
             android:key="View Apps from DLK Appentwicklung">
-
             <intent
                 android:action="android.intent.action.VIEW"
-                android:data="http://play.google.com/store/search?q=pub:DLK+Appentwicklung+(Kulsch-IT)"
-                />
-
-
+                android:data="http://play.google.com/store/search?q=pub:DLK+Appentwicklung+(Kulsch-IT)" />
         </Preference>
         <Preference
             android:title="Rate this app"
             android:key="Click for opening Google Play-Page">
-
             <intent
                 android:action="android.intent.action.VIEW"
-                android:data="https://play.google.com/store/apps/details?id=com.dlka.fireinstaller"
-                />
-
+                android:data="https://play.google.com/store/apps/details?id=com.dlka.fireinstaller" />
         </Preference>
         <Preference
             android:title="Donate Version"
             android:key="Would be glad if you have some money for us">
-
             <intent
                 android:action="android.intent.action.VIEW"
-                android:data="https://play.google.com/store/apps/details?id=com.dlka.fireinstaller2"
-                />
-
+                android:data="https://play.google.com/store/apps/details?id=com.dlka.fireinstaller2" />
         </Preference>
         <Preference
             android:defaultValue="0"
@@ -61,5 +46,14 @@
             android:selectable="true"
             android:summary="@string/about_sum"
             android:title="@string/about_text" />
+        <Preference
+            android:key="debugActivityLauncher"
+            android:title="debugActivityLauncher"
+            android:summary="debugActivityLauncher">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:targetPackage="com.dlka.fireinstaller"
+                android:targetClass="com.dlka.fireinstaller.SettingsActivity" />
+        </Preference>
 
  </PreferenceScreen>

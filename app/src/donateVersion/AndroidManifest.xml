@@ -40,6 +40,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.dlka.fireinstaller.MainActivity" />
         </activity>
+        <activity tools:replace="android:parentActivityName"
+            android:name="com.dlka.fireinstaller.DebugActivity"
+            android:label="@string/title_activity_debug"
+            android:parentActivityName="com.dlka.fireinstaller.MainActivity" >
+            <meta-data tools:replace="android:value"
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.dlka.fireinstaller.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

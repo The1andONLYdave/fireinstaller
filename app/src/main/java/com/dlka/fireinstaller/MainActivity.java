@@ -258,22 +258,19 @@ public class MainActivity extends ListActivity implements
                 showPreferences();
                 break;
             }
-           // case (R.id.item_debug_items): {
-           //     showDebugDialog();
-           //     break;
-          //   }
         }
         return true;
-    }
-
-    private void showDebugDialog() {
-        Intent myIntent = new Intent(MainActivity.this, DebugActivity.class);
-        MainActivity.this.startActivity(myIntent);
     }
 
     private void showPreferences() {
         Intent myIntent = new Intent(MainActivity.this, SettingsActivity.class);
         MainActivity.this.startActivity(myIntent);
+    }
+
+    public void LogToView(String title, String message) {
+        Log.d(title, message);
+        EditText debugView = (EditText) findViewById(R.id.debugText);
+        debugView.setText(debugView.getText() + title + " : " + message + "\n");
     }
 
     private void copyMenuSelect() {
@@ -291,11 +288,14 @@ public class MainActivity extends ListActivity implements
             textAbove.setVisibility(View.GONE);
             if(debugDisplay){
             debugView.setVisibility(View.VISIBLE);
+            Log.d("Fireinstaller", "debug message test");
+            Log.e("Fireinstaller", "failure message test");
+
 
             }
 
             Toast.makeText(this, "Installing at IP" + fireip, Toast.LENGTH_LONG).show();
-            Log.d("Fireinstaller", "IP ausgelesen:" + fireip);
+            LogToView("Fireinstaller", "IP ausgelesen:" + fireip);
 
             pushFireTv();
 
@@ -316,12 +316,12 @@ public class MainActivity extends ListActivity implements
         for (int i = 0; i < count; i++) {
             SortablePackageInfo spi = (SortablePackageInfo) adapter.getItem(i);
             if (spi.selected) {
-                Log.d("fireconnector", " ret.append package: " + spi.packageName + ", sourceDir: " + spi.sourceDir);
+                LogToView("fireconnector", " ret.append package: " + spi.packageName + ", sourceDir: " + spi.sourceDir);
                 dirs=dirs+":::"+spi.sourceDir;
                 counter++;//how much packages to push
             }
         }
-        Log.d("fireconnector", " counter package: " + counter + ", dirs package: " + dirs);
+        LogToView("fireconnector", " counter package: " + counter + ", dirs package: " + dirs);
 
 
         //TODO give fireip, counter and dirs as string, int, string
@@ -411,7 +411,7 @@ public class MainActivity extends ListActivity implements
             @Override
             protected Void doInBackground(String... params) {
 
-                Log.d("fireconnector","doInBackground starting");
+                Log.d("fireconnector", "doInBackground starting");
                 //String fireip=params[0];
                 //int counter = 1;//TODO cast params[1];
                 //String dirs = params[2];
@@ -430,7 +430,7 @@ public class MainActivity extends ListActivity implements
                     adb = Runtime.getRuntime().exec("sh");
 
                 } catch (IOException e1) {
-                    Log.e("fireconnector", "IOException error e "+e1);
+                    Log.e("fireconnector", "IOException error e " + e1);
                 }
 
                 DataOutputStream outputStream = null;
@@ -438,7 +438,7 @@ public class MainActivity extends ListActivity implements
                     outputStream = new DataOutputStream(adb.getOutputStream());
                 }
                 else{
-                    Log.e("fireconnector", "abd == null");
+                    Log.e("fireconnector", "adb == null");
                 }
                 try {
                     if (outputStream != null) {
@@ -452,7 +452,7 @@ public class MainActivity extends ListActivity implements
 
 
                 } catch (IOException e1) {
-                    Log.e("fireconnector", "IOException error 1"+e1);
+                    Log.e("fireconnector", "IOException error 1" + e1);
                 }
 
 
@@ -490,7 +490,7 @@ public class MainActivity extends ListActivity implements
                         }
 
                     } catch (IOException e) {
-                        Log.e("fireconnector", " IOException error "+e);
+                        Log.e("fireconnector", " IOException error " + e);
                     }
 
 
@@ -520,9 +520,9 @@ public class MainActivity extends ListActivity implements
                         Log.e("fireconnector", "adb closed already ");
                     }
                 } catch (IOException e) {
-                    Log.e("fireconnector", "IOException error 2 "+e);
+                    Log.e("fireconnector", "IOException error 2 " + e);
                 } catch (InterruptedException e) {
-                    Log.e("fireconnector", "InterruptedException error 5 "+e);
+                    Log.e("fireconnector", "InterruptedException error 5 " + e);
                 }
                 if (adb != null) {
                     adb.destroy();
@@ -559,7 +559,7 @@ public class MainActivity extends ListActivity implements
         protected void onProgressUpdate(Integer... v) {
 //lets format a string from the the 'completed' variable
 
-            Log.d("fireinstaller","completed "+completed+" v "+v);
+            LogToView("fireinstaller", "completed " + completed + " v " + v);
             //TODO Switch-case(0 start, 1 connected, 2 prepared packages, 3 installing first app, 4 installing next app, 100 finished
             if(notificationDisplay==true){
                 notificationHelper.progressUpdate(completed);
