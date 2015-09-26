@@ -24,9 +24,11 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
@@ -40,8 +42,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends ListActivity implements
@@ -53,12 +53,16 @@ public class MainActivity extends ListActivity implements
     private static final String mailtag = "0.9.1";
     public String fireip = "";
     public boolean notificationDisplay=false;
+    public boolean debugDisplay=false;
     private AdView adView;
     int completed = 0; // this is the value for the notification percentage
     NotificationHelper notificationHelper= new NotificationHelper(this);
     int counter = 0;
     String dirs="";
     HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
+    TextView textAbove;
+    EditText debugView;
+
 
     public static String noNull(String input) {
         if (input == null) {
@@ -250,12 +254,7 @@ public class MainActivity extends ListActivity implements
                 startActivity(Intent.createChooser(new Intent(Intent.ACTION_SENDTO, Uri.parse(uriString)), "Contact Developer"));
                 break;
             }
-          //  case (R.id.item_donate): {
-          //      //TODO open donate-link or even in-app purchase
-          //      Toast.makeText(this, "Isn't implemented yet. But you can buy donate-version @ google play. Or wait for in-app option with chooseable amount.", Toast.LENGTH_LONG).show();
-          //      break;
-            // }
-            case (R.id.item_settings): {
+             case (R.id.item_settings): {
                 showPreferences();
                 break;
             }
@@ -282,18 +281,17 @@ public class MainActivity extends ListActivity implements
             Map<String, ?> preferences = PreferenceManager.getDefaultSharedPreferences(this).getAll();
             fireip =(String)preferences.get("example_text");
 
-           /* for(Map.Entry<String,?> entry : preferences.entrySet()){
-                String output = "map values" + entry.getKey() + ": " +
-                        entry.getValue().toString();
-                Toast.makeText(this, output, Toast.LENGTH_LONG).show();
-
-            }*/
             notificationDisplay=(Boolean)preferences.get("notifications_new_message");
-            if (!notificationDisplay){
-                Toast.makeText(this, "notification off", Toast.LENGTH_LONG).show();
-            }
-            else if (notificationDisplay){
-                Toast.makeText(this, "notification on", Toast.LENGTH_LONG).show();
+
+            debugDisplay=(Boolean)preferences.get("debug_view_enabled");
+
+            TextView textAbove = (TextView) findViewById(R.id.format_as);
+            EditText debugView = (EditText) findViewById(R.id.debugText);
+
+            textAbove.setVisibility(View.GONE);
+            if(debugDisplay){
+            debugView.setVisibility(View.VISIBLE);
+
             }
 
             Toast.makeText(this, "Installing at IP" + fireip, Toast.LENGTH_LONG).show();
@@ -308,6 +306,9 @@ public class MainActivity extends ListActivity implements
 
 
     private void pushFireTv() {
+
+        //v0.9.2
+
 
         ListAdapter adapter = getListAdapter();
         int count = adapter.getCount();
@@ -600,6 +601,8 @@ public class MainActivity extends ListActivity implements
             //fix for increasing number when more installations without app closing in between.
             completed=0;
             counter=0;
+            TextView textAbove = (TextView) findViewById(R.id.format_as); //make sure we don't call an empty reference at textAbove
+            textAbove.setVisibility(View.VISIBLE);
         }
 
         private void lockScreenOrientation() {

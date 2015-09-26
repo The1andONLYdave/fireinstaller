@@ -74,6 +74,13 @@
             android:layout_weight="0"
             android:text="3: ->FireTV" />
 
+        <EditText
+            android:id="@+id/debugText"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="show debug output if turned on in prefs"/>
+
         <LinearLayout
             android:id="@+id/bannerLayout"
             android:layout_width="match_parent"
