@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+    compileSdkVersion 22
+    buildToolsVersion "23.0.1"
 
     buildTypes {
         release {
@@ -14,19 +14,19 @@ android {
         vanilla {
             applicationId "com.dlka.fireinstaller"
             minSdkVersion 10
-            targetSdkVersion 21
-            versionName '0.9.1 free'
+            targetSdkVersion 22
+            versionName '0.9.2 free'
             manifestPlaceholders = [ applicationName:"Fireinstaller" ]
-            manifestPlaceholders = [ applicationCode:"38" ]
+            manifestPlaceholders = [ applicationCode:"39" ]
             buildConfigField "boolean", "IS_PRO_VERSION", "false"
         }
         donateVersion {
             minSdkVersion 10
             applicationId 'com.dlka.fireinstaller2'
-            targetSdkVersion 21
-            versionName '0.9.1 pro'
+            targetSdkVersion 22
+            versionName '0.9.2 pro'
             manifestPlaceholders = [ applicationName:"Fireinstaller Donate" ]
-            manifestPlaceholders = [ applicationCode:"38" ]
+            manifestPlaceholders = [ applicationCode:"39" ]
             buildConfigField "boolean", "IS_PRO_VERSION", "true"
 
 
@@ -37,7 +37,4 @@ android {
 dependencies {
     compile 'com.google.android.gms:play-services:6.5.87'
     compile 'com.android.support:support-v4:21.0.3'
-    //compile project(':groundylibrary')
-    //compile 'com.telly:groundy:1.5'
-    //provided 'com.telly:groundy-compiler:1.5'
-}
+ }
