@@ -29,12 +29,11 @@
                 android:minHeight="15dp"
                 android:minLines="2"
                 android:text="@string/always_link"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <LinearLayout
                 android:id="@+id/nest"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -42,15 +41,21 @@
 
                 <Button
                     android:id="@+id/button1"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="1: Open Settings" />
+                    android:layout_weight="0"
+                    android:text="1: Open Settings"
+                    android:textStyle="bold" />
 
-
+                <Button
+                    android:id="@+id/button2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:text="3: ->FireTV"
+                    android:textStyle="bold" />
             </LinearLayout>
         </LinearLayout>
-
 
         <TextView
             android:id="@+id/textView"
@@ -58,7 +63,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="0"
             android:text="2: Select apps for copy @ Fire TV"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textStyle="bold" />
 
         <ListView
             android:id="@android:id/list"
@@ -66,13 +72,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="2"
             android:paddingTop="0dp" />
-
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:text="3: ->FireTV" />
 
         <EditText
             android:id="@+id/debugText"

@@ -15,18 +15,18 @@ android {
             applicationId "com.dlka.fireinstaller"
             minSdkVersion 10
             targetSdkVersion 22
-            versionName '0.9.2 free'
+            versionName '0.9.3 free'
             manifestPlaceholders = [ applicationName:"Fireinstaller" ]
-            manifestPlaceholders = [ applicationCode:"39" ]
+            manifestPlaceholders = [ applicationCode:"50" ]
             buildConfigField "boolean", "IS_PRO_VERSION", "false"
         }
         donateVersion {
             minSdkVersion 10
             applicationId 'com.dlka.fireinstaller2'
             targetSdkVersion 22
-            versionName '0.9.2 pro'
+            versionName '0.9.3 pro'
             manifestPlaceholders = [ applicationName:"Fireinstaller Donate" ]
-            manifestPlaceholders = [ applicationCode:"39" ]
+            manifestPlaceholders = [ applicationCode:"50" ]
             buildConfigField "boolean", "IS_PRO_VERSION", "true"
 
 

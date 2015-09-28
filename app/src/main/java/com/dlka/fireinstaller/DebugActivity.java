@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 
 public class DebugActivity extends Activity {
@@ -37,11 +38,14 @@ public class DebugActivity extends Activity {
         });
         bv.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
+                newLog(String.valueOf(getResources().getInteger(com.google.android.gms.R.integer.google_play_services_version)));
             }
         });
 
     }
-
+    public void newLog(String message){
+        EditText log = (EditText) findViewById(R.id.editTextLog);
+        log.setText(log.getText()+message);
+    }
 
 }
