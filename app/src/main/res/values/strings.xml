@@ -23,7 +23,7 @@
     <string name="about_text">Developed by Kulsch-iT.de</string>
     <string name="action_settings">Settings</string>
     <string name="add">Add</string>
-    <string name="always_link">Attention: Start your Fire TV and use same Wifi with this device\n1.) Input FireTV IP Address in Settings. \n2.) Select Apps from List below \n3.) Press \"->FireTV\" Button \n4.) Wait (minimize with home button)\n5.) Donate, if you want!</string>
+    <string name="always_link">Howto: Start your Fire TV and use same network/Wifi with this device\n1.) Input FireTV IP Address in Settings. \n2.) Select Apps from List below \n3.) Press \"->FireTV\" Button \n4.) Wait (minimize with home button)</string>
     <string name="content_title">Fireinstaller running</string>
     <string name="download_ticker">Pushing to FireTV</string>
     <string name="msg_no_webbrowser">No webbrowser installed!</string>
@@ -33,7 +33,7 @@
     <string name="pref_description_ad_support2">Thank you for buying the donate Version!</string>
     <string name="pref_description_analytics_google">Developersettings. Support us with fixing bugs and making this app better..</string>
     <string name="pref_description_ip_fire">IP v4 Address, separate each number (0-254) with dots. Example: 192.168.0.1 oder 192.168.001.003</string>
-    <string name="pref_header_donations">Developeraccount necessary</string>
+    <string name="pref_header_donations">...</string>
     <string name="pref_header_general">Generell</string>
     <string name="pref_header_notifications">Statusbar Notification</string>
     <string name="pref_title_ad_support">Ads deactivate</string>

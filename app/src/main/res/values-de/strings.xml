@@ -23,7 +23,7 @@
     <string name="about_text">Entwickelt von Kulsch-iT.de</string>
     <string name="action_settings">Einstellungen</string>
     <string name="add">Hinzufügen</string>
-    <string name="always_link">Wichtig: Starte deinen Fire TV und gehe mit diesem Gerät in das gleiche Wlan\n1.) Gebe in den Einstellungen die Fire TV IP Adresse ein. \n2.) Wähle Apps von der Liste unten \n3.) Drücke den \"->FireTV\" Button \n4.) Warte (minimieren via Homebutton)\n5.) Spende, wenn du willst!</string>
+    <string name="always_link">Anleitung: Starte deinen Fire TV und gehe mit diesem Gerät in das gleiche Netzwerk/Wlan\n1.) Gebe in den Einstellungen die Fire TV IP Adresse ein. \n2.) Wähle Apps von der Liste unten \n3.) Drücke den \"->FireTV\" Button \n4.) Warte (minimieren via Homebutton)</string>
     <string name="content_title">Fireinstaller läuft</string>
     <string name="download_ticker">Sende an FireTV</string>
     <string name="msg_no_webbrowser">Kein Webbrowser installiert!</string>
@@ -33,7 +33,7 @@
     <string name="pref_description_ad_support2">Danke für den Kauf der Premium Version!</string>
     <string name="pref_description_analytics_google">Nur für Entwickler. Unterstütze die App besser zu machen und bei Fehlern.</string>
     <string name="pref_description_ip_fire">IP v4 Adresse, jede Nummer (0-254) mit Punkten. Beispiel: 192.168.0.1 oder 192.168.001.003</string>
-    <string name="pref_header_donations">Entwickleraccount erforderlich</string>
+    <string name="pref_header_donations">...</string>
     <string name="pref_header_general">Generell</string>
     <string name="pref_header_notifications">Statusbar Benachrichtigung</string>
     <string name="pref_title_ad_support">Werbung aktivieren</string>

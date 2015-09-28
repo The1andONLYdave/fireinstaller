@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/pref_header_general">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="example_checkbox2"
+            android:summary="@string/pref_description_ad_support2"
+            android:title="@string/pref_title_ad_support" />
+        <!-- NOTE: EditTextPreference accepts EditText attributes. -->
+        <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
+        <!-- android:summary="@string/pref_description_ip_fire" -->
+        <EditTextPreference
+            android:defaultValue="@string/pref_default_ip_fire"
+            android:digits="0123456789."
+            android:inputType="number|numberDecimal"
+            android:key="example_text"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_title_ip_fire" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_header_notifications">
+        <!-- A 'parent' preference, which enables/disables child preferences (below)
+             when checked/unchecked. -->
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="notifications_new_message"
+            android:title="@string/pref_title_statusbar_notification" />
+    </PreferenceCategory>
+    <!-- NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
+     dismiss it. -->
+    <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
+    <PreferenceCategory android:title="@string/pref_header_donations">
+        <Preference android:title="Thank you for donating!"></Preference>
+        <Preference
+            android:key="Click for opening Google Play-Page"
+            android:title="Rate this app">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="https://play.google.com/store/apps/details?id=com.dlka.fireinstaller2" />
+        </Preference>
+        <Preference
+            android:key="View Apps from DLK Appentwicklung"
+            android:title="More Apps from us @ Google Play">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="http://play.google.com/store/search?q=pub:DLK+Appentwicklung+(Kulsch-IT)" />
+        </Preference>
+        <Preference
+            android:key="debugActivityLauncher"
+            android:summary="debugActivityLauncher"
+            android:title="debugActivityLauncher">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:targetClass="com.dlka.fireinstaller.DebugActivity"
+                android:targetPackage="com.dlka.fireinstaller2" />
+        </Preference>
+        <ListPreference
+            android:defaultValue="-1"
+            android:entries="@array/pref_example_install_method"
+            android:entryValues="@array/pref_example_install_number"
+            android:key="example_list"
+            android:negativeButtonText="@null"
+            android:positiveButtonText="@null"
+            android:title="@string/pref_title_install_method" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="example_checkbox"
+            android:summary="@string/pref_description_analytics_google"
+            android:title="@string/pref_title_analytics_google" />
+        <Preference
+            android:defaultValue="0"
+            android:key="aboutPref"
+            android:selectable="true"
+            android:summary="@string/about_sum"
+            android:title="@string/about_text" />
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="debug_view_enabled"
+            android:title="Enable Debug Window" />
+    </PreferenceCategory>
+</PreferenceScreen>
