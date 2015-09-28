@@ -1,4 +1,4 @@
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -65,7 +65,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="2"
-            android:paddingTop="0dp"/>
+            android:paddingTop="0dp" />
 
         <Button
             android:id="@+id/button2"
@@ -78,15 +78,15 @@
             android:id="@+id/debugText"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:text="show debug output if turned on in prefs"/>
+            android:text="show debug output if turned on in prefs"
+            android:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/bannerLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="bottom|center_vertical|end"
-            android:padding="15dp"/>
+            android:padding="15dp" />
 
     </LinearLayout>
 

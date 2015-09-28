@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:versionCode="${applicationCode}" tools:node="replace">
+    android:versionCode="${applicationCode}"
+    tools:node="replace">
 
-<uses-sdk
+    <uses-sdk
         android:minSdkVersion="10"
         android:targetSdkVersion="21" />
 
@@ -11,14 +12,16 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-    <application tools:replace="android:label"
+    <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="Fireinstaller Donate"
-        android:theme="@style/AppTheme" >
-        <activity tools:replace="android:name,android:label"
+        android:theme="@style/AppTheme"
+        tools:replace="android:label">
+        <activity
             android:name="com.dlka.fireinstaller.MainActivity"
-            android:label="Fireinstaller Donate">
+            android:label="Fireinstaller Donate"
+            tools:replace="android:name,android:label">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -30,23 +33,28 @@
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"
             android:theme="@android:style/Theme.Translucent" />
 
-        //fix for white or black empty screen on app startup, see https://code.google.com/p/android/issues/detail?id=82157
+        //fix for white or black empty screen on app startup, see
+        https://code.google.com/p/android/issues/detail?id=82157
 
-        <activity tools:replace="android:parentActivityName"
+        <activity
             android:name="com.dlka.fireinstaller.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName="com.dlka.fireinstaller.MainActivity" >
-            <meta-data tools:replace="android:value"
+            android:parentActivityName="com.dlka.fireinstaller.MainActivity"
+            tools:replace="android:parentActivityName">
+            <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.dlka.fireinstaller.MainActivity" />
+                android:value="com.dlka.fireinstaller.MainActivity"
+                tools:replace="android:value" />
         </activity>
-        <activity tools:replace="android:parentActivityName"
+        <activity
             android:name="com.dlka.fireinstaller.DebugActivity"
             android:label="@string/title_activity_debug"
-            android:parentActivityName="com.dlka.fireinstaller.MainActivity" >
-            <meta-data tools:replace="android:value"
+            android:parentActivityName="com.dlka.fireinstaller.MainActivity"
+            tools:replace="android:parentActivityName">
+            <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.dlka.fireinstaller.MainActivity" />
+                android:value="com.dlka.fireinstaller.MainActivity"
+                tools:replace="android:value" />
         </activity>
     </application>
 

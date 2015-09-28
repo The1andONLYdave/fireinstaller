@@ -59,24 +59,19 @@ public class NotificationHelper {
     public void progressUpdate(int percentageComplete) {
 
         //build up the new status message
-        CharSequence contentText="empty";
+        CharSequence contentText = "empty";
         //TODO Switch-case(0 start, 1 connected, 2 prepared packages, 3 installing first app, 4 installing next app, 100 finished
-        if(percentageComplete==0){
+        if (percentageComplete == 0) {
             contentText = "Connecting to Fire TV...";
-        }
-        else if(percentageComplete==1){
+        } else if (percentageComplete == 1) {
             contentText = "Fire TV connected... Preparing apps to push.";
-        }
-        else if(percentageComplete==2){
+        } else if (percentageComplete == 2) {
             contentText = "Begin installing";
-        }
-        else if((percentageComplete>2)&(percentageComplete<100)){
-            contentText = "Installing App Number "+(percentageComplete-2) + ". May take long time.";
-        }
-        else if(percentageComplete==100){
+        } else if ((percentageComplete > 2) & (percentageComplete < 100)) {
+            contentText = "Installing App Number " + (percentageComplete - 2) + ". May take long time.";
+        } else if (percentageComplete == 100) {
             contentText = "Installing complete. Thank you!";
-        }
-        else{
+        } else {
             contentText = "Unallowed percentageComplete. Please report error via email";
         }
         //publish it to the status bar

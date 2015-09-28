@@ -2,8 +2,6 @@ package com.dlka.fireinstaller;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -16,7 +14,7 @@ public class DebugActivity extends Activity {
         setContentView(R.layout.activity_debug);
 
         final int completed = 10; // this is the value for the notification percentage
-        final NotificationHelper notificationHelper= new NotificationHelper(this);
+        final NotificationHelper notificationHelper = new NotificationHelper(this);
 
         final Button bf = (Button) findViewById(R.id.button);
         final Button bs = (Button) findViewById(R.id.button2);
@@ -28,7 +26,8 @@ public class DebugActivity extends Activity {
             }
         });
         bs.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {notificationHelper.progressUpdate(completed);
+            public void onClick(View v) {
+                notificationHelper.progressUpdate(completed);
             }
         });
         bt.setOnClickListener(new View.OnClickListener() {
@@ -45,11 +44,4 @@ public class DebugActivity extends Activity {
     }
 
 
-
-
-
-
-
-
-
-    }
+}
