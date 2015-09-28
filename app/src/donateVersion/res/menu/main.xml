@@ -17,6 +17,10 @@
         android:id="@+id/item_mail"
         android:title="@string/mail"></item>
     <item
+        android:id="@+id/item_donate"
+        android:icon="@drawable/ic_action_help"
+        android:title="@string/pref_description_ad_support2"></item>
+    <item
         android:id="@+id/item_settings"
         android:icon="@drawable/ic_action_help"
         android:title="@string/settings"></item>

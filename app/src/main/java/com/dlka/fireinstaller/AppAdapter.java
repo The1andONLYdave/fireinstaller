@@ -37,8 +37,6 @@ public class AppAdapter extends ArrayAdapter<SortablePackageInfo> {
             vh.appName = (TextView) ret.findViewById(R.id.appname);
             vh.appPackage = (TextView) ret.findViewById(R.id.apppackage);
             vh.appIcon = (ImageView) ret.findViewById(R.id.icon);
-            //vh.comment = (TextView) ret.findViewById(R.id.comments);
-            //vh.tags = (TextView) ret.findViewById(R.id.tags);
             ret.setTag(vh);
         }
         SortablePackageInfo spi = getItem(position);

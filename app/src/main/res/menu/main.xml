@@ -24,7 +24,4 @@
         android:id="@+id/item_settings"
         android:icon="@drawable/ic_action_help"
         android:title="@string/settings"></item>
-    <!--item
-        android:id="@+id/item_debug_items"
-        android:title="debug_items"></item-->
 </menu>
