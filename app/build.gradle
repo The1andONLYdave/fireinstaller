@@ -17,7 +17,7 @@ android {
             targetSdkVersion 22
             versionName '0.9.3 free'
             manifestPlaceholders = [ applicationName:"Fireinstaller" ]
-            manifestPlaceholders = [ applicationCode:"50" ]
+            manifestPlaceholders = [ applicationCode:"51" ]
             buildConfigField "boolean", "IS_PRO_VERSION", "false"
         }
         donateVersion {
@@ -26,7 +26,7 @@ android {
             targetSdkVersion 22
             versionName '0.9.3 pro'
             manifestPlaceholders = [ applicationName:"Fireinstaller Donate" ]
-            manifestPlaceholders = [ applicationCode:"50" ]
+            manifestPlaceholders = [ applicationCode:"51" ]
             buildConfigField "boolean", "IS_PRO_VERSION", "true"
 
 

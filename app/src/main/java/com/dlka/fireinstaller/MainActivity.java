@@ -541,9 +541,10 @@ public class MainActivity extends ListActivity implements
             if (notificationDisplay == true) {
                 notificationHelper.createNotification();
             }
-
-            dialog = ProgressDialog.show(MainActivity.this, "doing my work...", "Please Wait, \nProgress in Notification Bar. \n", true);
-            dialog.setCancelable(false); //no cancel dialog while installing
+            if (!debugDisplay) {
+                dialog = ProgressDialog.show(MainActivity.this, "doing my work...", "Please Wait, \nProgress in Notification Bar. \n", true);
+                dialog.setCancelable(false); //no cancel dialog while installing
+            }
         }
 
         protected void onProgressUpdate(Integer... v) {
@@ -570,24 +571,29 @@ public class MainActivity extends ListActivity implements
             } else {
                 contentText = "Unallowed percentageComplete. Please report error via email";
             }
+            if (!debugDisplay) {
+                dialog.setMessage(dialogMessage + contentText);
+            }
 
-            dialog.setMessage(dialogMessage + contentText);
         }
-
         protected void onPostExecute(final Void result) {
             //this should be self explanatory
             if (notificationDisplay == true) {
                 notificationHelper.completed();
             }
-            dialog.setCancelable(true);
-            dialog.setProgress(100);
-            dialog.dismiss();
+            if (!debugDisplay) {
+                dialog.setCancelable(true);
+                dialog.setProgress(100);
+                dialog.dismiss();
+            }
             unlockScreenOrientation();
             //fix for increasing number when more installations without app closing in between.
             completed = 0;
             counter = 0;
             TextView textAbove = (TextView) findViewById(R.id.format_as); //make sure we don't call an empty reference at textAbove
-            textAbove.setVisibility(View.VISIBLE);
+            if (!debugDisplay) {
+                textAbove.setVisibility(View.VISIBLE);
+            }
         }
 
         private void lockScreenOrientation() {
