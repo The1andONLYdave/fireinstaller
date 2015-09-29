@@ -293,8 +293,6 @@ public class MainActivity extends ListActivity implements
                 debugView.setVisibility(View.VISIBLE);
                 Log.d("Fireinstaller", "debug message test");
                 Log.e("Fireinstaller", "failure message test");
-
-
             }
 
             Toast.makeText(this, "Installing at IP" + fireip, Toast.LENGTH_LONG).show();
@@ -432,6 +430,7 @@ public class MainActivity extends ListActivity implements
                 adb = Runtime.getRuntime().exec("sh");
 
             } catch (IOException e1) {
+                publishProgress(501);
                 Log.e("fireconnector", "IOException error e " + e1);
             }
 
@@ -439,6 +438,7 @@ public class MainActivity extends ListActivity implements
             if (adb != null) {
                 outputStream = new DataOutputStream(adb.getOutputStream());
             } else {
+                publishProgress(502);
                 Log.e("fireconnector", "adb == null");
             }
             try {
@@ -447,11 +447,13 @@ public class MainActivity extends ListActivity implements
                     outputStream.flush();
                     Log.d("fireconnector", "/system/bin/adb" + " connect " + fireip + "\n ");
                 } else {
+                    publishProgress(503);
                     Log.e("fireconnector", "outputStream == null");
                 }
 
 
             } catch (IOException e1) {
+                publishProgress(504);
                 Log.e("fireconnector", "IOException error 1" + e1);
             }
 
@@ -485,10 +487,12 @@ public class MainActivity extends ListActivity implements
                         outputStream.writeBytes("/system/bin/adb install " + sourceDir[i] + "\n");
                         outputStream.flush();
                     } else {
+                        publishProgress(505);
                         Log.e("fireconnector", "outputStream == null (occurence 2)");
                     }
 
                 } catch (IOException e) {
+                    publishProgress(506);
                     Log.e("fireconnector", " IOException error " + e);
                 }
 
@@ -505,27 +509,30 @@ public class MainActivity extends ListActivity implements
                 if (outputStream != null) {
                     outputStream.close();
                 } else {
+                    publishProgress(507);
                     Log.e("fireconnector", "outputStream closed already ");
                 }
                 if (adb != null) {
                     adb.waitFor();
                 } else {
+                    publishProgress(508);
                     Log.e("fireconnector", "adb closed already ");
                 }
             } catch (IOException e) {
+                publishProgress(509);
                 Log.e("fireconnector", "IOException error 2 " + e);
             } catch (InterruptedException e) {
+                publishProgress(510);
                 Log.e("fireconnector", "InterruptedException error 5 " + e);
             }
             if (adb != null) {
                 adb.destroy();
             } else {
+                publishProgress(511);
                 Log.e("fireconnector", "adb already destroyed ");
             }
 
-
             completed = 100;
-
             //lets call our onProgressUpdate() method which runs on the UI thread
             publishProgress(100);
             Log.e("fireconnector", "100");
@@ -550,32 +557,62 @@ public class MainActivity extends ListActivity implements
         protected void onProgressUpdate(Integer... v) {
 //lets format a string from the the 'completed' variable
 
-            LogToView("fireinstaller", "completed " + completed + " v " + v);
+            LogToView("fireinstaller", "completed " + completed + " v " + v); //TODO why we used to log v here?
             //TODO Switch-case(0 start, 1 connected, 2 prepared packages, 3 installing first app, 4 installing next app, 100 finished
             if (notificationDisplay == true) {
                 notificationHelper.progressUpdate(completed);
             }
             String dialogMessage = "Please Wait, \nProgress in Notification Bar. \n";
-            String contentText;
+            String contentText = "";
 
             if (completed == 0) {
                 contentText = "Connecting to Fire TV...";
+                LogToView("fireinstaller", "Connecting to Fire TV...\n");
             } else if (completed == 1) {
                 contentText = "Fire TV connected... Preparing apps to push.";
+                LogToView("fireinstaller", "Fire TV connected... Preparing apps to push.\n");
             } else if (completed == 2) {
                 contentText = "Begin installing";
+                LogToView("fireinstaller", "Begin installing\n");
             } else if ((completed > 2) & (completed < 100)) {
                 contentText = "Installing App Number " + (completed - 2) + " of " + counter + ".\n May take long time.\nIf no progress after some Minutes: Check if IP " + fireip + " is correct on your Fire TV. If it's wrong, just (force close and) restart this app. Then open Settings and enter correct IP (see menu: help for more).\nWhen this window disappears everything is installed. You can also enable (sometimes bugged) notifications for progress in settings of the app. Thank you for using my app!";
+                LogToView("fireinstaller", "Installing App Number " + (completed - 2) + " of " + counter + ".\n");
             } else if (completed == 100) {
                 contentText = "Installing complete. Thank you!";
+                LogToView("fireinstaller", "Installing complete. Thank you!\n");
+            } else if (completed == 501) {
+                LogToView("fireconnector", "IOException error e, cant get sh to exec ");
+            } else if (completed == 502) {
+                LogToView("fireconnector", "adb == null");
+            } else if (completed == 503) {
+                LogToView("fireconnector", "outputStream == null");
+            } else if (completed == 504) {
+                LogToView("fireconnector", "IOException error 1, outputstream error?");
+            } else if (completed == 505) {
+                LogToView("fireconnector", "outputStream == null (occurence 2)");
+            } else if (completed == 506) {
+                LogToView("fireconnector", " IOException error, outputstream error2 ? ");
+            } else if (completed == 507) {
+                LogToView("fireconnector", "outputStream closed already ");
+            } else if (completed == 508) {
+                LogToView("fireconnector", "adb closed already ");
+            } else if (completed == 509) {
+                LogToView("fireconnector", "IOException error 2 ");
+            } else if (completed == 510) {
+                LogToView("fireconnector", "InterruptedException error 5 ");
+            } else if (completed == 511) {
+                LogToView("fireconnector", "adb already destroyed ");
             } else {
                 contentText = "Unallowed percentageComplete. Please report error via email";
+                LogToView("fireinstaller", "Unallowed percentageComplete. Please report error via email");
             }
+
             if (!debugDisplay) {
                 dialog.setMessage(dialogMessage + contentText);
             }
 
         }
+
         protected void onPostExecute(final Void result) {
             //this should be self explanatory
             if (notificationDisplay == true) {
@@ -590,26 +627,31 @@ public class MainActivity extends ListActivity implements
             //fix for increasing number when more installations without app closing in between.
             completed = 0;
             counter = 0;
-            TextView textAbove = (TextView) findViewById(R.id.format_as); //make sure we don't call an empty reference at textAbove
             if (!debugDisplay) {
+                TextView textAbove = (TextView) findViewById(R.id.format_as); //make sure we don't call an empty reference at textAbove
                 textAbove.setVisibility(View.VISIBLE);
             }
+            LogToView("fireinstaller", "complete. READY?\n");
         }
 
         private void lockScreenOrientation() {
             int currentOrientation = getResources().getConfiguration().orientation;
             if (currentOrientation == Configuration.ORIENTATION_PORTRAIT) {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                LogToView("SCREEN_ORIENTATION_PORTRAIT", " calling locking.\n");
             } else {
                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                LogToView("SCREEN_ORIENTATION_LANDSCAPE", " calling locking.\n");
             }
         }
 
         private void unlockScreenOrientation() {
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+            LogToView("SCREEN_ORIENTATION_SENSOR", " calling unlock.\n");
         }
 
         public void onCancel(DialogInterface theDialog) {
+            LogToView("onCancel called", " this should not happen...\n");
             cancel(true);
             //TODO stop installertask
         }

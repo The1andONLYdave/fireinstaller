@@ -77,7 +77,7 @@
             android:id="@+id/debugText"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="show debug output if turned on in prefs"
+            android:text="show debug output if turned on in prefs\n"
             android:visibility="gone" />
 
         <LinearLayout

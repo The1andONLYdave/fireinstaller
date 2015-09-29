@@ -52,11 +52,30 @@
         android:layout_below="@+id/button3"
         android:text="Google Play Services" />
 
-    <EditText
-        android:id="@+id/editTextLog"
+    <Button
+        android:id="@+id/button5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Log" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/button4"
+        android:text="Ping FireTV/FireStick (ip from prefs)" />
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/scrollView" >
+
+        <EditText
+            android:id="@+id/editTextLog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Log"
+            android:selectAllOnFocus="true"
+            android:paddingBottom="10dp"
+            android:focusableInTouchMode="false"
+            android:textIsSelectable="true" />
+    </ScrollView>
 
 
 </TableLayout>
