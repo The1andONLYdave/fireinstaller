@@ -14,16 +14,8 @@ class SortablePackageInfo implements Comparable<SortablePackageInfo>,
 
     public String packageName;
     public String displayName;
-    public String installer;
-    public String tags;
     public boolean selected;
-    public int versionCode;
     public String version;
-    public long firstInstalled;
-    public long lastUpdated;
-    public int uid;
-    public String dataDir;
-    public int targetsdk;
     public ApplicationInfo appInfo;
     public String sourceDir;
 

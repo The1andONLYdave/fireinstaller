@@ -7,6 +7,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,8 +39,6 @@ public class ListTask extends
 
     @Override
     protected ArrayList<SortablePackageInfo> doInBackground(Object... params) {
-        SharedPreferences prefs = listActivity.getSharedPreferences(
-                MainActivity.PREFSFILE, 0);
         ArrayList<SortablePackageInfo> ret = new ArrayList<SortablePackageInfo>();
         PackageManager pm = listActivity.getPackageManager();
         List<PackageInfo> list = pm.getInstalledPackages(0);
@@ -52,25 +51,15 @@ public class ListTask extends
             PackageInfo info = it.next();
             try {
                 ApplicationInfo ai = pm.getApplicationInfo(info.packageName, 0);
-                if ((ai.flags & ApplicationInfo.FLAG_SYSTEM) != ApplicationInfo.FLAG_SYSTEM
-                        && (ai.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) {
                     spitmp[idx] = new SortablePackageInfo();
                     spitmp[idx].packageName = info.packageName;
                     spitmp[idx].sourceDir = ai.sourceDir;
-
                     spitmp[idx].displayName = pm
                             .getApplicationLabel(info.applicationInfo).toString();
-                    spitmp[idx].installer = pm.getInstallerPackageName(info.packageName);
                     spitmp[idx].appInfo = ai;
-                    spitmp[idx].versionCode = info.versionCode;
-                    spitmp[idx].version = info.versionName;
-                    spitmp[idx].firstInstalled = info.firstInstallTime;
-                    spitmp[idx].lastUpdated = info.lastUpdateTime;
-                    spitmp[idx].uid = info.applicationInfo.uid;
-                    spitmp[idx].dataDir = info.applicationInfo.dataDir;
-                    spitmp[idx].targetsdk = ai.targetSdkVersion;
+                    //TODO needing this? //spitmp[idx].uid = info.applicationInfo.uid;
                     idx++;
-                }
+
             } catch (NameNotFoundException exp) {
             }
         }
@@ -80,8 +69,7 @@ public class ListTask extends
         System.arraycopy(spitmp, 0, spi, 0, idx);
         Arrays.sort(spi);
         for (int i = 0; i < spi.length; i++) {
-            spi[i].selected = prefs.getBoolean(MainActivity.SELECTED + "."
-                    + spi[i].packageName, false);
+            spi[i].selected = false;//unselect all apps on createView onStart
             ret.add(spi[i]);
         }
         return ret;

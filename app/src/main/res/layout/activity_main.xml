@@ -33,7 +33,7 @@
 
             <LinearLayout
                 android:id="@+id/nest"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
@@ -44,8 +44,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0"
-                    android:text="1: Open Settings"
+                    android:text="@string/howto1"
                     android:textStyle="bold" />
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
 
                 <Button
                     android:id="@+id/button2"
@@ -62,7 +67,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
-            android:text="2: Select apps for copy @ Fire TV"
+            android:text="@string/howto2"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textStyle="bold" />
 

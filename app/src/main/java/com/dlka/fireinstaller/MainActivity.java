@@ -23,6 +23,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -49,7 +50,7 @@ public class MainActivity extends ListActivity implements
     public static final String PREFSFILE = "settings2";
     public static final String SELECTED = "selected";
     private static final String PROPERTY_ID = "App";
-    private static final String mailtag = "0.9.1";
+    private static final String mailtag = BuildConfig.VERSION_NAME;
     public String fireip = "";
     public boolean notificationDisplay = false;
     public boolean debugDisplay = false;
@@ -96,6 +97,9 @@ public class MainActivity extends ListActivity implements
         //fix for white or black empty screen on app startup, see https://code.google.com/p/android/issues/detail?id=82157
         t1.enableExceptionReporting(false);
 
+        LinearLayout layout = (LinearLayout) findViewById(R.id.bannerLayout);
+        layout.setVisibility(View.INVISIBLE);
+
         if (!BuildConfig.IS_PRO_VERSION) {
 
             // Create the adView.
@@ -103,8 +107,7 @@ public class MainActivity extends ListActivity implements
             adView.setAdUnitId("ca-app-pub-8761501900041217/6245885681");
             adView.setAdSize(AdSize.BANNER);
 
-            LinearLayout layout = (LinearLayout) findViewById(R.id.bannerLayout);
-
+            layout.setVisibility(View.VISIBLE);
             layout.addView(adView);
 
             AdRequest adRequest = new AdRequest.Builder()
@@ -116,6 +119,9 @@ public class MainActivity extends ListActivity implements
                     .build();
 
             adView.loadAd(adRequest);
+        }
+        else{
+            layout.setPadding(0,0,0,0); //free ad-space for donate version
         }
 
 
@@ -148,14 +154,32 @@ public class MainActivity extends ListActivity implements
         dialog.setTitle("Hello");
 
         Button button = (Button) dialog.findViewById(R.id.Button01);
+        final CheckBox dontShowAgain = (CheckBox) dialog.findViewById(R.id.checkBox);
         button.setOnClickListener(new OnClickListener() {
+
+
+
             @Override
             public void onClick(View view) {
+
+
+                String checkBoxResult = "NOT checked";
+                if (dontShowAgain.isChecked())
+                        checkBoxResult = "checked";
+                        SharedPreferences.Editor editor = getSharedPreferences(PREFSFILE, 0).edit();
+                        editor.putString("skipMessage", checkBoxResult);
+                        // Commit the edits!
+                        editor.commit();
                 dialog.dismiss();
+
             }
         });
 
-        dialog.show();
+
+        SharedPreferences settings = getSharedPreferences(PREFSFILE, 0);
+        String skipMessage = settings.getString("skipMessage", "NOT checked");
+        if (!skipMessage.equals("checked"))
+            dialog.show();
 
     }
 
@@ -227,15 +251,22 @@ public class MainActivity extends ListActivity implements
             case (R.id.item_help): {
                 final Dialog dialog = new Dialog(this);
                 dialog.setContentView(R.layout.dialog);
-                dialog.setTitle("Help Dialog 1");
+                dialog.setTitle("Help Dialog");
                 Button button = (Button) dialog.findViewById(R.id.Button01);
+                final CheckBox dontShowAgain = (CheckBox) dialog.findViewById(R.id.checkBox);
                 button.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        String checkBoxResult = "NOT checked";
+                        if (dontShowAgain.isChecked())
+                            checkBoxResult = "checked";
+                        SharedPreferences.Editor editor = getSharedPreferences(PREFSFILE, 0).edit();
+                        editor.putString("skipMessage", checkBoxResult);
+                        // Commit the edits!
+                        editor.commit();
                         dialog.dismiss();
                     }
                 });
-
                 dialog.show();
                 break;
             }

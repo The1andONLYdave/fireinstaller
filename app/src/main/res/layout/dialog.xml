@@ -3,30 +3,50 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:scrollbarAlwaysDrawVerticalTrack="true"
-            android:scrollbars="vertical">>
+            android:layout_height="0dp"
+            android:layout_gravity="top"
+            android:layout_weight="2">
 
             <TextView
                 android:id="@+id/TextView01"
                 android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/Guide"
+                android:gravity="top" />
+        </ScrollView>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            >
+
+            <CheckBox
+                android:id="@+id/checkBox"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/Guide" />
+
+                android:text="@string/checkbox"
+                android:layout_gravity="bottom"
+                android:layout_weight="1" />
 
             <Button
                 android:id="@+id/Button01"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/TextView01"
-                android:layout_centerHorizontal="true"
-                android:text="@string/GuideOk" />
+                android:text="@string/GuideOk"
+                android:layout_gravity="bottom"
+                android:layout_weight="1" />
         </LinearLayout>
-    </ScrollView>
+
+    </LinearLayout>
+
 </RelativeLayout>

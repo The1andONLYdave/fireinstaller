@@ -7,7 +7,7 @@
     <string name="help">Help</string>
     <string name="mail">Send Developer Email</string>
     <string name="copy">Copy selected Apps at FireTV</string>
-    <string name="Guide">"Quick Guide:\n\nStep 1 – Enable ADB Debugging\nIn order for the Fire TV to accept sideloaded apps, you must enable ADB Debugging. You may turn it back off once you’re done sideloading apps.\nFrom the home screen, scroll down to “Settings”\nScroll right to “SYSTEM”\nScroll down to “Developer Options”\nChange “ADB debugging” to “ON”\nChange ”Unknown Sources” to ”ON”\n\nStep 2 – Obtain your Fire TV’s IP Address\nFrom the home screen, scroll down to “Settings”\nScroll right to “SYSTEM”\nSelect “About”\nScroll down to “Network”\nWrite down the numbers next to “IP Address”\n\nBeta Version with a known bug: if you write wrong ip adress (xxx.xxx.xxx.xxx, no spaces, input with “.”) app will hang, also sometimes after transfering all apps too. if all apps installed on your firetv you may safely force-close the app from your phone's settings menu. will be fixed in next releases.\n Last but not least: thanks for trying/using our app. We are happy for emails and market comments. Thank you!"</string>
+    <string name="Guide">"Quick Guide:\n\nStep 1 – Enable ADB Debugging\nIn order for the Fire TV to accept sideloaded apps, you must enable ADB Debugging. You may turn it back off once you’re done sideloading apps.\nFrom the home screen, scroll down to “Settings”\nScroll right to “SYSTEM”\nScroll down to “Developer Options”\nChange “ADB debugging” to “ON”\nChange ”Unknown Sources” to ”ON”\n\nStep 2 – Obtain your Fire TV’s IP Address\nFrom the home screen, scroll down to “Settings”\nScroll right to “SYSTEM”\nSelect “About”\nScroll down to “Network”\nWrite down the numbers next to “IP Address”\n\nYou find installed apps on Fire TV / Fire Stick at Settings > Applications > Manage Installed Applications.\n\nBeta Version with a known bug: if you write wrong ip adress (xxx.xxx.xxx.xxx, no spaces, input with “.”) app will hang, also sometimes after transfering all apps too. if all apps installed on your firetv you may safely force-close the app from your phone's settings menu. will be fixed in next releases.\n Last but not least: thanks for trying/using our app. We are happy for emails and market comments. Thank you!"</string>
     <string name="GuideOk">Ok</string>
     <string name="apprater_title">Rate this app?</string>
     <string name="apprater_message">Hi,\nis this App usefull? Then it would be amazing if you could write a comment on Google Play. Wanna open Google Play Entry?</string>
@@ -55,4 +55,7 @@
         <item>0</item>
         <item>1</item>
     </string-array>
+    <string name="checkbox">Don\'t show on Startup</string>
+    <string name="howto1">1. Open Settings</string>
+    <string name="howto2">2. Select apps for copy @ Fire TV</string>
 </resources>
