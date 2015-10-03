@@ -1,6 +1,7 @@
 package com.dlka.fireinstaller;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -30,6 +31,8 @@ public class DebugActivity extends Activity {
         final Button bt = (Button) findViewById(R.id.button3);
         final Button bv = (Button) findViewById(R.id.button4);
         final Button bfifth = (Button) findViewById(R.id.button5);
+        final Button bsixth = (Button) findViewById(R.id.button5);
+        int i = 0;
 
         bf.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -37,6 +40,7 @@ public class DebugActivity extends Activity {
                 bs.setEnabled(true);
                 bt.setEnabled(true);
                 bf.setEnabled(false);
+                bsixth.setEnabled(false);
             }
         });
         bs.setOnClickListener(new View.OnClickListener() {
@@ -50,6 +54,7 @@ public class DebugActivity extends Activity {
                 bs.setEnabled(false);
                 bt.setEnabled(false);
                 bf.setEnabled(true);
+                bsixth.setEnabled(true);
             }
         });
         bv.setOnClickListener(new View.OnClickListener() {
@@ -63,12 +68,19 @@ public class DebugActivity extends Activity {
                 Map<String, ?> preferences = PreferenceManager.getDefaultSharedPreferences(DebugActivity.this).getAll();
                 fireip = (String) preferences.get("example_text");
 
-                newLog("\nping running: ip "+fireip+" please wait 5 seconds for output\n");
+                newLog("\nping running: ip " + fireip + " please wait 5 seconds for output\n");
                 newLog(pingTV(fireip));
             }
         });
+        bsixth.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                showNewDesign();
+            }
+        });
+
     }
-    public void newLog(String message){
+
+    public void newLog(String message) {
         EditText log = (EditText) findViewById(R.id.editTextLog);
         log.setText(log.getText()+message);
     }
@@ -156,4 +168,8 @@ public class DebugActivity extends Activity {
         return output;
     }
 
+    private void showNewDesign() {
+        Intent myIntent = new Intent(DebugActivity.this, MainActivity2.class);
+        DebugActivity.this.startActivity(myIntent);
+    }
 }
