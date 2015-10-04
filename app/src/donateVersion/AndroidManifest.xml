@@ -11,6 +11,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
         android:allowBackup="true"
@@ -22,11 +23,6 @@
             android:name="com.dlka.fireinstaller.MainActivity"
             android:label="Fireinstaller Donate"
             tools:replace="android:name,android:label">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name="com.google.android.gms.ads.AdActivity"
@@ -55,6 +51,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.dlka.fireinstaller.MainActivity"
                 tools:replace="android:value" />
+        </activity>
+        <activity
+            android:name="com.dlka.fireinstaller.MainActivity2"
+            android:label="Fireinstaller">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

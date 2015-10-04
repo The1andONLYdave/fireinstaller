@@ -55,7 +55,15 @@
         <item>0</item>
         <item>1</item>
     </string-array>
-    <string name="checkbox">Nicht erneut anzeigen beim Starten (Visueller Guide)</string>
+    <string name="checkbox">Verstecke visuelle Anleitung beim Start</string>
     <string name="howto1">1. Zeige Einstellungen</string>
     <string name="howto2">2. Wähle Apps für den Fire TV aus:</string>
+    <string-array name="donation_google_catalog_values">
+        <item>1 Euro</item>
+        <item>2 Euros</item>
+        <item>3 Euros</item>
+        <item>5 Euros</item>
+        <item>8 Euros</item>
+        <item>20 Euros</item>
+    </string-array>
 </resources>

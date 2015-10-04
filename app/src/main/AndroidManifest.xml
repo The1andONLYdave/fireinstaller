@@ -11,21 +11,17 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.android.vending.BILLING" />
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher2"
+        android:icon="@drawable/ic_launcher"
         android:label="Fireinstaller"
         android:theme="@style/AppTheme"
         tools:replace="android:label,android:icon,android:theme">>
         <activity
             android:name=".MainActivity"
             android:label="Fireinstaller">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name="com.google.android.gms.ads.AdActivity"
@@ -53,11 +49,13 @@
         </activity>
         <activity
             android:name=".MainActivity2"
-            android:label="@string/title_activity_debug"
+            android:label="Fireinstaller"
             android:parentActivityName=".DebugActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".DebugActivity" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
 

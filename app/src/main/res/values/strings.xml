@@ -55,7 +55,19 @@
         <item>0</item>
         <item>1</item>
     </string-array>
-    <string name="checkbox">Don\'t show on Startup Visual Guide</string>
+    <string name="checkbox">Hide Visual Guide on App Start</string>
     <string name="howto1">1. Open Settings</string>
     <string name="howto2">2. Select apps for copy @ Fire TV</string>
+    <string name="newquickguide">Howto: Start your Fire TV and use same network/Wifi with this device\nPress orange help button for more information.</string>
+
+
+    <string-array name="donation_google_catalog_values">
+        <item>1 Euro</item>
+        <item>2 Euros</item>
+        <item>3 Euros</item>
+        <item>5 Euros</item>
+        <item>8 Euros</item>
+        <item>20 Euros</item>
+    </string-array>
+
 </resources>

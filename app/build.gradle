@@ -19,6 +19,8 @@ android {
             manifestPlaceholders = [ applicationName:"Fireinstaller" ]
             manifestPlaceholders = [ applicationCode:"53" ]
             buildConfigField "boolean", "IS_PRO_VERSION", "false"
+            buildConfigField "boolean", "DONATIONS_GOOGLE", "true"
+
         }
         donateVersion {
             minSdkVersion 14
@@ -28,6 +30,8 @@ android {
             manifestPlaceholders = [ applicationName:"Fireinstaller Donate" ]
             manifestPlaceholders = [ applicationCode:"53" ]
             buildConfigField "boolean", "IS_PRO_VERSION", "true"
+            buildConfigField "boolean", "DONATIONS_GOOGLE", "false"
+
 
 
         }
@@ -43,7 +47,5 @@ dependencies {
     compile 'net.fredericosilva:showTipsView:1.0.2'
     compile 'org.sufficientlysecure:donations:2.3'
     compile 'com.getbase:floatingactionbutton:1.10.0'
-  //  compile 'com.kyleduo.switchbutton:library:1.2.10'
-    compile 'com.romainpiel.shimmer:library:1.4.0@aar'
 }
 //    compile 'com.nononsenseapps:filepicker:2.4.2'

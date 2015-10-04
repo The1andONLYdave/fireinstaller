@@ -37,7 +37,6 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
-import com.romainpiel.shimmer.Shimmer;
 
 import net.frederico.showtipsview.*;
 
@@ -49,9 +48,6 @@ import java.util.Map;
 
 import fr.nicolaspomepuy.discreetapprate.AppRate;
 import cn.pedant.SweetAlert.SweetAlertDialog;
-//import com.readystatesoftware.notificationlog.Log;
-import com.romainpiel.shimmer.Shimmer;
-import com.romainpiel.shimmer.ShimmerTextView;
 
 
 
@@ -150,7 +146,7 @@ public class MainActivity2 extends ListActivity implements
         final Button bs = (Button) findViewById(R.id.button2);
         bs.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
-                copyMenuSelect();
+                dialogBeforeInstall();
             }
         });
 
@@ -190,13 +186,6 @@ public class MainActivity2 extends ListActivity implements
         });
 
 
-
-
-                SharedPreferences settings = getSharedPreferences(PREFSFILE, 0);
-                String skipMessage = settings.getString("skipMessage", "NOT checked");
-                if (!skipMessage.equals("checked"))
-                showIntroHelp();
-
         findViewById(R.id.floatinghelp).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -204,14 +193,20 @@ public class MainActivity2 extends ListActivity implements
                 String skipMessage = settings.getString("skipMessage", "NOT checked");
                 if (!skipMessage.equals("checked"))
                 */
-                    dialog.show();
+                dialog.show();
             }
         });
+
+
+                SharedPreferences settings = getSharedPreferences(PREFSFILE, 0);
+                String skipMessage = settings.getString("skipMessage", "NOT checked");
+                if (!skipMessage.equals("checked"))
+                showIntroHelp();
+
+
     }
 
     private void showIntroHelp() {
-        final ShimmerTextView tv = (ShimmerTextView) findViewById(R.id.shimmer_tv);
-        final Shimmer shimmer = new Shimmer();;
         final Button bs2 = (Button) findViewById(R.id.button1);
         final Button bs = (Button) findViewById(R.id.button2);
         final ListView listView = getListView();
@@ -227,7 +222,7 @@ public class MainActivity2 extends ListActivity implements
 
         final ShowTipsView showtips2 = new ShowTipsBuilder(this)
                 //.setTarget(listView)
-                .setTarget(listView, 0, 0, 30)
+                .setTarget(listView, 100, 150, 200)
                 .setTitle("select some apps")
                 .setDescription("from all installed apps")
                 .setDelay(1000)
@@ -246,7 +241,7 @@ public class MainActivity2 extends ListActivity implements
                 .setTarget(bhelp)
                 .setTitle("Need help?")
                 .setDescription("Press this Button for more information, like where to find installed apps on Fire-Device, how to know IP-Adress and more.")
-                .setDelay(100)
+                .setDelay(1000)
                 .build();
 
 
@@ -254,8 +249,6 @@ public class MainActivity2 extends ListActivity implements
             @Override
             public void gotItClicked() {
                 showtips2.show(MainActivity2.this);
-                shimmer.start(tv);
-                shimmer.setRepeatCount(5);
             }
         });
         showtips2.setCallback(new ShowTipsViewInterface() {
@@ -270,7 +263,12 @@ public class MainActivity2 extends ListActivity implements
                 showtips4.show(MainActivity2.this);
             }
         });
-
+        showtips4.setCallback(new ShowTipsViewInterface() {
+            @Override
+            public void gotItClicked() {
+                AppRate.with(MainActivity2.this).checkAndShow();
+            }
+        });
 
         showtips.show(this);
     }
@@ -327,8 +325,7 @@ public class MainActivity2 extends ListActivity implements
 
         switch (item.getItemId()) {
             case R.id.copy: {
-                AppRate.with(MainActivity2.this).initialLaunchCount(3).checkAndShow();
-                copyMenuSelect();
+                dialogBeforeInstall();
                 break;
             }
             case (R.id.deselect_all): {
@@ -378,7 +375,7 @@ public class MainActivity2 extends ListActivity implements
             }
 
             case (R.id.item_donate): {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + "com.dlka.fireinstaller2")));
+                showDonationActivity();
                 break;
             }
             case (R.id.item_settings): {
@@ -394,30 +391,50 @@ public class MainActivity2 extends ListActivity implements
         MainActivity2.this.startActivity(myIntent);
     }
 
+    private void showDonationActivity() {
+        Intent myIntent = new Intent(MainActivity2.this, DonationsActivity.class);
+        MainActivity2.this.startActivity(myIntent);
+    }
+
+
     public void LogToView(String title, String message) {
         Log.d(title, message);
         EditText debugView = (EditText) findViewById(R.id.debugText);
         debugView.setText(debugView.getText() + title + " : " + message + "\n");
     }
 
+    private void dialogBeforeInstall(){
+
+        Map<String, ?> preferences = PreferenceManager.getDefaultSharedPreferences(this).getAll();
+        fireip = (String) preferences.get("example_text");
+
+        new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText("Are you sure?")
+                .setContentText("Do you want to install at ip " + fireip)
+                .setCancelText("No,cancel plx!")
+                .setConfirmText("Yes,do it!")
+                .showCancelButton(true)
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        sDialog.cancel();
+                        copyMenuSelect();
+                    }
+                })
+                .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        sDialog.cancel();
+                    }
+                })
+                .show();
+    }
     private void copyMenuSelect() {
 
-            new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
-                    .setTitleText("Are you sure?")
-                    .setContentText("Do you want to install at ip "+fireip)
-                    .setCancelText("No,cancel plx!")
-                    .setConfirmText("Yes,do it!")
-                    .showCancelButton(true)
-                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                        @Override
-                        public void onClick(SweetAlertDialog sDialog) {
-                            sDialog.cancel();
-                        }
-                    })
-                    .show();
+        Map<String, ?> preferences = PreferenceManager.getDefaultSharedPreferences(this).getAll();
+        fireip = (String) preferences.get("example_text");
+
         if (!isNothingSelected()) {
-            Map<String, ?> preferences = PreferenceManager.getDefaultSharedPreferences(this).getAll();
-            fireip = (String) preferences.get("example_text");
 
             notificationDisplay = (Boolean) preferences.get("notifications_new_message");
 
