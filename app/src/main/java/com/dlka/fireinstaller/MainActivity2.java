@@ -37,12 +37,23 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.romainpiel.shimmer.Shimmer;
+
+import net.frederico.showtipsview.*;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import fr.nicolaspomepuy.discreetapprate.AppRate;
+import cn.pedant.SweetAlert.SweetAlertDialog;
+//import com.readystatesoftware.notificationlog.Log;
+import com.romainpiel.shimmer.Shimmer;
+import com.romainpiel.shimmer.ShimmerTextView;
+
+
 
 public class MainActivity2 extends ListActivity implements
         OnItemSelectedListener, OnItemClickListener, OnItemLongClickListener {
@@ -73,11 +84,15 @@ public class MainActivity2 extends ListActivity implements
 
     @Override
     protected void onCreate(Bundle b) {
+        if (BuildConfig.DEBUG) {
+       //     Log.initialize(this);
+        }
+
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         super.onCreate(b);
         // requestWindowFeature(Window.FEATURE_PROGRESS);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main2);
 
 
         ListView listView = getListView();
@@ -158,18 +173,17 @@ public class MainActivity2 extends ListActivity implements
         button.setOnClickListener(new OnClickListener() {
 
 
-
             @Override
             public void onClick(View view) {
 
 
                 String checkBoxResult = "NOT checked";
                 if (dontShowAgain.isChecked())
-                        checkBoxResult = "checked";
-                        SharedPreferences.Editor editor = getSharedPreferences(PREFSFILE, 0).edit();
-                        editor.putString("skipMessage", checkBoxResult);
-                        // Commit the edits!
-                        editor.commit();
+                    checkBoxResult = "checked";
+                SharedPreferences.Editor editor = getSharedPreferences(PREFSFILE, 0).edit();
+                editor.putString("skipMessage", checkBoxResult);
+                // Commit the edits!
+                editor.commit();
                 dialog.dismiss();
 
             }
@@ -181,6 +195,51 @@ public class MainActivity2 extends ListActivity implements
         if (!skipMessage.equals("checked"))
             dialog.show();
 
+        ShimmerTextView tv;
+        Shimmer shimmer;
+        tv = (ShimmerTextView) findViewById(R.id.shimmer_tv);
+        shimmer = new Shimmer();
+        shimmer.start(tv);
+
+        ShowTipsView showtips = new ShowTipsBuilder(this)
+                .setTarget(bs2)
+                .setTitle("PLease click here and enter your fire tv ip adress")
+                .setDescription("in settings of app")
+                .setDelay(1000)
+                .build();
+
+        final ShowTipsView showtips3 = new ShowTipsBuilder(this)
+                .setTarget(bs)
+                .setTitle("after selecting apps")
+                .setDescription("install them to fire tv here")
+                .setDelay(1000)
+                .build();
+
+        final ShowTipsView showtips2 = new ShowTipsBuilder(this)
+                .setTarget(listView)
+                .setTitle("select your apps")
+                .setDescription("from all installed apps here")
+                .setDelay(1000)
+                .build();
+
+
+        showtips2.setCallback(new ShowTipsViewInterface(){
+            @Override
+            public void gotItClicked() {
+                showtips3.show(MainActivity2.this);
+            }
+        });
+        showtips.setCallback(new ShowTipsViewInterface(){
+            @Override
+            public void gotItClicked() {
+               showtips2.show(MainActivity2.this);
+            }
+        });
+
+        showtips.show(this);
+
+
+        shimmer.cancel();
     }
 
     @Override
@@ -235,6 +294,7 @@ public class MainActivity2 extends ListActivity implements
 
         switch (item.getItemId()) {
             case R.id.copy: {
+                AppRate.with(MainActivity2.this).initialLaunchCount(3).checkAndShow();
                 copyMenuSelect();
                 break;
             }
@@ -308,6 +368,20 @@ public class MainActivity2 extends ListActivity implements
     }
 
     private void copyMenuSelect() {
+
+            new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText("Are you sure?")
+                    .setContentText("Do you want to install at ip "+fireip)
+                    .setCancelText("No,cancel plx!")
+                    .setConfirmText("Yes,do it!")
+                    .showCancelButton(true)
+                    .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                        @Override
+                        public void onClick(SweetAlertDialog sDialog) {
+                            sDialog.cancel();
+                        }
+                    })
+                    .show();
         if (!isNothingSelected()) {
             Map<String, ?> preferences = PreferenceManager.getDefaultSharedPreferences(this).getAll();
             fireip = (String) preferences.get("example_text");
