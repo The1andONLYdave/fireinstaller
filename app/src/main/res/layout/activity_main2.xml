@@ -10,13 +10,14 @@
     tools:context=".MainActivity2">
 
     <com.getbase.floatingactionbutton.FloatingActionButton
-        android:id="@+id/pink_icon"
+        android:id="@+id/floatinghelp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-         fab:fab_colorNormal="#FF0000"
-        fab:fab_colorPressed="#CC0000"
+        fab:fab_colorNormal="#FF9900"
+        fab:fab_colorPressed="#FFCC33"
+        fab:fab_icon="@drawable/ic_action_help"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
+        android:layout_alignParentRight="true"
         android:layout_marginBottom="16dp"/>
 
     <LinearLayout

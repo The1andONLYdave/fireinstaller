@@ -55,7 +55,7 @@
         <item>0</item>
         <item>1</item>
     </string-array>
-    <string name="checkbox">Nicht erneut anzeigen beim Starten</string>
+    <string name="checkbox">Nicht erneut anzeigen beim Starten (Visueller Guide)</string>
     <string name="howto1">1. Zeige Einstellungen</string>
     <string name="howto2">2. Wähle Apps für den Fire TV aus:</string>
 </resources>

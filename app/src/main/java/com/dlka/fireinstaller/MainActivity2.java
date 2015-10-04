@@ -190,56 +190,89 @@ public class MainActivity2 extends ListActivity implements
         });
 
 
-        SharedPreferences settings = getSharedPreferences(PREFSFILE, 0);
-        String skipMessage = settings.getString("skipMessage", "NOT checked");
-        if (!skipMessage.equals("checked"))
-            dialog.show();
 
-        ShimmerTextView tv;
-        Shimmer shimmer;
-        tv = (ShimmerTextView) findViewById(R.id.shimmer_tv);
-        shimmer = new Shimmer();
-        shimmer.start(tv);
+
+                SharedPreferences settings = getSharedPreferences(PREFSFILE, 0);
+                String skipMessage = settings.getString("skipMessage", "NOT checked");
+                if (!skipMessage.equals("checked"))
+                showIntroHelp();
+
+        findViewById(R.id.floatinghelp).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               /* SharedPreferences settings = getSharedPreferences(PREFSFILE, 0);
+                String skipMessage = settings.getString("skipMessage", "NOT checked");
+                if (!skipMessage.equals("checked"))
+                */
+                    dialog.show();
+            }
+        });
+    }
+
+    private void showIntroHelp() {
+        final ShimmerTextView tv = (ShimmerTextView) findViewById(R.id.shimmer_tv);
+        final Shimmer shimmer = new Shimmer();;
+        final Button bs2 = (Button) findViewById(R.id.button1);
+        final Button bs = (Button) findViewById(R.id.button2);
+        final ListView listView = getListView();
+
+
 
         ShowTipsView showtips = new ShowTipsBuilder(this)
                 .setTarget(bs2)
-                .setTitle("PLease click here and enter your fire tv ip adress")
-                .setDescription("in settings of app")
+                .setTitle("Please open Settings")
+                .setDescription("And enter your Fire's IP-Adress")
+                .setDelay(1000)
+                .build();
+
+        final ShowTipsView showtips2 = new ShowTipsBuilder(this)
+                //.setTarget(listView)
+                .setTarget(listView, 0, 0, 30)
+                .setTitle("select some apps")
+                .setDescription("from all installed apps")
                 .setDelay(1000)
                 .build();
 
         final ShowTipsView showtips3 = new ShowTipsBuilder(this)
                 .setTarget(bs)
-                .setTitle("after selecting apps")
-                .setDescription("install them to fire tv here")
+                .setTitle("and finally")
+                .setDescription("install them on your Fire-Device with this Button")
                 .setDelay(1000)
                 .build();
 
-        final ShowTipsView showtips2 = new ShowTipsBuilder(this)
-                .setTarget(listView)
-                .setTitle("select your apps")
-                .setDescription("from all installed apps here")
-                .setDelay(1000)
+        final View bhelp = findViewById(R.id.floatinghelp);
+
+        final ShowTipsView showtips4 = new ShowTipsBuilder(this)
+                .setTarget(bhelp)
+                .setTitle("Need help?")
+                .setDescription("Press this Button for more information, like where to find installed apps on Fire-Device, how to know IP-Adress and more.")
+                .setDelay(100)
                 .build();
 
 
-        showtips2.setCallback(new ShowTipsViewInterface(){
+        showtips.setCallback(new ShowTipsViewInterface() {
+            @Override
+            public void gotItClicked() {
+                showtips2.show(MainActivity2.this);
+                shimmer.start(tv);
+                shimmer.setRepeatCount(5);
+            }
+        });
+        showtips2.setCallback(new ShowTipsViewInterface() {
             @Override
             public void gotItClicked() {
                 showtips3.show(MainActivity2.this);
             }
         });
-        showtips.setCallback(new ShowTipsViewInterface(){
+        showtips3.setCallback(new ShowTipsViewInterface() {
             @Override
             public void gotItClicked() {
-               showtips2.show(MainActivity2.this);
+                showtips4.show(MainActivity2.this);
             }
         });
 
+
         showtips.show(this);
-
-
-        shimmer.cancel();
     }
 
     @Override
