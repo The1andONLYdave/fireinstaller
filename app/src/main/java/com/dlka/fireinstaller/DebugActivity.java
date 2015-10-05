@@ -26,9 +26,6 @@ public class DebugActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_debug);
 
-        final int completed = 10; // this is the value for the notification percentage
-        final NotificationHelper notificationHelper = new NotificationHelper(this);
-
         final Button bf = (Button) findViewById(R.id.button);
         final Button bs = (Button) findViewById(R.id.button2);
         final Button bt = (Button) findViewById(R.id.button3);
@@ -38,10 +35,10 @@ public class DebugActivity extends Activity {
 
         bs.setEnabled(false);
         bt.setEnabled(false);
+        bf.setEnabled(false);
 
         bf.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                notificationHelper.createNotification();
                 bs.setEnabled(true);
                 bt.setEnabled(true);
                 bf.setEnabled(false);
@@ -50,12 +47,10 @@ public class DebugActivity extends Activity {
         });
         bs.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                notificationHelper.progressUpdate(completed);
             }
         });
         bt.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                notificationHelper.completed();
                 bs.setEnabled(false);
                 bt.setEnabled(false);
                 bf.setEnabled(true);

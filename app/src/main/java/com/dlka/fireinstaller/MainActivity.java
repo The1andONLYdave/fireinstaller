@@ -63,7 +63,6 @@ public class MainActivity extends ListActivity implements
     public boolean debugDisplay = false;
     private AdView adView;
     int completed = 0; // this is the value for the notification percentage
-    NotificationHelper notificationHelper = new NotificationHelper(this);
     int counter = 0;
     String dirs = "";
     HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
@@ -702,7 +701,7 @@ public class MainActivity extends ListActivity implements
 
             completed = 0;
             if (notificationDisplay == true) {
-                notificationHelper.createNotification();
+                //notificationHelper.createNotification();
             }
             if (!debugDisplay) {
                 dialog = ProgressDialog.show(MainActivity.this, "doing my work...", "Please Wait, \nProgress in Notification Bar. \n", true);
@@ -716,7 +715,7 @@ public class MainActivity extends ListActivity implements
             LogToView("fireinstaller", "completed " + completed + " v " + v); //TODO why we used to log v here?
             //TODO Switch-case(0 start, 1 connected, 2 prepared packages, 3 installing first app, 4 installing next app, 100 finished
             if (notificationDisplay == true) {
-                notificationHelper.progressUpdate(completed);
+                //notificationHelper.progressUpdate(completed);
             }
             String dialogMessage = "Please Wait, \nProgress in Notification Bar. \n";
             String contentText = "";
@@ -772,7 +771,7 @@ public class MainActivity extends ListActivity implements
         protected void onPostExecute(final Void result) {
             //this should be self explanatory
             if (notificationDisplay == true) {
-                notificationHelper.completed();
+                //notificationHelper.completed();
             }
             if (!debugDisplay) {
                 dialog.setCancelable(true);
