@@ -21,23 +21,23 @@ package com.dlka.fireinstaller;
  */
 
 
-        import android.annotation.TargetApi;
-        import android.app.Activity;
-        import android.content.ClipData;
-        import android.content.Intent;
-        import android.os.Build;
-        import android.os.Bundle;
-        import android.util.Log;
-        import android.view.Menu;
-        import android.view.MenuItem;
-        import android.view.View;
-        import android.widget.CheckBox;
-        import android.widget.RadioGroup;
-        import android.widget.TextView;
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.ClipData;
+import android.content.Intent;
+import android.os.Build;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 
-        import com.nononsenseapps.filepicker.AbstractFilePickerFragment;
-        import com.nononsenseapps.filepicker.FilePickerActivity;
-        import java.util.ArrayList;
+import com.nononsenseapps.filepicker.AbstractFilePickerFragment;
+import com.nononsenseapps.filepicker.FilePickerActivity;
+
+import java.util.ArrayList;
 
 
 public class NoNonsenseFilePicker extends Activity {
@@ -70,7 +70,7 @@ public class NoNonsenseFilePicker extends Activity {
 
 
                         i = new Intent(NoNonsenseFilePicker.this,
-                                    FilePickerActivity.class);
+                                FilePickerActivity.class);
                         i.setAction(Intent.ACTION_GET_CONTENT);
 
                         i.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE,

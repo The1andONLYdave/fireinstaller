@@ -83,7 +83,8 @@ public class DebugActivity extends Activity {
         });
         bsixth.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-//                showNewDesign();
+                Intent myIntent = new Intent(DebugActivity.this, NoNonsenseFilePicker.class);
+                DebugActivity.this.startActivity(myIntent);
             }
         });
         Log.d("DebugActivity", "ready");
@@ -105,8 +106,6 @@ public class DebugActivity extends Activity {
 
         startActivityForResult(i, 0);
 
-        Intent myIntent = new Intent(DebugActivity.this, NoNonsenseFilePicker.class);
-        DebugActivity.this.startActivity(myIntent);
 
 
     }

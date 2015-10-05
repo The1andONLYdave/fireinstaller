@@ -75,6 +75,15 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.dlka.fireinstaller.NoNonsenseFilePicker"
+            android:label="NoNonsenseFilePicker"
+            android:parentActivityName="com.dlka.fireinstaller.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.dlka.fireinstaller.MainActivity"
+                tools:replace="android:value" />
+        </activity>
     </application>
 
 </manifest>
