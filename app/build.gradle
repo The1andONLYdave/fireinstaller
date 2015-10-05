@@ -32,8 +32,6 @@ android {
             buildConfigField "boolean", "IS_PRO_VERSION", "true"
             buildConfigField "boolean", "DONATIONS_GOOGLE", "false"
 
-
-
         }
     }
 }

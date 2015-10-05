@@ -34,28 +34,35 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity2">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".MainActivity2" />
         </activity>
         <activity
             android:name=".DebugActivity"
             android:label="@string/title_activity_debug"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName=".MainActivity2">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity" />
+                android:value=".MainActivity2" />
         </activity>
         <activity
             android:name=".MainActivity2"
-            android:label="Fireinstaller"
-            android:parentActivityName=".DebugActivity">
+            android:label="Fireinstaller">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".DonationsActivity"
+            android:label="Donation"
+            android:parentActivityName=".SettingsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity2" />
         </activity>
     </application>
 

@@ -35,21 +35,21 @@
         <activity
             android:name="com.dlka.fireinstaller.SettingsActivity"
             android:label="@string/title_activity_settings"
-            android:parentActivityName="com.dlka.fireinstaller.MainActivity"
+            android:parentActivityName="com.dlka.fireinstaller.MainActivity2"
             tools:replace="android:parentActivityName">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.dlka.fireinstaller.MainActivity"
+                android:value="com.dlka.fireinstaller.MainActivity2"
                 tools:replace="android:value" />
         </activity>
         <activity
             android:name="com.dlka.fireinstaller.DebugActivity"
             android:label="@string/title_activity_debug"
-            android:parentActivityName="com.dlka.fireinstaller.MainActivity"
+            android:parentActivityName="com.dlka.fireinstaller.MainActivity2"
             tools:replace="android:parentActivityName">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.dlka.fireinstaller.MainActivity"
+                android:value="com.dlka.fireinstaller.MainActivity2"
                 tools:replace="android:value" />
         </activity>
         <activity
@@ -60,6 +60,15 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="com.dlka.fireinstaller.DonationsActivity"
+            android:label="Donation"
+            android:parentActivityName="com.dlka.fireinstaller.SettingsActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.dlka.fireinstaller.MainActivity2"
+                tools:replace="android:value" />
         </activity>
     </application>
 
