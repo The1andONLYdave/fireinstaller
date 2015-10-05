@@ -35,7 +35,6 @@ public class DebugActivity extends Activity {
         final Button bv = (Button) findViewById(R.id.button4);
         final Button bfifth = (Button) findViewById(R.id.button5);
         final Button bsixth = (Button) findViewById(R.id.button5);
-        int i = 0;
 
         bs.setEnabled(false);
         bt.setEnabled(false);
