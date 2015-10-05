@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="accent_material_dark_1">#ff9900</color>
+    <item name="colorPrimary">#ff9900</item>
+    <item name="colorPrimaryDark">#ff9900</item>
+    <item name="colorAccent">#ff9900</item>
 </resources>
