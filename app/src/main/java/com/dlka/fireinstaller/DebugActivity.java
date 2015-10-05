@@ -3,11 +3,14 @@ package com.dlka.fireinstaller;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import com.nononsenseapps.filepicker.FilePickerActivity;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -33,6 +36,9 @@ public class DebugActivity extends Activity {
         final Button bfifth = (Button) findViewById(R.id.button5);
         final Button bsixth = (Button) findViewById(R.id.button5);
         int i = 0;
+
+        bs.setEnabled(false);
+        bt.setEnabled(false);
 
         bf.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -65,6 +71,7 @@ public class DebugActivity extends Activity {
         });
         bfifth.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                Log.d("debugActivity", "pingTV starting");
                 Map<String, ?> preferences = PreferenceManager.getDefaultSharedPreferences(DebugActivity.this).getAll();
                 fireip = (String) preferences.get("example_text");
 
@@ -74,17 +81,35 @@ public class DebugActivity extends Activity {
         });
         bsixth.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                showNewDesign();
+//                showNewDesign();
             }
         });
+        Log.d("DebugActivity", "ready");
+        // This always works
+        Intent i = new Intent(DebugActivity.this, FilePickerActivity.class);
+        // This works if you defined the intent filter
+        // Intent i = new Intent(Intent.ACTION_GET_CONTENT);
 
+        // Set these depending on your use case. These are the defaults.
+        i.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false);
+        i.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, false);
+        i.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_FILE);
+
+        // Configure initial directory by specifying a String.
+        // You could specify a String like "/storage/emulated/0/", but that can
+        // dangerous. Always use Android's API calls to get paths to the SD-card or
+        // internal memory.
+        i.putExtra(FilePickerActivity.EXTRA_START_PATH, Environment.getExternalStorageDirectory().getPath());
+
+        startActivityForResult(i, 0);
     }
 
     public void newLog(String message) {
         EditText log = (EditText) findViewById(R.id.editTextLog);
-        log.setText(log.getText()+message);
+        log.setText(log.getText() + message);
     }
-    public String pingTV(String fireip){
+
+    public String pingTV(String fireip) {
         //TODO ping logic:  3 pings, no backgroung, return error if unseccesfull instead of UI freeze
         Log.d("debugActivity", "pingTV starting");
 
@@ -114,16 +139,19 @@ public class DebugActivity extends Activity {
 //http://stackoverflow.com/a/16563729/2359197
                 int readed = 0;
                 byte[] buff = new byte[4096];
-                    while( inputStream.available() <= 0) {
-                        try { Thread.sleep(5000); } catch(Exception ex) {}
+                while (inputStream.available() <= 0) {
+                    try {
+                        Thread.sleep(5000);
+                    } catch (Exception ex) {
                     }
+                }
 
-                    while( inputStream.available() > 0) {
-                        readed = inputStream.read(buff);
-                        if ( readed <= 0 ) break;
-                        String seg = new String(buff,0,readed);
-                        output=seg; //result is a string to show in textview
-                    }
+                while (inputStream.available() > 0) {
+                    readed = inputStream.read(buff);
+                    if (readed <= 0) break;
+                    String seg = new String(buff, 0, readed);
+                    output = seg; //result is a string to show in textview
+                }
 
             } else {
                 Log.e("firedebug", "outputStream == null");
@@ -164,12 +192,11 @@ public class DebugActivity extends Activity {
         }
 
 
-
         return output;
     }
 
     private void showNewDesign() {
-        Intent myIntent = new Intent(DebugActivity.this, MainActivity2.class);
+        Intent myIntent = new Intent(DebugActivity.this, MainActivity.class);
         DebugActivity.this.startActivity(myIntent);
     }
 }

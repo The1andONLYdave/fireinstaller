@@ -14,13 +14,13 @@
         android:layout_height="@android:dimen/app_icon_size"
         android:layout_gravity="center_vertical"
         android:layout_marginRight="11dip"
+        android:layout_toRightOf="@+id/selected"
         android:scaleType="fitCenter" />
 
     <TextView
         android:id="@+id/appname"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/selected"
         android:layout_toRightOf="@+id/icon"
         android:text=""
         android:textAppearance="?android:attr/textAppearanceLarge" />
@@ -40,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_centerVertical="true"
         android:focusable="false"
