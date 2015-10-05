@@ -133,7 +133,6 @@ public class SettingsActivity extends PreferenceActivity {
         bindPreferenceSummaryToValue(findPreference("example_list"));
         getPreferenceScreen().findPreference("example_checkbox2").setEnabled(false);//Disabling
         getPreferenceScreen().findPreference("example_checkbox").setEnabled(false);//Disabling
-        getPreferenceScreen().findPreference("notifications_new_message").setEnabled(true);//Enabling v0.9.1
         getPreferenceScreen().findPreference("example_list").setEnabled(false);//Disabling
     }
 }

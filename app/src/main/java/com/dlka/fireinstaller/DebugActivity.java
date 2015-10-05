@@ -1,7 +1,11 @@
 package com.dlka.fireinstaller;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.ClipData;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -15,6 +19,7 @@ import com.nononsenseapps.filepicker.FilePickerActivity;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
 
 
@@ -96,6 +101,45 @@ public class DebugActivity extends Activity {
         i.putExtra(FilePickerActivity.EXTRA_START_PATH, Environment.getExternalStorageDirectory().getPath());
 
         startActivityForResult(i, 0);
+
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
+            if (data.getBooleanExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false)) {
+                // For JellyBean and above
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    ClipData clip = data.getClipData();
+
+                    if (clip != null) {
+                        for (int i = 0; i < clip.getItemCount(); i++) {
+                            Uri uri = clip.getItemAt(i).getUri();
+                            Log.d("filepickerdebug", uri.getEncodedPath());
+                            Log.d("filepickerdebug", uri.getPath());// Do something with the URI
+                        }
+                    }
+                    // For Ice Cream Sandwich
+                } else {
+                    ArrayList<String> paths = data.getStringArrayListExtra
+                            (FilePickerActivity.EXTRA_PATHS);
+
+                    if (paths != null) {
+                        for (String path: paths) {
+                            Uri uri = Uri.parse(path);
+                            Log.d("filepickerdebug", uri.getEncodedPath());
+                            Log.d("filepickerdebug", uri.getPath());// Do something with the URI
+                        }
+                    }
+                }
+
+            } else {
+                Uri uri = data.getData();
+                Log.d("filepickerdebug", uri.getEncodedPath());
+                Log.d("filepickerdebug", uri.getPath());// Do something with the URI
+            }
+        }
     }
 
     public void newLog(String message) {

@@ -29,7 +29,7 @@
     <string name="msg_no_webbrowser">No webbrowser installed!</string>
     <string name="msg_warn_nothing_selected">Select the apps you want to push!</string>
     <string name="pref_default_ip_fire">192.0.0.0</string>
-    <string name="pref_description_ad_support">Donate or buy DonateVersion at Google Play to disable Ads.</string>
+    <string name="pref_description_ad_support">Donate (still shows ads in this version) or buy DonateVersion at Google Play to disable Ads.</string>
     <string name="pref_description_ad_support2">Thank you for buying the donate Version!</string>
     <string name="pref_description_analytics_google">Developersettings. Support us with fixing bugs and making this app better..</string>
     <string name="pref_description_ip_fire">IP v4 Address, separate each number (0-254) with dots. Example: 192.168.0.1 oder 192.168.001.003</string>

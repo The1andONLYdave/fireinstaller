@@ -215,7 +215,7 @@ public class MainActivity extends ListActivity implements
         ShowTipsView showtips = new ShowTipsBuilder(this)
                 .setTarget(bs2)
                 .setTitle("Please open Settings")
-                .setDescription("And enter your Fire's IP-Adress")
+                .setDescription("and enter your Fire's IP-Address (Network Address)")
                 .setDelay(1000)
                 .build();
 
@@ -223,7 +223,7 @@ public class MainActivity extends ListActivity implements
                 //.setTarget(listView)
                 .setTarget(listView, 100, 150, 200)
                 .setTitle("select some apps")
-                .setDescription("from all installed apps")
+                .setDescription("from all installed apps (filepicker in development for non-installed apps)")
                 .setDelay(1000)
                 .build();
 
@@ -239,7 +239,8 @@ public class MainActivity extends ListActivity implements
         final ShowTipsView showtips4 = new ShowTipsBuilder(this)
                 .setTarget(bhelp)
                 .setTitle("Need help?")
-                .setDescription("Press this Button for more information, like where to find installed apps on Fire-Device, how to know IP-Adress and more.")
+                .setDescription("Press this Button for more information, like where to find installed apps on Fire-Device, how to know IP-Adress and more.\n" +
+                        "Hint of the day: There is also a setting for not showing this interactive-Guide on every start ;)\n\nHope you enjoy my app. Have Fun!")
                 .setDelay(1000)
                 .build();
 
