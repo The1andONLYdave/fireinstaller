@@ -19,14 +19,13 @@
             android:singleLine="true"
             android:title="@string/pref_title_ip_fire" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="@string/pref_header_notifications">
-        <!-- A 'parent' preference, which enables/disables child preferences (below)
-             when checked/unchecked. -->
-        <CheckBoxPreference
+    <!--<PreferenceCategory android:title="@string/pref_header_notifications">
+         <CheckBoxPreference
             android:defaultValue="false"
             android:key="notifications_new_message"
             android:title="@string/pref_title_statusbar_notification" />
-    </PreferenceCategory>
+    </PreferenceCategory>-->
+
     <!-- NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
      dismiss it. -->
     <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
@@ -77,7 +76,7 @@
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="debug_view_enabled"
-            android:title="Enable Debug Window, disable Progress Dialog and more"
-            android:summary="Developer and Tester features. unstable!"/>
+            android:summary="Developer and Tester features. unstable!"
+            android:title="Enable Debug Window, disable Progress Dialog and more" />
     </PreferenceCategory>
 </PreferenceScreen>
