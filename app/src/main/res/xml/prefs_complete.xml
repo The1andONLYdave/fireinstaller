@@ -17,7 +17,8 @@
             android:maxLines="1"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:title="@string/pref_title_ip_fire" />
+            android:title="@string/pref_title_ip_fire"
+            android:summary="Format is four Numbers between 0 and 254, separated by dot's (.) . Example: 192.168.0.1 or 192.168.20.204 . You'll find it on FireTV/FireStick at Settings->System->About->Network. "/>
     </PreferenceCategory>
     <!-- <PreferenceCategory android:title="@string/pref_header_notifications">
          <CheckBoxPreference
@@ -34,14 +35,16 @@
         <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
         <Preference
             android:key="Would be glad if you have some money for us"
-            android:title="Donate Version">
+            android:title="Help by buying Donate Version"
+            android:summary="Or use Menu -> Donation for custom amount.">
             <intent
                 android:action="android.intent.action.VIEW"
                 android:data="https://play.google.com/store/apps/details?id=com.dlka.fireinstaller2" />
         </Preference>
         <Preference
             android:key="Click for opening Google Play-Page"
-            android:title="Rate this app">
+            android:title="Rate this app"
+            android:summary="Click for opening Google Play-Page">
             <intent
                 android:action="android.intent.action.VIEW"
                 android:data="https://play.google.com/store/apps/details?id=com.dlka.fireinstaller" />

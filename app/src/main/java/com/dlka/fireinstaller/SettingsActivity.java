@@ -134,5 +134,6 @@ public class SettingsActivity extends PreferenceActivity {
         getPreferenceScreen().findPreference("example_checkbox2").setEnabled(false);//Disabling
         getPreferenceScreen().findPreference("example_checkbox").setEnabled(false);//Disabling
         getPreferenceScreen().findPreference("example_list").setEnabled(false);//Disabling
+        getPreferenceScreen().findPreference("debug_view_enabled").setEnabled(false);//Disabling
     }
 }
