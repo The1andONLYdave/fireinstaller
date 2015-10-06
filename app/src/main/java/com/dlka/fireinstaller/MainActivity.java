@@ -374,23 +374,23 @@ public class MainActivity extends ListActivity implements
                 showPreferences();
                 break;
             }
-            case (R.id.item_externalAPK):{ // This always works
-            Intent i = new Intent(MainActivity.this, FilePickerActivity.class);
-            // This works if you defined the intent filter
-            // Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+            case (R.id.item_externalAPK): { // This always works
+                Intent i = new Intent(MainActivity.this, FilePickerActivity.class);
+                // This works if you defined the intent filter
+                // Intent i = new Intent(Intent.ACTION_GET_CONTENT);
 
-            // Set these depending on your use case. These are the defaults.
-            i.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false);
-            i.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, false);
-            i.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_FILE);
+                // Set these depending on your use case. These are the defaults.
+                i.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false);
+                i.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, false);
+                i.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_FILE);
 
-            // Configure initial directory by specifying a String.
-            // You could specify a String like "/storage/emulated/0/", but that can
-            // dangerous. Always use Android's API calls to get paths to the SD-card or
-            // internal memory.
-            i.putExtra(FilePickerActivity.EXTRA_START_PATH, Environment.getExternalStorageDirectory().getPath());
-            startActivityForResult(i, 0);
-            break;
+                // Configure initial directory by specifying a String.
+                // You could specify a String like "/storage/emulated/0/", but that can
+                // dangerous. Always use Android's API calls to get paths to the SD-card or
+                // internal memory.
+                i.putExtra(FilePickerActivity.EXTRA_START_PATH, Environment.getExternalStorageDirectory().getPath());
+                startActivityForResult(i, 0);
+                break;
             }
         }
         return true;
@@ -427,7 +427,6 @@ public class MainActivity extends ListActivity implements
                     @Override
                     public void onClick(SweetAlertDialog sDialog) {
                         sDialog.cancel();
-                        installAPKdirectly = false;
                         copyMenuSelect();
                     }
                 })
@@ -445,7 +444,7 @@ public class MainActivity extends ListActivity implements
         Map<String, ?> preferences = PreferenceManager.getDefaultSharedPreferences(this).getAll();
         fireip = (String) preferences.get("example_text");
 
-        if (!isNothingSelected()) {
+        if ((!isNothingSelected())||(installAPKdirectly == true)) {
 
             notificationDisplay = (Boolean) preferences.get("notifications_new_message");
 
@@ -620,7 +619,7 @@ public class MainActivity extends ListActivity implements
             publishProgress("get packages ready");
             Log.e("fireconnector", "2");
 
-            if (installAPKdirectly) {
+            if (installAPKdirectly == true) {
                 for (int i = 0; i < count; i++) {
                     if (!(encPath.isEmpty())) {
                         Log.d("fireconnector", " external install called " + encPath);
@@ -796,6 +795,7 @@ public class MainActivity extends ListActivity implements
         }
 
         protected void onPostExecute(final Void result) {
+            installAPKdirectly = false;
             //this should be self explanatory
             if (notificationDisplay == true) {
                 //notificationHelper.completed();
@@ -830,6 +830,7 @@ public class MainActivity extends ListActivity implements
         }
 
         public void onCancel(DialogInterface theDialog) {
+            installAPKdirectly = false;
             LogToView("onCancel called", " this should not happen...\n");
             cancel(true);
             //TODO stop installertask
@@ -850,7 +851,7 @@ public class MainActivity extends ListActivity implements
     public void installAPK(String sourceFile) {
         encPath = sourceFile;
         installAPKdirectly = true;
-        pushFireTv();
+        dialogBeforeInstall();
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
