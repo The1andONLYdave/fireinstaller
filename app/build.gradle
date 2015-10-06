@@ -30,7 +30,7 @@ android {
             manifestPlaceholders = [ applicationName:"Fireinstaller Donate" ]
             manifestPlaceholders = [ applicationCode:"56" ]
             buildConfigField "boolean", "IS_PRO_VERSION", "true"
-            buildConfigField "boolean", "DONATIONS_GOOGLE", "false"
+            buildConfigField "boolean", "DONATIONS_GOOGLE", "true"
 
         }
     }

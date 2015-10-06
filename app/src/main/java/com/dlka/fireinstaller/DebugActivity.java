@@ -104,7 +104,7 @@ public class DebugActivity extends Activity {
         // internal memory.
         i.putExtra(FilePickerActivity.EXTRA_START_PATH, Environment.getExternalStorageDirectory().getPath());
 
-        startActivityForResult(i, 0);
+//        startActivityForResult(i, 0);
 
 
 

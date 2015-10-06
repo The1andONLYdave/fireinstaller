@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -562,7 +563,7 @@ public class MainActivity extends ListActivity implements
 
     private class LongRunningTask extends AsyncTask<String, Integer, Void> {
 
-        private ProgressDialog dialog = null;
+        SweetAlertDialog pDialog = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.PROGRESS_TYPE);
 
         //TODO: disallow orientation change while running
         @Override
@@ -705,8 +706,10 @@ public class MainActivity extends ListActivity implements
                 //notificationHelper.createNotification();
             }
             if (!debugDisplay) {
-                dialog = ProgressDialog.show(MainActivity.this, "doing my work...", "Please Wait, \nProgress in Notification Bar. \n", true);
-                dialog.setCancelable(false); //no cancel dialog while installing
+                pDialog.getProgressHelper().setBarColor(Color.parseColor("#ff9900"));
+                pDialog.setTitleText("installing on Fire...");
+                pDialog.setCancelable(false);
+                pDialog.show();
             }
         }
 
@@ -718,7 +721,7 @@ public class MainActivity extends ListActivity implements
             if (notificationDisplay == true) {
                 //notificationHelper.progressUpdate(completed);
             }
-            String dialogMessage = "Please Wait, \nProgress in Notification Bar. \n";
+            String dialogMessage = "Please Wait. \n";
             String contentText = "";
 
             if (completed == 0) {
@@ -731,7 +734,7 @@ public class MainActivity extends ListActivity implements
                 contentText = "Begin installing";
                 LogToView("fireinstaller", "Begin installing\n");
             } else if ((completed > 2) & (completed < 100)) {
-                contentText = "Installing App Number " + (completed - 2) + " of " + counter + ".\n May take long time.\nIf no progress after some Minutes: Check if IP " + fireip + " is correct on your Fire TV. If it's wrong, just (force close and) restart this app. Then open Settings and enter correct IP (see menu: help for more).\nWhen this window disappears everything is installed. You can also enable (sometimes bugged) notifications for progress in settings of the app. Thank you for using my app!";
+                contentText = "Installing App Number " + (completed - 2) + " of " + counter + ".\n May take long time.\nIf no progress after some Minutes: Check if IP " + fireip + " is correct on your Fire TV. If it's wrong, just (force close and) restart this app. Then open Settings and enter correct IP (see menu: help for more).\nWhen this window disappears everything is installed. Thank you for using my app!";
                 LogToView("fireinstaller", "Installing App Number " + (completed - 2) + " of " + counter + ".\n");
             } else if (completed == 100) {
                 contentText = "Installing complete. Thank you!";
@@ -764,7 +767,9 @@ public class MainActivity extends ListActivity implements
             }
 
             if (!debugDisplay) {
-                dialog.setMessage(dialogMessage + contentText);
+                //dialog.setMessage(dialogMessage + contentText);
+                // sample code snippet to set the text content on the ExpandableTextView
+                pDialog.setContentText(dialogMessage+contentText);
             }
 
         }
@@ -775,9 +780,8 @@ public class MainActivity extends ListActivity implements
                 //notificationHelper.completed();
             }
             if (!debugDisplay) {
-                dialog.setCancelable(true);
-                dialog.setProgress(100);
-                dialog.dismiss();
+                pDialog.setCancelable(true);
+                pDialog.dismissWithAnimation();
             }
             unlockScreenOrientation();
             //fix for increasing number when more installations without app closing in between.
@@ -810,6 +814,19 @@ public class MainActivity extends ListActivity implements
             LogToView("onCancel called", " this should not happen...\n");
             cancel(true);
             //TODO stop installertask
+            if (!debugDisplay) {
+                pDialog.setCancelable(true);
+                pDialog.dismissWithAnimation();
+            }
+            unlockScreenOrientation();
+            //fix for increasing number when more installations without app closing in between.
+            completed = 0;
+            counter = 0;
+            if (!debugDisplay) {
+                TextView textAbove = (TextView) findViewById(R.id.format_as); //make sure we don't call an empty reference at textAbove
+                textAbove.setVisibility(View.VISIBLE);
+            }
+
         }
 
     }
