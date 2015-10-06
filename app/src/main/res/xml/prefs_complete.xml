@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="@string/pref_header_general">
-        <CheckBoxPreference
-            android:defaultValue="true"
-            android:key="example_checkbox2"
-            android:summary="@string/pref_description_ad_support"
-            android:title="@string/pref_title_ad_support" />
-        <!-- NOTE: EditTextPreference accepts EditText attributes. -->
-        <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
-        <!-- android:summary="@string/pref_description_ip_fire" -->
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="example_checkbox2"
+        android:summary="@string/pref_description_ad_support"
+        android:title="@string/pref_title_ad_support" />
+    <!-- NOTE: EditTextPreference accepts EditText attributes. -->
+    <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
+    <!-- android:summary="@string/pref_description_ip_fire" -->
+    <PreferenceCategory android:title="Hint: IP-Address Format is four Numbers between 0 and 254, separated by dot's (.) . Example: 192.168.0.1 or 192.168.20.204 . You'll find it on FireTV/FireStick at Settings->System->About->Network. ">
         <EditTextPreference
             android:defaultValue="@string/pref_default_ip_fire"
             android:digits="0123456789."
@@ -17,8 +17,8 @@
             android:maxLines="1"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:title="@string/pref_title_ip_fire"
-            android:summary="Format is four Numbers between 0 and 254, separated by dot's (.) . Example: 192.168.0.1 or 192.168.20.204 . You'll find it on FireTV/FireStick at Settings->System->About->Network. "/>
+            android:summary="Format is four Numbers between 0 and 254, separated by dot's (.) . Example: 192.168.0.1 or 192.168.20.204 . You'll find it on FireTV/FireStick at Settings->System->About->Network. "
+            android:title="@string/pref_title_ip_fire" />
     </PreferenceCategory>
     <!-- <PreferenceCategory android:title="@string/pref_header_notifications">
          <CheckBoxPreference
@@ -35,16 +35,16 @@
         <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
         <Preference
             android:key="Would be glad if you have some money for us"
-            android:title="Help by buying Donate Version"
-            android:summary="Or use Menu -> Donation for custom amount.">
+            android:summary="Or use Menu -> Donation for custom amount."
+            android:title="Help by buying Donate Version">
             <intent
                 android:action="android.intent.action.VIEW"
                 android:data="https://play.google.com/store/apps/details?id=com.dlka.fireinstaller2" />
         </Preference>
         <Preference
             android:key="Click for opening Google Play-Page"
-            android:title="Rate this app"
-            android:summary="Click for opening Google Play-Page">
+            android:summary="Click for opening Google Play-Page"
+            android:title="Rate this app">
             <intent
                 android:action="android.intent.action.VIEW"
                 android:data="https://play.google.com/store/apps/details?id=com.dlka.fireinstaller" />
