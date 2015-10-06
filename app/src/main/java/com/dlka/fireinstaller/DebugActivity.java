@@ -78,12 +78,7 @@ public class DebugActivity extends Activity {
                 newLog(pingTV(fireip));
             }
         });
-        bsixth.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent myIntent = new Intent(DebugActivity.this, NoNonsenseFilePicker.class);
-                DebugActivity.this.startActivity(myIntent);
-            }
-        });
+
         Log.d("DebugActivity", "ready");
         // This always works
         Intent i = new Intent(DebugActivity.this, FilePickerActivity.class);
@@ -91,7 +86,7 @@ public class DebugActivity extends Activity {
         // Intent i = new Intent(Intent.ACTION_GET_CONTENT);
 
         // Set these depending on your use case. These are the defaults.
-        i.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, true);
+        i.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false);
         i.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, false);
         i.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_FILE);
 
@@ -100,8 +95,7 @@ public class DebugActivity extends Activity {
         // dangerous. Always use Android's API calls to get paths to the SD-card or
         // internal memory.
         i.putExtra(FilePickerActivity.EXTRA_START_PATH, Environment.getExternalStorageDirectory().getPath());
-
-//        startActivityForResult(i, 0);
+        startActivityForResult(i, 0);
 
 
     }
@@ -118,8 +112,8 @@ public class DebugActivity extends Activity {
                     if (clip != null) {
                         for (int i = 0; i < clip.getItemCount(); i++) {
                             Uri uri = clip.getItemAt(i).getUri();
-                            Log.d("filepickerdebug", uri.getEncodedPath());
-                            Log.d("filepickerdebug", uri.getPath());// Do something with the URI
+                            Log.d("filepickerdebug1", uri.getEncodedPath());
+                            installAPK(uri.getEncodedPath());
                         }
                     }
                     // For Ice Cream Sandwich
@@ -130,18 +124,24 @@ public class DebugActivity extends Activity {
                     if (paths != null) {
                         for (String path : paths) {
                             Uri uri = Uri.parse(path);
-                            Log.d("filepickerdebug", uri.getEncodedPath());
-                            Log.d("filepickerdebug", uri.getPath());// Do something with the URI
+                            Log.d("filepickerdebug2", uri.getEncodedPath());
+                            installAPK(uri.getEncodedPath());
                         }
                     }
                 }
 
             } else {
                 Uri uri = data.getData();
-                Log.d("filepickerdebug", uri.getEncodedPath());
-                Log.d("filepickerdebug", uri.getPath());// Do something with the URI
+                Log.d("filepickerdebug3", uri.getEncodedPath());
+                installAPK(uri.getEncodedPath());
             }
         }
+    }
+
+    public void installAPK(String sourceFile) {
+        encPath = sourceFile;
+        installAPKdirectly = true;
+        pushFireTv();
     }
 
     public void newLog(String message) {

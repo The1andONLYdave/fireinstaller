@@ -63,6 +63,8 @@ public class MainActivity extends ListActivity implements
     public boolean notificationDisplay = false;
     public boolean debugDisplay = false;
     private AdView adView;
+    public boolean installAPKdirectly = false;
+    public String encPath=null;
     HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
     TextView textAbove;
     EditText debugView;
@@ -178,7 +180,7 @@ public class MainActivity extends ListActivity implements
         findViewById(R.id.floatinghelp).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                   dialog.show();
+                dialog.show();
             }
         });
 
@@ -401,6 +403,7 @@ public class MainActivity extends ListActivity implements
                     @Override
                     public void onClick(SweetAlertDialog sDialog) {
                         sDialog.cancel();
+                        installAPKdirectly = false;
                         copyMenuSelect();
                     }
                 })
@@ -444,7 +447,7 @@ public class MainActivity extends ListActivity implements
         }
     }
 
-    private void pushFireTv() {
+    public void pushFireTv() {
 
         //lets start our long running process Asyncronous Task
         new LongRunningTask().execute();
@@ -483,7 +486,6 @@ public class MainActivity extends ListActivity implements
         spi.selected = !spi.selected;
         aa.notifyDataSetChanged();
     }
-
 
 
     /**
@@ -594,55 +596,106 @@ public class MainActivity extends ListActivity implements
             publishProgress("get packages ready");
             Log.e("fireconnector", "2");
 
-            for (int i = 0; i < count; i++) {
-                SortablePackageInfo spi = (SortablePackageInfo) adapter.getItem(i);
-                if (spi.selected) {
-                    Log.d("fireconnector", " ret.append package: " + spi.displayName + ", sourceDir: " + spi.sourceDir);
+            if (installAPKdirectly) {
+                for (int i = 0; i < count; i++) {
+                     if (!(encPath.isEmpty())) {
+                        Log.d("fireconnector", " external install called "+encPath);
 
-                    publishProgress("Install:\""+spi.displayName + "\"  (app number " + (i + 1) + ") from " + spi.sourceDir + " . \n\n" +
-                            " May take long time.\n\n\n" +
-                            "If no progress after some Minutes: Check if IP " + fireip + " is correct on your Fire TV. " +
-                            "If it's wrong, just (force close and) restart this app. " +
-                            "Then open Settings and enter correct IP (see menu: help for more).\n" +
-                            "When this window disappears everything is installed. Thank you for using my app!");
+                        publishProgress("Install external APK. " +  encPath + " . \n\n" +
+                                " May take long time.\n\n\n" +
+                                "If no progress after some Minutes: Check if IP " + fireip + " is correct on your Fire TV. " +
+                                "If it's wrong, just (force close and) restart this app. " +
+                                "Then open Settings and enter correct IP (see menu: help for more).\n" +
+                                "When this window disappears everything is installed. Thank you for using my app!");
 
-                    Log.e("fireconnector", "3");
+                        Log.e("fireconnector", "3");
 
-                    try {
-                        //move apk to fire tv here
-                        //Foreach Entry do and show progress thing:
+                        try {
+                            //move apk to fire tv here
+                            //Foreach Entry do and show progress thing:
 
-                        if (outputStream != null) {
-                            Log.d("fireconnector", "/system/bin/adb install " + spi.sourceDir + "\n");
-                            outputStream.writeBytes("/system/bin/adb install " + spi.sourceDir + "\n");
-                            outputStream.flush();
+                            if (outputStream != null) {
+                                Log.d("fireconnector", "/system/bin/adb install " + encPath + "\n");
+                                outputStream.writeBytes("/system/bin/adb install " + encPath + "\n");
+                                outputStream.flush();
 
-                            int readed = 0;
-                            byte[] buff = new byte[4096];
-                            while (inputStream.available() <= 0) {
-                                try {
-                                    Thread.sleep(500);
-                                } catch (Exception ex) {
+                                int readed = 0;
+                                byte[] buff = new byte[4096];
+                                while (inputStream.available() <= 0) {
+                                    try {
+                                        Thread.sleep(500);
+                                    } catch (Exception ex) {
+                                    }
                                 }
-                            }
 
-                            while (inputStream.available() > 0) {
-                                readed = inputStream.read(buff);
-                                if (readed <= 0) break;
-                                String seg = new String(buff, 0, readed);
-                                output = seg; //result is a string to show in textview
+                                while (inputStream.available() > 0) {
+                                    readed = inputStream.read(buff);
+                                    if (readed <= 0) break;
+                                    String seg = new String(buff, 0, readed);
+                                    output = seg; //result is a string to show in textview
+                                }
+                                publishProgress("adb_output" + output);
+                            } else {
+                                publishProgress("outputStream == null (occurence 2)");
+                                Log.e("fireconnector", "outputStream == null (occurence 2)");
                             }
-                            publishProgress("adb_output" + output);
-                        } else {
-                            publishProgress("outputStream == null (occurence 2)");
-                            Log.e("fireconnector", "outputStream == null (occurence 2)");
+                        } catch (IOException e) {
+                            publishProgress(" IOException error " + e.toString());
+                            Log.e("fireconnector", " IOException error " + e);
                         }
-                    } catch (IOException e) {
-                        publishProgress(" IOException error " + e.toString());
-                        Log.e("fireconnector", " IOException error " + e);
                     }
                 }
-            } //end for loop
+            } else {
+                for (int i = 0; i < count; i++) {
+                    SortablePackageInfo spi = (SortablePackageInfo) adapter.getItem(i);
+                    if (spi.selected) {
+                        Log.d("fireconnector", " ret.append package: " + spi.displayName + ", sourceDir: " + spi.sourceDir);
+
+                        publishProgress("Install:\"" + spi.displayName + "\"  (app number " + (i + 1) + ") from " + spi.sourceDir + " . \n\n" +
+                                " May take long time.\n\n\n" +
+                                "If no progress after some Minutes: Check if IP " + fireip + " is correct on your Fire TV. " +
+                                "If it's wrong, just (force close and) restart this app. " +
+                                "Then open Settings and enter correct IP (see menu: help for more).\n" +
+                                "When this window disappears everything is installed. Thank you for using my app!");
+
+                        Log.e("fireconnector", "3");
+
+                        try {
+                            //move apk to fire tv here
+                            //Foreach Entry do and show progress thing:
+
+                            if (outputStream != null) {
+                                Log.d("fireconnector", "/system/bin/adb install " + spi.sourceDir + "\n");
+                                outputStream.writeBytes("/system/bin/adb install " + spi.sourceDir + "\n");
+                                outputStream.flush();
+
+                                int readed = 0;
+                                byte[] buff = new byte[4096];
+                                while (inputStream.available() <= 0) {
+                                    try {
+                                        Thread.sleep(500);
+                                    } catch (Exception ex) {
+                                    }
+                                }
+
+                                while (inputStream.available() > 0) {
+                                    readed = inputStream.read(buff);
+                                    if (readed <= 0) break;
+                                    String seg = new String(buff, 0, readed);
+                                    output = seg; //result is a string to show in textview
+                                }
+                                publishProgress("adb_output" + output);
+                            } else {
+                                publishProgress("outputStream == null (occurence 2)");
+                                Log.e("fireconnector", "outputStream == null (occurence 2)");
+                            }
+                        } catch (IOException e) {
+                            publishProgress(" IOException error " + e.toString());
+                            Log.e("fireconnector", " IOException error " + e);
+                        }
+                    }
+                }
+            }//end for loop
 
 
             //CLOSINGCONNECTION //should work
