@@ -420,10 +420,15 @@ public class MainActivity extends ListActivity implements
         Map<String, ?> preferences = PreferenceManager.getDefaultSharedPreferences(this).getAll();
         fireip = (String) preferences.get("example_text");
         if(fireip.equals("192.0.0.0")){
-            Toast.makeText(this, "Target? Please enter Fire's IP-Address, please.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Target? Please enter Fire's IP-Address before.", Toast.LENGTH_LONG).show();
             showPreferences();
+            return;
         }
-        isValidIPV4(fireip);
+        if(isValidIPV4(fireip)==false){
+            Toast.makeText(this, "Wrong IP Syntax. Please enter Fire's IP-Address before.", Toast.LENGTH_LONG).show();
+            showPreferences();
+            return;
+        }
 
         new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                 .setTitleText("Are you sure?")
