@@ -53,6 +53,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import fr.nicolaspomepuy.discreetapprate.AppRate;
@@ -74,6 +75,8 @@ public class MainActivity extends ListActivity implements
     HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
     TextView textAbove;
     EditText debugView;
+    static private final String IPV4_REGEX = "(([0-1]?[0-9]{1,2}\\.)|(2[0-4][0-9]\\.)|(25[0-5]\\.)){3}(([0-1]?[0-9]{1,2})|(2[0-4][0-9])|(25[0-5]))";
+    static private Pattern IPV4_PATTERN = Pattern.compile(IPV4_REGEX);
 
 
     @Override
@@ -232,7 +235,7 @@ public class MainActivity extends ListActivity implements
                 .setTarget(bhelp)
                 .setTitle("Need help?")
                 .setDescription("Press this Button for more information, like where to find installed apps on Fire-Device, how to know IP-Adress and more.\n" +
-                        "Hint of the day: There is also a setting for not showing this interactive-Guide on every start ;)\n\nHope you enjoy my app. Have Fun!")
+                        "Hint of the day: There's a checkbox for hiding this interactive-Guide on start ;)\n\nHope you enjoy my app. Have Fun!\n\nFeeling adventurous? Try Menu -> Sideloading, push any apk on your phones sd-card.\n\n")
                 .setDelay(1000)
                 .build();
 
@@ -416,6 +419,11 @@ public class MainActivity extends ListActivity implements
 
         Map<String, ?> preferences = PreferenceManager.getDefaultSharedPreferences(this).getAll();
         fireip = (String) preferences.get("example_text");
+        if(fireip.equals("192.0.0.0")){
+            Toast.makeText(this, "Target? Please enter Fire's IP-Address, please.", Toast.LENGTH_LONG).show();
+            showPreferences();
+        }
+        isValidIPV4(fireip);
 
         new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                 .setTitleText("Are you sure?")
@@ -849,9 +857,14 @@ public class MainActivity extends ListActivity implements
     }
 
     public void installAPK(String sourceFile) {
+        if(sourceFile.endsWith(".apk")){
         encPath = sourceFile;
         installAPKdirectly = true;
         dialogBeforeInstall();
+        }else{
+            Toast.makeText(this, "Please select only files with .apk ending", Toast.LENGTH_LONG).show();
+        }
+
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -892,6 +905,10 @@ public class MainActivity extends ListActivity implements
         }
     }
 
+    public static boolean isValidIPV4(final String s)
+    {
+        return IPV4_PATTERN.matcher(s).matches();
+    }
 }
 
 
