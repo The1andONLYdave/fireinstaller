@@ -2,7 +2,6 @@ package com.dlka.fireinstaller;
 
 import android.app.Dialog;
 import android.app.ListActivity;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,7 +20,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -39,21 +37,23 @@ import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
-import net.frederico.showtipsview.*;
+import net.frederico.showtipsview.ShowTipsBuilder;
+import net.frederico.showtipsview.ShowTipsView;
+import net.frederico.showtipsview.ShowTipsViewInterface;
 
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import fr.nicolaspomepuy.discreetapprate.AppRate;
 import cn.pedant.SweetAlert.SweetAlertDialog;
-
+import fr.nicolaspomepuy.discreetapprate.AppRate;
 
 
 public class MainActivity extends ListActivity implements
-        OnItemSelectedListener, OnItemClickListener, OnItemLongClickListener {
+        OnItemSelectedListener, OnItemClickListener {
 
     public static final String PREFSFILE = "settings2";
     public static final String SELECTED = "selected";
@@ -63,25 +63,15 @@ public class MainActivity extends ListActivity implements
     public boolean notificationDisplay = false;
     public boolean debugDisplay = false;
     private AdView adView;
-    int completed = 0; // this is the value for the notification percentage
-    int counter = 0;
-    String dirs = "";
     HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
     TextView textAbove;
     EditText debugView;
 
 
-    public static String noNull(String input) {
-        if (input == null) {
-            return "";
-        }
-        return input;
-    }
-
     @Override
     protected void onCreate(Bundle b) {
         if (BuildConfig.DEBUG) {
-       //     Log.initialize(this);
+            //     Log.initialize(this);
         }
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -130,9 +120,8 @@ public class MainActivity extends ListActivity implements
                     .build();
 
             adView.loadAd(adRequest);
-        }
-        else{
-            layout.setPadding(0,0,0,0); //free ad-space for donate version
+        } else {
+            layout.setPadding(0, 0, 0, 0); //free ad-space for donate version
         }
 
 
@@ -189,19 +178,15 @@ public class MainActivity extends ListActivity implements
         findViewById(R.id.floatinghelp).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-               /* SharedPreferences settings = getSharedPreferences(PREFSFILE, 0);
-                String skipMessage = settings.getString("skipMessage", "NOT checked");
-                if (!skipMessage.equals("checked"))
-                */
-                dialog.show();
+                   dialog.show();
             }
         });
 
 
-                SharedPreferences settings = getSharedPreferences(PREFSFILE, 0);
-                String skipMessage = settings.getString("skipMessage", "NOT checked");
-                if (!skipMessage.equals("checked"))
-                showIntroHelp();
+        SharedPreferences settings = getSharedPreferences(PREFSFILE, 0);
+        String skipMessage = settings.getString("skipMessage", "NOT checked");
+        if (!skipMessage.equals("checked"))
+            showIntroHelp();
 
 
     }
@@ -212,7 +197,6 @@ public class MainActivity extends ListActivity implements
         final ListView listView = getListView();
 
 
-
         ShowTipsView showtips = new ShowTipsBuilder(this)
                 .setTarget(bs2)
                 .setTitle("Please open Settings")
@@ -221,7 +205,6 @@ public class MainActivity extends ListActivity implements
                 .build();
 
         final ShowTipsView showtips2 = new ShowTipsBuilder(this)
-                //.setTarget(listView)
                 .setTarget(listView, 100, 150, 200)
                 .setTitle("select some apps")
                 .setDescription("from all installed apps (filepicker in development for non-installed apps)")
@@ -310,7 +293,6 @@ public class MainActivity extends ListActivity implements
         editor.commit();
     }
 
-
     @Override
     protected void onStop() {
         super.onStop();
@@ -398,14 +380,13 @@ public class MainActivity extends ListActivity implements
         MainActivity.this.startActivity(myIntent);
     }
 
-
     public void LogToView(String title, String message) {
         Log.d(title, message);
         EditText debugView = (EditText) findViewById(R.id.debugText);
         debugView.setText(debugView.getText() + title + " : " + message + "\n");
     }
 
-    private void dialogBeforeInstall(){
+    private void dialogBeforeInstall() {
 
         Map<String, ?> preferences = PreferenceManager.getDefaultSharedPreferences(this).getAll();
         fireip = (String) preferences.get("example_text");
@@ -431,6 +412,7 @@ public class MainActivity extends ListActivity implements
                 })
                 .show();
     }
+
     private void copyMenuSelect() {
 
         Map<String, ?> preferences = PreferenceManager.getDefaultSharedPreferences(this).getAll();
@@ -462,31 +444,11 @@ public class MainActivity extends ListActivity implements
         }
     }
 
-
     private void pushFireTv() {
 
-        //v0.9.2
+        //lets start our long running process Asyncronous Task
+        new LongRunningTask().execute();
 
-
-        ListAdapter adapter = getListAdapter();
-        int count = adapter.getCount();
-
-        for (int i = 0; i < count; i++) {
-            SortablePackageInfo spi = (SortablePackageInfo) adapter.getItem(i);
-            if (spi.selected) {
-                LogToView("fireconnector", " ret.append package: " + spi.packageName + ", sourceDir: " + spi.sourceDir);
-                dirs = dirs + ":::" + spi.sourceDir;
-                counter++;//how much packages to push
-            }
-        }
-        LogToView("fireconnector", " counter package: " + counter + ", dirs package: " + dirs);
-
-
-        //TODO give fireip, counter and dirs as string, int, string
-//lets start our long running process Asyncronous Task
-        new LongRunningTask().execute(); //fireip,counter,dirs
-
-        //return ret;
     }
 
     public boolean isNothingSelected() {
@@ -522,15 +484,7 @@ public class MainActivity extends ListActivity implements
         aa.notifyDataSetChanged();
     }
 
-    @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view,
-                                   int position, long id) {
-        AppAdapter aa = (AppAdapter) getListAdapter();
-        SortablePackageInfo spi = aa.getItem(position);
-        spi.selected = !spi.selected;
-        aa.notifyDataSetChanged();
-        return true;
-    }
+
 
     /**
      * Enum used to identify the tracker that needs to be used for tracking.
@@ -561,24 +515,16 @@ public class MainActivity extends ListActivity implements
     }
 
 
-    private class LongRunningTask extends AsyncTask<String, Integer, Void> {
+    private class LongRunningTask extends AsyncTask<String, String, Void> {
 
         SweetAlertDialog pDialog = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.PROGRESS_TYPE);
 
-        //TODO: disallow orientation change while running
         @Override
         protected Void doInBackground(String... params) {
 
             Log.d("fireconnector", "doInBackground starting");
-            //String fireip=params[0];
-            //int counter = 1;//TODO cast params[1];
-            //String dirs = params[2];
-
-            //working with big strings
-
-
             // lots of code
-            publishProgress(0);
+            publishProgress("Connecting to Fire TV at " + fireip);
             Log.e("fireconnector", "0");
             //CONNECTING //should work if we call it only once (singleton making)
             Log.d("fireconnector", "connecting adb to " + fireip);
@@ -587,15 +533,19 @@ public class MainActivity extends ListActivity implements
                 adb = Runtime.getRuntime().exec("sh");
 
             } catch (IOException e1) {
-                publishProgress(501);
+                publishProgress("IOException error e" + e1.toString());
                 Log.e("fireconnector", "IOException error e " + e1);
             }
 
             DataOutputStream outputStream = null;
+            DataInputStream inputStream = null;
+            String output = "";
+
             if (adb != null) {
                 outputStream = new DataOutputStream(adb.getOutputStream());
+                inputStream = new DataInputStream(adb.getInputStream());
             } else {
-                publishProgress(502);
+                publishProgress("asb == null");
                 Log.e("fireconnector", "adb == null");
             }
             try {
@@ -603,57 +553,95 @@ public class MainActivity extends ListActivity implements
                     outputStream.writeBytes("/system/bin/adb" + " connect " + fireip + "\n ");
                     outputStream.flush();
                     Log.d("fireconnector", "/system/bin/adb" + " connect " + fireip + "\n ");
+
+                    int readed = 0;
+                    byte[] buff = new byte[4096];
+                    while (inputStream.available() <= 0) {
+                        try {
+                            Thread.sleep(100); //TODO: does this check every 100ms for output, then continues?
+                        } catch (Exception ex) {
+                        }
+                    }
+
+                    while (inputStream.available() > 0) {
+                        readed = inputStream.read(buff);
+                        if (readed <= 0) break;
+                        String seg = new String(buff, 0, readed);
+                        output = seg; //result is a string to show in textview
+                    }
+                    publishProgress("adb_output" + output);
+
                 } else {
-                    publishProgress(503);
+                    publishProgress("outputStream == null");
                     Log.e("fireconnector", "outputStream == null");
                 }
 
 
             } catch (IOException e1) {
-                publishProgress(504);
+                publishProgress("IOException error 1" + e1.toString());
                 Log.e("fireconnector", "IOException error 1" + e1);
             }
 
 
-            //INSTALLING //maybe work
-            String dir = dirs.substring(3);
-            completed = 1;
-            publishProgress(1);//connection established
+            //TODO: why we parse everything to string and separate it here, can't we access getListAdapter in onBackground?
+            ListAdapter adapter = getListAdapter();
+            int count = adapter.getCount();
+
+
+            publishProgress("connection established at " + fireip + ". Preparing apps to push.");
             Log.e("fireconnector", "1");
 
-            //if(!dir.contains(":::")){return succeeded().add("the_result","cant split string");}
-            String[] sourceDir = dir.split(":::");
-            completed = 2;
-            publishProgress();//get packages ready
+            publishProgress("get packages ready");
             Log.e("fireconnector", "2");
 
-            for (int i = 0; i < counter; i++) {
-                //first dirs -- first 3 :
-                completed = i + 3;
-                publishProgress();//do package nr i
-                Log.e("fireconnector", "3");
-                //then split as often as ValueOf counter by stripping first chars till :::
+            for (int i = 0; i < count; i++) {
+                SortablePackageInfo spi = (SortablePackageInfo) adapter.getItem(i);
+                if (spi.selected) {
+                    Log.d("fireconnector", " ret.append package: " + spi.displayName + ", sourceDir: " + spi.sourceDir);
 
+                    publishProgress("Install:\""+spi.displayName + "\"  (app number " + (i + 1) + ") from " + spi.sourceDir + " . \n\n" +
+                            " May take long time.\n\n\n" +
+                            "If no progress after some Minutes: Check if IP " + fireip + " is correct on your Fire TV. " +
+                            "If it's wrong, just (force close and) restart this app. " +
+                            "Then open Settings and enter correct IP (see menu: help for more).\n" +
+                            "When this window disappears everything is installed. Thank you for using my app!");
 
-                try {
-                    //move apk to fire tv here
-                    //Foreach Entry do and show progress thing:
+                    Log.e("fireconnector", "3");
 
-                    if (outputStream != null) {
-                        Log.d("fireconnector", "/system/bin/adb install " + sourceDir[i] + "\n");
-                        outputStream.writeBytes("/system/bin/adb install " + sourceDir[i] + "\n");
-                        outputStream.flush();
-                    } else {
-                        publishProgress(505);
-                        Log.e("fireconnector", "outputStream == null (occurence 2)");
+                    try {
+                        //move apk to fire tv here
+                        //Foreach Entry do and show progress thing:
+
+                        if (outputStream != null) {
+                            Log.d("fireconnector", "/system/bin/adb install " + spi.sourceDir + "\n");
+                            outputStream.writeBytes("/system/bin/adb install " + spi.sourceDir + "\n");
+                            outputStream.flush();
+
+                            int readed = 0;
+                            byte[] buff = new byte[4096];
+                            while (inputStream.available() <= 0) {
+                                try {
+                                    Thread.sleep(500);
+                                } catch (Exception ex) {
+                                }
+                            }
+
+                            while (inputStream.available() > 0) {
+                                readed = inputStream.read(buff);
+                                if (readed <= 0) break;
+                                String seg = new String(buff, 0, readed);
+                                output = seg; //result is a string to show in textview
+                            }
+                            publishProgress("adb_output" + output);
+                        } else {
+                            publishProgress("outputStream == null (occurence 2)");
+                            Log.e("fireconnector", "outputStream == null (occurence 2)");
+                        }
+                    } catch (IOException e) {
+                        publishProgress(" IOException error " + e.toString());
+                        Log.e("fireconnector", " IOException error " + e);
                     }
-
-                } catch (IOException e) {
-                    publishProgress(506);
-                    Log.e("fireconnector", " IOException error " + e);
                 }
-
-
             } //end for loop
 
 
@@ -666,32 +654,36 @@ public class MainActivity extends ListActivity implements
                 if (outputStream != null) {
                     outputStream.close();
                 } else {
-                    publishProgress(507);
+                    publishProgress("outputStream closed already ");
                     Log.e("fireconnector", "outputStream closed already ");
+                }
+                if (inputStream != null) {
+                    inputStream.close();
+                } else {
+                    Log.e("fireconnector", "inputStream closed already ");
                 }
                 if (adb != null) {
                     adb.waitFor();
                 } else {
-                    publishProgress(508);
+                    publishProgress("adb closed already ");
                     Log.e("fireconnector", "adb closed already ");
                 }
             } catch (IOException e) {
-                publishProgress(509);
+                publishProgress("IOException error 2 " + e.toString());
                 Log.e("fireconnector", "IOException error 2 " + e);
             } catch (InterruptedException e) {
-                publishProgress(510);
+                publishProgress("InterruptedException error 5 " + e.toString());
                 Log.e("fireconnector", "InterruptedException error 5 " + e);
             }
             if (adb != null) {
                 adb.destroy();
             } else {
-                publishProgress(511);
+                publishProgress("adb already destroyed ");
                 Log.e("fireconnector", "adb already destroyed ");
             }
 
-            completed = 100;
             //lets call our onProgressUpdate() method which runs on the UI thread
-            publishProgress(100);
+            publishProgress("Installing complete. Thank you!");
             Log.e("fireconnector", "100");
             return null;
         }
@@ -701,7 +693,6 @@ public class MainActivity extends ListActivity implements
         protected void onPreExecute() {
             lockScreenOrientation();
 
-            completed = 0;
             if (notificationDisplay == true) {
                 //notificationHelper.createNotification();
             }
@@ -713,63 +704,16 @@ public class MainActivity extends ListActivity implements
             }
         }
 
-        protected void onProgressUpdate(Integer... v) {
-//lets format a string from the the 'completed' variable
+        protected void onProgressUpdate(String... v) {
+            String passedValues = v[0];// + "," + v[1];
 
-            LogToView("fireinstaller", "completed " + completed + " v " + v); //TODO why we used to log v here?
-            //TODO Switch-case(0 start, 1 connected, 2 prepared packages, 3 installing first app, 4 installing next app, 100 finished
+            LogToView("fireinstaller", "onProgressUpdate" + " passedValues " + passedValues); //TODO why we used to log v here?
             if (notificationDisplay == true) {
                 //notificationHelper.progressUpdate(completed);
             }
-            String dialogMessage = "Please Wait. \n";
-            String contentText = "";
-
-            if (completed == 0) {
-                contentText = "Connecting to Fire TV...";
-                LogToView("fireinstaller", "Connecting to Fire TV...\n");
-            } else if (completed == 1) {
-                contentText = "Fire TV connected... Preparing apps to push.";
-                LogToView("fireinstaller", "Fire TV connected... Preparing apps to push.\n");
-            } else if (completed == 2) {
-                contentText = "Begin installing";
-                LogToView("fireinstaller", "Begin installing\n");
-            } else if ((completed > 2) & (completed < 100)) {
-                contentText = "Installing App Number " + (completed - 2) + " of " + counter + ".\n May take long time.\nIf no progress after some Minutes: Check if IP " + fireip + " is correct on your Fire TV. If it's wrong, just (force close and) restart this app. Then open Settings and enter correct IP (see menu: help for more).\nWhen this window disappears everything is installed. Thank you for using my app!";
-                LogToView("fireinstaller", "Installing App Number " + (completed - 2) + " of " + counter + ".\n");
-            } else if (completed == 100) {
-                contentText = "Installing complete. Thank you!";
-                LogToView("fireinstaller", "Installing complete. Thank you!\n");
-            } else if (completed == 501) {
-                LogToView("fireconnector", "IOException error e, cant get sh to exec ");
-            } else if (completed == 502) {
-                LogToView("fireconnector", "adb == null");
-            } else if (completed == 503) {
-                LogToView("fireconnector", "outputStream == null");
-            } else if (completed == 504) {
-                LogToView("fireconnector", "IOException error 1, outputstream error?");
-            } else if (completed == 505) {
-                LogToView("fireconnector", "outputStream == null (occurence 2)");
-            } else if (completed == 506) {
-                LogToView("fireconnector", " IOException error, outputstream error2 ? ");
-            } else if (completed == 507) {
-                LogToView("fireconnector", "outputStream closed already ");
-            } else if (completed == 508) {
-                LogToView("fireconnector", "adb closed already ");
-            } else if (completed == 509) {
-                LogToView("fireconnector", "IOException error 2 ");
-            } else if (completed == 510) {
-                LogToView("fireconnector", "InterruptedException error 5 ");
-            } else if (completed == 511) {
-                LogToView("fireconnector", "adb already destroyed ");
-            } else {
-                contentText = "Unallowed percentageComplete. Please report error via email";
-                LogToView("fireinstaller", "Unallowed percentageComplete. Please report error via email");
-            }
 
             if (!debugDisplay) {
-                //dialog.setMessage(dialogMessage + contentText);
-                // sample code snippet to set the text content on the ExpandableTextView
-                pDialog.setContentText(dialogMessage+contentText);
+                pDialog.setContentText(passedValues);
             }
 
         }
@@ -784,14 +728,12 @@ public class MainActivity extends ListActivity implements
                 pDialog.dismissWithAnimation();
             }
             unlockScreenOrientation();
-            //fix for increasing number when more installations without app closing in between.
-            completed = 0;
-            counter = 0;
             if (!debugDisplay) {
                 TextView textAbove = (TextView) findViewById(R.id.format_as); //make sure we don't call an empty reference at textAbove
                 textAbove.setVisibility(View.VISIBLE);
             }
             LogToView("fireinstaller", "complete. READY?\n");
+            AppRate.with(MainActivity.this).checkAndShow();
         }
 
         private void lockScreenOrientation() {
@@ -819,9 +761,6 @@ public class MainActivity extends ListActivity implements
                 pDialog.dismissWithAnimation();
             }
             unlockScreenOrientation();
-            //fix for increasing number when more installations without app closing in between.
-            completed = 0;
-            counter = 0;
             if (!debugDisplay) {
                 TextView textAbove = (TextView) findViewById(R.id.format_as); //make sure we don't call an empty reference at textAbove
                 textAbove.setVisibility(View.VISIBLE);

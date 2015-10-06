@@ -9,15 +9,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.nononsenseapps.filepicker.FilePickerActivity;
-
-import org.sufficientlysecure.donations.DonationsFragment;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -107,7 +104,6 @@ public class DebugActivity extends Activity {
 //        startActivityForResult(i, 0);
 
 
-
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -132,7 +128,7 @@ public class DebugActivity extends Activity {
                             (FilePickerActivity.EXTRA_PATHS);
 
                     if (paths != null) {
-                        for (String path: paths) {
+                        for (String path : paths) {
                             Uri uri = Uri.parse(path);
                             Log.d("filepickerdebug", uri.getEncodedPath());
                             Log.d("filepickerdebug", uri.getPath());// Do something with the URI
