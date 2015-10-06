@@ -24,4 +24,8 @@
         android:id="@+id/item_settings"
         android:icon="@drawable/ic_action_help"
         android:title="@string/settings"></item>
+    <item
+        android:id="@+id/item_externalAPK"
+        android:icon="@drawable/ic_action_help"
+        android:title="@string/externalAPK"></item>
 </menu>

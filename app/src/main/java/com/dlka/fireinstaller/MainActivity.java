@@ -1,7 +1,10 @@
 package com.dlka.fireinstaller;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ListActivity;
+import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,7 +13,9 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -36,6 +41,7 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.nononsenseapps.filepicker.FilePickerActivity;
 
 import net.frederico.showtipsview.ShowTipsBuilder;
 import net.frederico.showtipsview.ShowTipsView;
@@ -64,7 +70,7 @@ public class MainActivity extends ListActivity implements
     public boolean debugDisplay = false;
     private AdView adView;
     public boolean installAPKdirectly = false;
-    public String encPath=null;
+    public String encPath = null;
     HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
     TextView textAbove;
     EditText debugView;
@@ -368,6 +374,24 @@ public class MainActivity extends ListActivity implements
                 showPreferences();
                 break;
             }
+            case (R.id.item_externalAPK):{ // This always works
+            Intent i = new Intent(MainActivity.this, FilePickerActivity.class);
+            // This works if you defined the intent filter
+            // Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+
+            // Set these depending on your use case. These are the defaults.
+            i.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false);
+            i.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, false);
+            i.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_FILE);
+
+            // Configure initial directory by specifying a String.
+            // You could specify a String like "/storage/emulated/0/", but that can
+            // dangerous. Always use Android's API calls to get paths to the SD-card or
+            // internal memory.
+            i.putExtra(FilePickerActivity.EXTRA_START_PATH, Environment.getExternalStorageDirectory().getPath());
+            startActivityForResult(i, 0);
+            break;
+            }
         }
         return true;
     }
@@ -598,10 +622,10 @@ public class MainActivity extends ListActivity implements
 
             if (installAPKdirectly) {
                 for (int i = 0; i < count; i++) {
-                     if (!(encPath.isEmpty())) {
-                        Log.d("fireconnector", " external install called "+encPath);
+                    if (!(encPath.isEmpty())) {
+                        Log.d("fireconnector", " external install called " + encPath);
 
-                        publishProgress("Install external APK. " +  encPath + " . \n\n" +
+                        publishProgress("Install external APK. " + encPath + " . \n\n" +
                                 " May take long time.\n\n\n" +
                                 "If no progress after some Minutes: Check if IP " + fireip + " is correct on your Fire TV. " +
                                 "If it's wrong, just (force close and) restart this app. " +
@@ -822,6 +846,51 @@ public class MainActivity extends ListActivity implements
         }
 
     }
+
+    public void installAPK(String sourceFile) {
+        encPath = sourceFile;
+        installAPKdirectly = true;
+        pushFireTv();
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
+            if (data.getBooleanExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false)) {
+                // For JellyBean and above
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                    ClipData clip = data.getClipData();
+
+                    if (clip != null) {
+                        for (int i = 0; i < clip.getItemCount(); i++) {
+                            Uri uri = clip.getItemAt(i).getUri();
+                            Log.d("filepickerdebug1", uri.getEncodedPath());
+                            installAPK(uri.getEncodedPath());
+                        }
+                    }
+                    // For Ice Cream Sandwich
+                } else {
+                    ArrayList<String> paths = data.getStringArrayListExtra
+                            (FilePickerActivity.EXTRA_PATHS);
+
+                    if (paths != null) {
+                        for (String path : paths) {
+                            Uri uri = Uri.parse(path);
+                            Log.d("filepickerdebug2", uri.getEncodedPath());
+                            installAPK(uri.getEncodedPath());
+                        }
+                    }
+                }
+
+            } else {
+                Uri uri = data.getData();
+                Log.d("filepickerdebug3", uri.getEncodedPath());
+                installAPK(uri.getEncodedPath());
+            }
+        }
+    }
+
 }
 
 

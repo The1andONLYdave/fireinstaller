@@ -67,5 +67,5 @@
         <item>8 Euros</item>
         <item>20 Euros</item>
     </string-array>
-
+    <string name="externalAPK">(BETA) sideload APK</string>
 </resources>

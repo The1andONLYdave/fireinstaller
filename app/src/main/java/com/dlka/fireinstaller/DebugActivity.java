@@ -1,11 +1,7 @@
 package com.dlka.fireinstaller;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.ClipData;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -19,7 +15,6 @@ import com.nononsenseapps.filepicker.FilePickerActivity;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Map;
 
 
@@ -80,69 +75,8 @@ public class DebugActivity extends Activity {
         });
 
         Log.d("DebugActivity", "ready");
-        // This always works
-        Intent i = new Intent(DebugActivity.this, FilePickerActivity.class);
-        // This works if you defined the intent filter
-        // Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-
-        // Set these depending on your use case. These are the defaults.
-        i.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false);
-        i.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, false);
-        i.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_FILE);
-
-        // Configure initial directory by specifying a String.
-        // You could specify a String like "/storage/emulated/0/", but that can
-        // dangerous. Always use Android's API calls to get paths to the SD-card or
-        // internal memory.
-        i.putExtra(FilePickerActivity.EXTRA_START_PATH, Environment.getExternalStorageDirectory().getPath());
-        startActivityForResult(i, 0);
-
-
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
-            if (data.getBooleanExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false)) {
-                // For JellyBean and above
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    ClipData clip = data.getClipData();
-
-                    if (clip != null) {
-                        for (int i = 0; i < clip.getItemCount(); i++) {
-                            Uri uri = clip.getItemAt(i).getUri();
-                            Log.d("filepickerdebug1", uri.getEncodedPath());
-                            installAPK(uri.getEncodedPath());
-                        }
-                    }
-                    // For Ice Cream Sandwich
-                } else {
-                    ArrayList<String> paths = data.getStringArrayListExtra
-                            (FilePickerActivity.EXTRA_PATHS);
-
-                    if (paths != null) {
-                        for (String path : paths) {
-                            Uri uri = Uri.parse(path);
-                            Log.d("filepickerdebug2", uri.getEncodedPath());
-                            installAPK(uri.getEncodedPath());
-                        }
-                    }
-                }
-
-            } else {
-                Uri uri = data.getData();
-                Log.d("filepickerdebug3", uri.getEncodedPath());
-                installAPK(uri.getEncodedPath());
-            }
-        }
-    }
-
-    public void installAPK(String sourceFile) {
-        encPath = sourceFile;
-        installAPKdirectly = true;
-        pushFireTv();
-    }
 
     public void newLog(String message) {
         EditText log = (EditText) findViewById(R.id.editTextLog);
