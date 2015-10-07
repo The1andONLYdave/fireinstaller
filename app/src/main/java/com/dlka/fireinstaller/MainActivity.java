@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.ClipData;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -419,12 +418,12 @@ public class MainActivity extends ListActivity implements
 
         Map<String, ?> preferences = PreferenceManager.getDefaultSharedPreferences(this).getAll();
         fireip = (String) preferences.get("example_text");
-        if(fireip.equals("192.0.0.0")){
+        if (fireip.equals("192.0.0.0")) {
             Toast.makeText(this, "Target? Please enter Fire's IP-Address before.", Toast.LENGTH_LONG).show();
             showPreferences();
             return;
         }
-        if(isValidIPV4(fireip)==false){
+        if (isValidIPV4(fireip) == false) {
             Toast.makeText(this, "Wrong IP Syntax. Please enter Fire's IP-Address before.", Toast.LENGTH_LONG).show();
             showPreferences();
             return;
@@ -457,7 +456,7 @@ public class MainActivity extends ListActivity implements
         Map<String, ?> preferences = PreferenceManager.getDefaultSharedPreferences(this).getAll();
         fireip = (String) preferences.get("example_text");
 
-        if ((!isNothingSelected())||(installAPKdirectly == true)) {
+        if ((!isNothingSelected()) || (installAPKdirectly == true)) {
 
             notificationDisplay = (Boolean) preferences.get("notifications_new_message");
 
@@ -607,7 +606,7 @@ public class MainActivity extends ListActivity implements
                         String seg = new String(buff, 0, readed);
                         output = seg; //result is a string to show in textview
                     }
-                    publishProgress("adb_output" + output);
+                    publishProgress("adb_output_connect" + output);
 
                 } else {
                     publishProgress("outputStream == null");
@@ -633,52 +632,45 @@ public class MainActivity extends ListActivity implements
             Log.e("fireconnector", "2");
 
             if (installAPKdirectly == true) {
-                for (int i = 0; i < count; i++) {
-                    if (!(encPath.isEmpty())) {
-                        Log.d("fireconnector", " external install called " + encPath);
+                if (!(encPath.isEmpty())) {
+                    Log.d("fireconnector", " external install called " + encPath);
 
-                        publishProgress("Install external APK. " + encPath + " . \n\n" +
-                                " May take long time.\n\n\n" +
-                                "If no progress after some Minutes: Check if IP " + fireip + " is correct on your Fire TV. " +
-                                "If it's wrong, just (force close and) restart this app. " +
-                                "Then open Settings and enter correct IP (see menu: help for more).\n" +
-                                "When this window disappears everything is installed. Thank you for using my app!");
+                    publishProgress("Install external APK. " + encPath + " . \n\n" +
+                            " May take long time.\n\n\n" +
+                            "If no progress after some Minutes: Check if IP " + fireip + " is correct on your Fire TV. " +
+                            "If it's wrong, just (force close and) restart this app. " +
+                            "Then open Settings and enter correct IP (see menu: help for more).\n" +
+                            "When this window disappears everything is installed. Thank you for using my app!");
 
-                        Log.e("fireconnector", "3");
+                    Log.e("fireconnector", "3");
 
-                        try {
-                            //move apk to fire tv here
-                            //Foreach Entry do and show progress thing:
+                    try {
+                        //move apk to fire tv here
+                        //Foreach Entry do and show progress thing:
 
-                            if (outputStream != null) {
-                                Log.d("fireconnector", "/system/bin/adb install " + encPath + "\n");
-                                outputStream.writeBytes("/system/bin/adb install " + encPath + "\n");
-                                outputStream.flush();
+                        if (outputStream != null) {
+                            Log.d("fireconnector", "/system/bin/adb install " + encPath + "\n");
+                            outputStream.writeBytes("/system/bin/adb install " + encPath + "\n");
+                            outputStream.flush();
 
-                                int readed = 0;
-                                byte[] buff = new byte[4096];
-                                while (inputStream.available() <= 0) {
-                                    try {
-                                        Thread.sleep(500);
-                                    } catch (Exception ex) {
-                                    }
-                                }
+                            int readed = 0;
+                            byte[] buff = new byte[4096];
 
-                                while (inputStream.available() > 0) {
-                                    readed = inputStream.read(buff);
-                                    if (readed <= 0) break;
-                                    String seg = new String(buff, 0, readed);
-                                    output = seg; //result is a string to show in textview
-                                }
-                                publishProgress("adb_output" + output);
-                            } else {
-                                publishProgress("outputStream == null (occurence 2)");
-                                Log.e("fireconnector", "outputStream == null (occurence 2)");
+                            while (inputStream.available() > 0) {
+                                readed = inputStream.read(buff);
+                                if (readed <= 0) break;
+                                String seg = new String(buff, 0, readed);
+                                output = seg; //result is a string to show in textview
                             }
-                        } catch (IOException e) {
-                            publishProgress(" IOException error " + e.toString());
-                            Log.e("fireconnector", " IOException error " + e);
+                            publishProgress("adb_output" + output);
+                            Log.d("adb output directly", output);
+                        } else {
+                            publishProgress("outputStream == null (occurence 2)");
+                            Log.e("fireconnector", "outputStream == null (occurence 2)");
                         }
+                    } catch (IOException e) {
+                        publishProgress(" IOException error " + e.toString());
+                        Log.e("fireconnector", " IOException error " + e);
                     }
                 }
             } else {
@@ -701,18 +693,13 @@ public class MainActivity extends ListActivity implements
                             //Foreach Entry do and show progress thing:
 
                             if (outputStream != null) {
-                                Log.d("fireconnector", "/system/bin/adb install " + spi.sourceDir + "\n");
-                                outputStream.writeBytes("/system/bin/adb install " + spi.sourceDir + "\n");
+                                Log.d("fireconnector", "/system/bin/adb install -r " + spi.sourceDir + "\n");//add -g, ‚grant permissions on non-interactive install
+                                outputStream.writeBytes("/system/bin/adb install -r " + spi.sourceDir + "\n");
                                 outputStream.flush();
 
                                 int readed = 0;
                                 byte[] buff = new byte[4096];
-                                while (inputStream.available() <= 0) {
-                                    try {
-                                        Thread.sleep(500);
-                                    } catch (Exception ex) {
-                                    }
-                                }
+
 
                                 while (inputStream.available() > 0) {
                                     readed = inputStream.read(buff);
@@ -721,6 +708,7 @@ public class MainActivity extends ListActivity implements
                                     output = seg; //result is a string to show in textview
                                 }
                                 publishProgress("adb_output" + output);
+                                Log.d("adb output list", output);
                             } else {
                                 publishProgress("outputStream == null (occurence 2)");
                                 Log.e("fireconnector", "outputStream == null (occurence 2)");
@@ -731,28 +719,41 @@ public class MainActivity extends ListActivity implements
                         }
                     }
                 }
+                try {
+                    outputStream.writeBytes("exit\n");
+                    outputStream.flush();
+                }catch (IOException e) {
+                    publishProgress(" IOException error " + e.toString());
+                    Log.e("fireconnector", " IOException error " + e);
+                }
             }//end for loop
 
 
             //CLOSINGCONNECTION //should work
 
             //TODO better logging with errorcontent too
+            publishProgress("Closing Connections. Installation complete. Thank you!");
+Log.e("fireconnector","closing connections");
 
             //After pushing:
             try {
                 if (outputStream != null) {
+                    Log.d("fireconnector", "closing os");
                     outputStream.close();
                 } else {
                     publishProgress("outputStream closed already ");
                     Log.e("fireconnector", "outputStream closed already ");
                 }
                 if (inputStream != null) {
+                    Log.d("fireconnector", "closing is");
                     inputStream.close();
                 } else {
                     Log.e("fireconnector", "inputStream closed already ");
                 }
                 if (adb != null) {
+                    Log.d("fireconnector", "adb waitfor");
                     adb.waitFor();
+                    Log.d("fireconnector", "adb waitfor finished");
                 } else {
                     publishProgress("adb closed already ");
                     Log.e("fireconnector", "adb closed already ");
@@ -789,6 +790,16 @@ public class MainActivity extends ListActivity implements
                 pDialog.getProgressHelper().setBarColor(Color.parseColor("#ff9900"));
                 pDialog.setTitleText("installing on Fire...");
                 pDialog.setCancelable(false);
+                pDialog.showCancelButton(true);
+                pDialog.setCanceledOnTouchOutside(false);
+                pDialog.setCancelText("Destroy Install-Process!");
+                pDialog.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        cancel(true);
+                        sDialog.cancel();
+                    }
+                });
                 pDialog.show();
             }
         }
@@ -842,9 +853,59 @@ public class MainActivity extends ListActivity implements
             LogToView("SCREEN_ORIENTATION_SENSOR", " calling unlock.\n");
         }
 
-        public void onCancel(DialogInterface theDialog) {
+        public void onCancelled() {
+            Log.d("onCancelled", "Killing adb server. Installation canceled :(");
             installAPKdirectly = false;
-            LogToView("onCancel called", " this should not happen...\n");
+            Log.d("onCancelled", "this should not happen...\n");
+
+
+            Process adb2 = null;
+            try {
+                adb2 = Runtime.getRuntime().exec("sh");
+
+            } catch (IOException e1) {
+                Log.e("fireconnector", "IOException error e " + e1);
+            }
+
+            DataOutputStream outputStream2 = null;
+
+            if (adb2 != null) {
+                outputStream2 = new DataOutputStream(adb2.getOutputStream());
+            } else {
+                Log.e("fireconnector", "adb == null");
+            }
+            try {
+                if (outputStream2 != null) {
+                    outputStream2.writeBytes("/system/bin/adb kill-server" + "\n ");
+                    outputStream2.flush();
+                    Log.d("fireconnector", "/system/bin/adb kill-server" + "\n ");
+                }
+            } catch (IOException e) {
+                Log.e("fireconnector", " IOException error " + e);
+            }
+            Log.d("onCancelled", "Closing Connections. Installation canceled :(");
+            try {
+                if (outputStream2 != null) {
+                    outputStream2.close();
+                } else {
+                    Log.e("fireconnector", "outputStream closed already ");
+                }
+                if (adb2 != null) {
+                    adb2.waitFor();
+                } else {
+                    Log.e("fireconnector", "adb closed already ");
+                }
+            } catch (IOException e) {
+                Log.e("fireconnector", "IOException error 2 " + e);
+            } catch (InterruptedException e) {
+                Log.e("fireconnector", "InterruptedException error 5 " + e);
+            }
+            if (adb2 != null) {
+                adb2.destroy();
+            } else {
+                Log.e("fireconnector", "adb already destroyed ");
+            }
+
             cancel(true);
             //TODO stop installertask
             if (!debugDisplay) {
@@ -856,17 +917,17 @@ public class MainActivity extends ListActivity implements
                 TextView textAbove = (TextView) findViewById(R.id.format_as); //make sure we don't call an empty reference at textAbove
                 textAbove.setVisibility(View.VISIBLE);
             }
-
+            Log.d("onCancel", "finished");
         }
 
     }
 
     public void installAPK(String sourceFile) {
-        if(sourceFile.endsWith(".apk")){
-        encPath = sourceFile;
-        installAPKdirectly = true;
-        dialogBeforeInstall();
-        }else{
+        if (sourceFile.endsWith(".apk")) {
+            encPath = sourceFile;
+            installAPKdirectly = true;
+            dialogBeforeInstall();
+        } else {
             Toast.makeText(this, "Please select only files with .apk ending", Toast.LENGTH_LONG).show();
         }
 
@@ -910,8 +971,7 @@ public class MainActivity extends ListActivity implements
         }
     }
 
-    public static boolean isValidIPV4(final String s)
-    {
+    public static boolean isValidIPV4(final String s) {
         return IPV4_PATTERN.matcher(s).matches();
     }
 }
