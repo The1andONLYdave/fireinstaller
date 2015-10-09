@@ -458,7 +458,7 @@ public class MainActivity extends ListActivity implements
 
         if ((!isNothingSelected()) || (installAPKdirectly == true)) {
 
-            notificationDisplay = (Boolean) preferences.get("notifications_new_message");
+            //notificationDisplay = (Boolean) preferences.get("notifications_new_message");
 
             debugDisplay = (Boolean) preferences.get("debug_view_enabled");
 
