@@ -22,58 +22,25 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-                <com.getbase.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/floatinghelp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"
-                    fab:fab_colorNormal="#FF9900"
-                    fab:fab_colorPressed="#FFCC33"
-                    fab:fab_icon="@drawable/ic_action_help"
-                    android:layout_weight="0" />
 
                 <TextView
                     android:id="@+id/format_as"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_weight="0"
                     android:gravity="center_vertical|start"
                     android:minHeight="15dp"
                     android:minLines="2"
                     android:text="@string/newquickguide"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:layout_gravity="left"
-                    android:layout_weight="0"
                     android:textColor="#FF9900" />
 
             </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <Button
-                android:id="@+id/button1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:text="@string/howto1"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="0"
-                android:text="3: ->FireTV"
-                android:textStyle="bold" />
-
         </LinearLayout>
 
         <LinearLayout
@@ -81,8 +48,8 @@
             android:layout_width="fill_parent"
             android:layout_height="0dp"
             android:gravity="center"
-            android:padding="0dp"
-            android:minHeight="15dp">
+            android:minHeight="15dp"
+            android:padding="0dp">
 
         </LinearLayout>
 
@@ -93,7 +60,6 @@
             android:text="@string/howto2"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textStyle="bold" />
-
 
         <ListView
             android:id="@android:id/list"
@@ -116,5 +82,62 @@
             android:padding="15dp" />
 
     </LinearLayout>
+
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/multiple_actions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        fab:fab_addButtonColorNormal="#FF9900"
+        fab:fab_addButtonColorPressed="#0066FF"
+        fab:fab_addButtonPlusIconColor="#FF9900"
+        fab:fab_labelStyle="@style/menu_labels_style">
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/firetv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_weight="0"
+            fab:fab_colorNormal="#FF9900"
+            fab:fab_colorPressed="#FFCC33"
+            fab:fab_title="->FireTV" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/action_a"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_colorNormal="#FF9900"
+            fab:fab_colorPressed="#FFCC33"
+            fab:fab_title="Preferences" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/floatinghelp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_weight="0"
+            fab:fab_colorNormal="#FF9900"
+            fab:fab_colorPressed="#FFCC33"
+            fab:fab_icon="@drawable/ic_action_help"
+            fab:fab_title="Quick Help Guide" />
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/action_b"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            fab:fab_colorNormal="#FF9900"
+            fab:fab_colorPressed="#FFCC33"
+            fab:fab_title="Open Filebrowser for external Files" />
+
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
+
 
 </RelativeLayout>

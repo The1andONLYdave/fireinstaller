@@ -34,6 +34,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
@@ -91,6 +93,30 @@ public class MainActivity extends ListActivity implements
         setContentView(R.layout.activity_main);
 
 
+        //floating action menu
+        final View actionB = findViewById(R.id.action_b);
+        actionB.setVisibility(View.GONE);
+        FloatingActionButton actionC = new FloatingActionButton(getBaseContext());
+        actionC.setTitle("Expert Option?");
+        actionC.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                actionB.setVisibility(actionB.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+            }
+        });
+
+        final FloatingActionsMenu menuMultipleActions = (FloatingActionsMenu) findViewById(R.id.multiple_actions);
+        menuMultipleActions.addButton(actionC);
+
+        final FloatingActionButton actionA = (FloatingActionButton) findViewById(R.id.action_a);
+        actionA.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                actionA.setTitle("Action A clicked");
+            }
+        });
+
+
         ListView listView = getListView();
         listView.setOnItemClickListener(this);
 
@@ -142,53 +168,34 @@ public class MainActivity extends ListActivity implements
                 new ArrayList<SortablePackageInfo>(), R.layout.app_item));
         new ListTask(this, R.layout.app_item).execute("");
 
-        final Button bs = (Button) findViewById(R.id.button2);
+        final View bs = (View) findViewById(R.id.firetv);
         bs.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 dialogBeforeInstall();
             }
         });
 
-        final Button bs2 = (Button) findViewById(R.id.button1);
+        final View bs2 = (View) findViewById(R.id.action_a);
         bs2.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 showPreferences();
             }
         });
 
-        t1.send(new HitBuilders.AppViewBuilder().build());
-
-        final Dialog dialog;
-        dialog = new Dialog(this);
-        dialog.setContentView(R.layout.dialog);
-        dialog.setTitle("Hello");
-
-        Button button = (Button) dialog.findViewById(R.id.Button01);
-        final CheckBox dontShowAgain = (CheckBox) dialog.findViewById(R.id.checkBox);
-        button.setOnClickListener(new OnClickListener() {
-
-
-            @Override
-            public void onClick(View view) {
-
-
-                String checkBoxResult = "NOT checked";
-                if (dontShowAgain.isChecked())
-                    checkBoxResult = "checked";
-                SharedPreferences.Editor editor = getSharedPreferences(PREFSFILE, 0).edit();
-                editor.putString("skipMessage", checkBoxResult);
-                // Commit the edits!
-                editor.commit();
-                dialog.dismiss();
-
+        final View bs3 = (View) findViewById(R.id.action_b);
+        bs3.setOnClickListener(new OnClickListener() {
+            public void onClick(View v) {
+                showFilePicker();
             }
         });
+
+        t1.send(new HitBuilders.AppViewBuilder().build());
 
 
         findViewById(R.id.floatinghelp).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.show();
+                showDialogHelp();
             }
         });
 
@@ -202,13 +209,15 @@ public class MainActivity extends ListActivity implements
     }
 
     private void showIntroHelp() {
-        final Button bs2 = (Button) findViewById(R.id.button1);
-        final Button bs = (Button) findViewById(R.id.button2);
         final ListView listView = getListView();
+        final View firetv = findViewById(R.id.firetv);
+        final FloatingActionsMenu menuMultipleActions = (FloatingActionsMenu) findViewById(R.id.multiple_actions);
+        final View action_a = findViewById(R.id.action_a);
 
+        menuMultipleActions.expand();
 
         ShowTipsView showtips = new ShowTipsBuilder(this)
-                .setTarget(bs2)
+                .setTarget(action_a)
                 .setTitle("Please open Settings")
                 .setDescription("and enter your Fire's IP-Address (Network Address)")
                 .setDelay(1000)
@@ -222,7 +231,7 @@ public class MainActivity extends ListActivity implements
                 .build();
 
         final ShowTipsView showtips3 = new ShowTipsBuilder(this)
-                .setTarget(bs)
+                .setTarget(firetv)
                 .setTitle("and finally")
                 .setDescription("install them on your Fire-Device with this Button")
                 .setDelay(1000)
@@ -260,7 +269,7 @@ public class MainActivity extends ListActivity implements
         showtips4.setCallback(new ShowTipsViewInterface() {
             @Override
             public void gotItClicked() {
-
+                menuMultipleActions.collapse();
             }
         });
 
@@ -323,51 +332,17 @@ public class MainActivity extends ListActivity implements
                 break;
             }
             case (R.id.deselect_all): {
-                ListAdapter adapter = getListAdapter();
-                int count = adapter.getCount();
-                for (int i = 0; i < count; i++) {
-                    SortablePackageInfo spi = (SortablePackageInfo) adapter.getItem(i);
-                    spi.selected = false;
-                }
-                ((AppAdapter) adapter).notifyDataSetChanged();
+                deselectAllList();
                 break;
             }
             case (R.id.item_help): {
-                final Dialog dialog = new Dialog(this);
-                dialog.setContentView(R.layout.dialog);
-                dialog.setTitle("Help Dialog");
-                Button button = (Button) dialog.findViewById(R.id.Button01);
-                final CheckBox dontShowAgain = (CheckBox) dialog.findViewById(R.id.checkBox);
-                button.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        String checkBoxResult = "NOT checked";
-                        if (dontShowAgain.isChecked())
-                            checkBoxResult = "checked";
-                        SharedPreferences.Editor editor = getSharedPreferences(PREFSFILE, 0).edit();
-                        editor.putString("skipMessage", checkBoxResult);
-                        // Commit the edits!
-                        editor.commit();
-                        dialog.dismiss();
-                    }
-                });
-                dialog.show();
+                showDialogHelp();
                 break;
             }
             case (R.id.item_mail): {
-                StringBuilder buffer;
-                buffer = new StringBuilder();
-                buffer.append("mailto:");
-                buffer.append("feedback@kulsch-it.de");
-                buffer.append("?subject=");
-                buffer.append("Fireinstaller" + mailtag);
-                buffer.append("&body=Please provide Androidversion and Device Model for Bugreport if you know it.");
-                String uriString = buffer.toString().replace(" ", "%20");
-
-                startActivity(Intent.createChooser(new Intent(Intent.ACTION_SENDTO, Uri.parse(uriString)), "Contact Developer"));
+                sendDeveloperMail();
                 break;
             }
-
             case (R.id.item_donate): {
                 showDonationActivity();
                 break;
@@ -376,22 +351,8 @@ public class MainActivity extends ListActivity implements
                 showPreferences();
                 break;
             }
-            case (R.id.item_externalAPK): { // This always works
-                Intent i = new Intent(MainActivity.this, FilePickerActivity.class);
-                // This works if you defined the intent filter
-                // Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-
-                // Set these depending on your use case. These are the defaults.
-                i.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false);
-                i.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, false);
-                i.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_FILE);
-
-                // Configure initial directory by specifying a String.
-                // You could specify a String like "/storage/emulated/0/", but that can
-                // dangerous. Always use Android's API calls to get paths to the SD-card or
-                // internal memory.
-                i.putExtra(FilePickerActivity.EXTRA_START_PATH, Environment.getExternalStorageDirectory().getPath());
-                startActivityForResult(i, 0);
+            case (R.id.item_externalAPK): {
+                showFilePicker();
                 break;
             }
         }
@@ -406,6 +367,60 @@ public class MainActivity extends ListActivity implements
     private void showDonationActivity() {
         Intent myIntent = new Intent(MainActivity.this, DonationsActivity.class);
         MainActivity.this.startActivity(myIntent);
+    }
+
+    private void showDialogHelp() {
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog);
+        dialog.setTitle("Help Dialog");
+        Button button = (Button) dialog.findViewById(R.id.Button01);
+        final CheckBox dontShowAgain = (CheckBox) dialog.findViewById(R.id.checkBox);
+        button.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String checkBoxResult = "NOT checked";
+                if (dontShowAgain.isChecked())
+                    checkBoxResult = "checked";
+                SharedPreferences.Editor editor = getSharedPreferences(PREFSFILE, 0).edit();
+                editor.putString("skipMessage", checkBoxResult);
+                // Commit the edits!
+                editor.commit();
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
+    private void showFilePicker() {
+        // This always works
+        Intent i = new Intent(MainActivity.this, FilePickerActivity.class);
+        // This works if you defined the intent filter
+        // Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+
+        // Set these depending on your use case. These are the defaults.
+        i.putExtra(FilePickerActivity.EXTRA_ALLOW_MULTIPLE, false);
+        i.putExtra(FilePickerActivity.EXTRA_ALLOW_CREATE_DIR, false);
+        i.putExtra(FilePickerActivity.EXTRA_MODE, FilePickerActivity.MODE_FILE);
+
+        // Configure initial directory by specifying a String.
+        // You could specify a String like "/storage/emulated/0/", but that can
+        // dangerous. Always use Android's API calls to get paths to the SD-card or
+        // internal memory.
+        i.putExtra(FilePickerActivity.EXTRA_START_PATH, Environment.getExternalStorageDirectory().getPath());
+        startActivityForResult(i, 0);
+    }
+
+    private void sendDeveloperMail() {
+        StringBuilder buffer;
+        buffer = new StringBuilder();
+        buffer.append("mailto:");
+        buffer.append("feedback@kulsch-it.de");
+        buffer.append("?subject=");
+        buffer.append("Fireinstaller" + mailtag);
+        buffer.append("&body=Please provide Androidversion and Device Model for Bugreport if you know it.");
+        String uriString = buffer.toString().replace(" ", "%20");
+
+        startActivity(Intent.createChooser(new Intent(Intent.ACTION_SENDTO, Uri.parse(uriString)), "Contact Developer"));
     }
 
     public void LogToView(String title, String message) {
@@ -449,6 +464,16 @@ public class MainActivity extends ListActivity implements
                     }
                 })
                 .show();
+    }
+
+    private void deselectAllList() {
+        ListAdapter adapter = getListAdapter();
+        int count = adapter.getCount();
+        for (int i = 0; i < count; i++) {
+            SortablePackageInfo spi = (SortablePackageInfo) adapter.getItem(i);
+            spi.selected = false;
+        }
+        ((AppAdapter) adapter).notifyDataSetChanged();
     }
 
     private void copyMenuSelect() {
@@ -722,7 +747,7 @@ public class MainActivity extends ListActivity implements
                 try {
                     outputStream.writeBytes("exit\n");
                     outputStream.flush();
-                }catch (IOException e) {
+                } catch (IOException e) {
                     publishProgress(" IOException error " + e.toString());
                     Log.e("fireconnector", " IOException error " + e);
                 }
@@ -733,7 +758,7 @@ public class MainActivity extends ListActivity implements
 
             //TODO better logging with errorcontent too
             publishProgress("Closing Connections. Installation complete. Thank you!");
-Log.e("fireconnector","closing connections");
+            Log.e("fireconnector", "closing connections");
 
             //After pushing:
             try {

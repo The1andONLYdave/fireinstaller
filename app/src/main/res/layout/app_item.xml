@@ -33,7 +33,8 @@
         android:layout_below="@+id/appname"
         android:layout_toRightOf="@+id/icon"
         android:text=""
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="@color/blue_semi_transparent" />
 
     <CheckBox
         android:id="@+id/selected"
