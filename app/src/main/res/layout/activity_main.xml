@@ -115,7 +115,9 @@
             android:layout_height="wrap_content"
             fab:fab_colorNormal="#FF9900"
             fab:fab_colorPressed="#FFCC33"
-            fab:fab_title="Preferences" />
+            fab:fab_title="Preferences"
+            fab:fab_size="mini" />
+
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/floatinghelp"
@@ -127,7 +129,8 @@
             fab:fab_colorNormal="#FF9900"
             fab:fab_colorPressed="#FFCC33"
             fab:fab_icon="@drawable/ic_action_help"
-            fab:fab_title="Quick Help Guide" />
+            fab:fab_title="Quick Help Guide"
+            fab:fab_size="mini" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/action_b"
@@ -135,7 +138,8 @@
             android:layout_height="wrap_content"
             fab:fab_colorNormal="#FF9900"
             fab:fab_colorPressed="#FFCC33"
-            fab:fab_title="Open Filebrowser for external Files" />
+            fab:fab_title="Open Filebrowser for external Files"
+            fab:fab_size="mini" />
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
