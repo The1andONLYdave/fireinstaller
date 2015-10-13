@@ -41,7 +41,7 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
-    <style name="fireinstaller" parent="@style/MaterialDrawerTheme.ActionBar" >
+    <style name="fireinstaller" parent="@style/MaterialDarkAmazon" >
         <item name="colorPrimaryDark">@color/material_drawer_primary_dark_1</item>
     </style>
 </resources>

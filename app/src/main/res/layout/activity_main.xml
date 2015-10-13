@@ -7,8 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".MainActivity"
-    android:fitsSystemWindows="true">
+    tools:context=".MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -115,8 +114,8 @@
             android:layout_height="wrap_content"
             fab:fab_colorNormal="#FF9900"
             fab:fab_colorPressed="#FFCC33"
-            fab:fab_title="Preferences"
-            fab:fab_size="mini" />
+            fab:fab_size="mini"
+            fab:fab_title="Preferences" />
 
 
         <com.getbase.floatingactionbutton.FloatingActionButton
@@ -129,8 +128,8 @@
             fab:fab_colorNormal="#FF9900"
             fab:fab_colorPressed="#FFCC33"
             fab:fab_icon="@drawable/ic_action_help"
-            fab:fab_title="Quick Help Guide"
-            fab:fab_size="mini" />
+            fab:fab_size="mini"
+            fab:fab_title="Quick Help Guide" />
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/action_b"
@@ -138,8 +137,8 @@
             android:layout_height="wrap_content"
             fab:fab_colorNormal="#FF9900"
             fab:fab_colorPressed="#FFCC33"
-            fab:fab_title="Open Filebrowser for external Files"
-            fab:fab_size="mini" />
+            fab:fab_size="mini"
+            fab:fab_title="Open Filebrowser for external Files" />
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
