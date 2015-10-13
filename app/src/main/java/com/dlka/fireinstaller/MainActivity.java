@@ -129,7 +129,6 @@ public class MainActivity extends ListActivity implements
                             }
                             case 4: {
                                 showWebpageHelp();
-                                Toast.makeText(MainActivity.this, "TODO postion " + position, Toast.LENGTH_LONG).show();
                                 break;
                             }
                             case 5: {
