@@ -66,19 +66,6 @@
                 android:targetClass="com.dlka.fireinstaller.SettingsActivity"
                 android:targetPackage="com.dlka.fireinstaller" />
         </Preference>
-        <ListPreference
-            android:defaultValue="-1"
-            android:entries="@array/pref_example_install_method"
-            android:entryValues="@array/pref_example_install_number"
-            android:key="example_list"
-            android:negativeButtonText="@null"
-            android:positiveButtonText="@null"
-            android:title="@string/pref_title_install_method" />
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="example_checkbox"
-            android:summary="@string/pref_description_analytics_google"
-            android:title="@string/pref_title_analytics_google" />
         <CheckBoxPreference
             android:defaultValue="false"
             android:key="debug_view_enabled"

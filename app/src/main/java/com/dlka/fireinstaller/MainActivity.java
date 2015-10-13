@@ -105,11 +105,11 @@ public class MainActivity extends ListActivity implements
                         new SecondaryDrawerItem().withName(R.string.externalAPK),//1
                         new DividerDrawerItem(),//2
                         new SecondaryDrawerItem().withName(R.string.mail),//3
-                        new SecondaryDrawerItem().withName("webpage help"),//4
+                        new SecondaryDrawerItem().withName("Help Webpage").withDescription("open in browser"),//4
                         new SecondaryDrawerItem().withName(R.string.help),//5
                         new SecondaryDrawerItem().withName(R.string.donate),//6
                         new DividerDrawerItem(),//7
-                        new PrimaryDrawerItem().withName(R.string.settings).withDescription("testdescription")//8
+                        new PrimaryDrawerItem().withName(R.string.settings).withDescription("Here you can enter IP-Address.")//8
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -985,7 +985,10 @@ public class MainActivity extends ListActivity implements
     }
 
     public void showWebpageHelp() {
-        //@TODO: open webpage on blogspot via intent or webactivity... hmmm... intent :)
+        String url = "https://kulsch-it.blogspot.de/2015/10/sideloading-firetvfirestick.html";
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        startActivity(i);
     }
 }
 

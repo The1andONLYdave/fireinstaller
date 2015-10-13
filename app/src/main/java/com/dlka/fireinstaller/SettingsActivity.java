@@ -123,10 +123,6 @@ public class SettingsActivity extends PreferenceActivity {
         // their values. When their values change, their summaries are updated
         // to reflect the new value, per the Android Design guidelines.
         bindPreferenceSummaryToValue(findPreference("example_text"));
-        bindPreferenceSummaryToValue(findPreference("example_list"));
-        getPreferenceScreen().findPreference("example_checkbox2").setEnabled(false);//Disabling
-        getPreferenceScreen().findPreference("example_checkbox").setEnabled(false);//Disabling
-        getPreferenceScreen().findPreference("example_list").setEnabled(false);//Disabling
         getPreferenceScreen().findPreference("debug_view_enabled").setEnabled(false);//Disabling
     }
 }
