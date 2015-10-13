@@ -9,4 +9,5 @@
     <color name="blue_semi_transparent">#B20066FF</color>
     <color name="blue">#0066FF</color>
     <color name="background">#000000</color>
+    <color name="material_drawer_primary_dark_1">#7f4c00</color>
 </resources>

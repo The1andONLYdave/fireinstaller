@@ -42,6 +42,12 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.model.DividerDrawerItem;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.nononsenseapps.filepicker.FilePickerActivity;
 
 import net.frederico.showtipsview.ShowTipsBuilder;
@@ -92,6 +98,32 @@ public class MainActivity extends ListActivity implements
         // requestWindowFeature(Window.FEATURE_PROGRESS);
         setContentView(R.layout.activity_main);
 
+        //new DrawerBuilder().withActivity(this).build();
+//if you want to update the items at a later time it is recommended to keep it in a variable
+        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withName("Quick Help Guide");
+        SecondaryDrawerItem item2 = new SecondaryDrawerItem().withName("Sideloading APK Filebrwoser");
+
+//create the drawer and remember the `Drawer` result object
+        Drawer result = new DrawerBuilder()
+                .withActivity(this)
+                .withTranslucentStatusBar(false)
+                .withActionBarDrawerToggle(false)
+                .addDrawerItems(
+                        item1,
+                        new DividerDrawerItem(),
+                        item2,
+                        new SecondaryDrawerItem().withName("Preferences")
+                )
+                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        // do something with the clicked item :D
+                        return true;
+                    }
+                })
+                .build();
+
+        result.openDrawer();
 
         //floating action menu
         final View actionB = findViewById(R.id.action_b);
