@@ -92,7 +92,7 @@
         fab:fab_addButtonColorNormal="#FF9900"
         fab:fab_addButtonColorPressed="#FF9900"
         fab:fab_addButtonPlusIconColor="#FF9900"
-        fab:fab_labelStyle="@style/menu_labels_style">
+        fab:fab_title="Menu">
     </com.getbase.floatingactionbutton.FloatingActionButton>
 
 

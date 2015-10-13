@@ -3,8 +3,4 @@
     <style name="AppBaseTheme" parent="android:Theme.Holo">
         <item name="android:colorAccent">@color/accent_material_dark_1</item>
     </style>
-    <style name="menu_labels_style">
-        <item name="android:background">@drawable/fab_label_background</item>
-        <item name="android:textColor">@color/white</item>
-    </style>
 </resources>

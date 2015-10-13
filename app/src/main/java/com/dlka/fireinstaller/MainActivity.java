@@ -101,34 +101,55 @@ public class MainActivity extends ListActivity implements
                         //just use this with the Drawer
                 .withSelectedItem(-1)
                 .addDrawerItems(
-                        new PrimaryDrawerItem().withName(R.string.copy),
-                        new SecondaryDrawerItem().withName("sideload"),
-                        new DividerDrawerItem(),
-                        new SecondaryDrawerItem().withName("email feedback"),
-                        new SecondaryDrawerItem().withName("webpage help"),
-                        new SecondaryDrawerItem().withName("quick help guide"),
-                        new SecondaryDrawerItem().withName("donate"),
-                        new DividerDrawerItem(),
-                        new PrimaryDrawerItem().withName(R.string.action_settings).withDescription("testdescription")
-
+                        new PrimaryDrawerItem().withName(R.string.copy),//0
+                        new SecondaryDrawerItem().withName(R.string.externalAPK),//1
+                        new DividerDrawerItem(),//2
+                        new SecondaryDrawerItem().withName(R.string.mail),//3
+                        new SecondaryDrawerItem().withName("webpage help"),//4
+                        new SecondaryDrawerItem().withName(R.string.help),//5
+                        new SecondaryDrawerItem().withName(R.string.donate),//6
+                        new DividerDrawerItem(),//7
+                        new PrimaryDrawerItem().withName(R.string.settings).withDescription("testdescription")//8
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        Toast.makeText(MainActivity.this, "selected position " + position, Toast.LENGTH_LONG).show();
-                        //some of the functions we wanna load here:
-                        /*dialogBeforeInstall();
-                        showPreferences();
-                        showFilePicker();
-                        showDialogHelp();
-                        */
+                        switch (position) {
+                            case 0: {
+                                dialogBeforeInstall();
+                                break;
+                            }
+                            case 1: {
+                                showFilePicker();
+                                break;
+                            }
+                            case 3: {
+                                sendDeveloperMail();
+                                break;
+                            }
+                            case 4: {
+                                showWebpageHelp();
+                                Toast.makeText(MainActivity.this, "TODO postion " + position, Toast.LENGTH_LONG).show();
+                                break;
+                            }
+                            case 5: {
+                                showDialogHelp();
+                                break;
+                            }
+                            case 6: {
+                                showDonationActivity();
+                                break;
+                            }
+                            case 8: {
+                                showPreferences();
+                                break;
+                            }
+
+                        }
                         return true; //@TODO change function -> void
                     }
                 })
                 .withActivity(this).build();
-
-
-        drawer.openDrawer();
 
 
         //floating action button
@@ -202,29 +223,24 @@ public class MainActivity extends ListActivity implements
         final ListView listView = getListView();
 
         ShowTipsView showtips = new ShowTipsBuilder(this)
-                .setTitle("Please open Settings")
-                .setDescription("and enter your Fire's IP-Address (Network Address)")
+                .setTarget(findViewById(R.id.multiple_actions))
+                .setTitle("Start here")
+                .setDescription("to open drawer. Then open Settings for entering IP-Address (Networkaddress) of FireTV/FireStick.")
                 .setDelay(1000)
                 .build();
 
         final ShowTipsView showtips2 = new ShowTipsBuilder(this)
                 .setTarget(listView, 100, 150, 200)
                 .setTitle("select some apps")
-                .setDescription("from all installed apps (filepicker in development for non-installed apps)")
-                .setDelay(1000)
-                .build();
-
-        final ShowTipsView showtips3 = new ShowTipsBuilder(this)
-                .setTitle("and finally")
-                .setDescription("install them on your Fire-Device with this Button")
+                .setDescription("from all installed apps or use Sideload-Option in Menu.")
                 .setDelay(1000)
                 .build();
 
         final ShowTipsView showtips4 = new ShowTipsBuilder(this)
                 .setTarget(findViewById(R.id.multiple_actions))
-                .setTitle("Need help?")
-                .setDescription("Press this Button for more information, like where to find installed apps on Fire-Device, how to know IP-Adress and more.\n" +
-                        "Hint of the day: There's a checkbox for hiding this interactive-Guide on start ;)\n\nHope you enjoy my app. Have Fun!\n\nFeeling adventurous? Try Menu -> Sideloading, push any apk on your phones sd-card.\n\n")
+                .setTitle("Searching Help?")
+                .setDescription("Select Help or Help-Webpage from Drawer for more information, like where to find installed apps on Fire-Device, how to know IP-Adress and more.\n" +
+                        "Hope you enjoy my app. Have Fun!\n\nFeeling adventurous? Try Drawer -> Sideloading, push any apk from your phones sd-card.\n\n")
                 .setDelay(1000)
                 .build();
 
@@ -238,19 +254,16 @@ public class MainActivity extends ListActivity implements
         showtips2.setCallback(new ShowTipsViewInterface() {
             @Override
             public void gotItClicked() {
-                showtips3.show(MainActivity.this);
-            }
-        });
-        showtips3.setCallback(new ShowTipsViewInterface() {
-            @Override
-            public void gotItClicked() {
                 showtips4.show(MainActivity.this);
             }
         });
         showtips4.setCallback(new ShowTipsViewInterface() {
             @Override
             public void gotItClicked() {
-             ;
+                SharedPreferences.Editor editor = getSharedPreferences(PREFSFILE, 0).edit();
+                editor.putString("skipMessage", "checked");
+                // Commit the edits!
+                editor.commit();
             }
         });
 
@@ -969,6 +982,10 @@ public class MainActivity extends ListActivity implements
 
     public static boolean isValidIPV4(final String s) {
         return IPV4_PATTERN.matcher(s).matches();
+    }
+
+    public void showWebpageHelp() {
+        //@TODO: open webpage on blogspot via intent or webactivity... hmmm... intent :)
     }
 }
 
