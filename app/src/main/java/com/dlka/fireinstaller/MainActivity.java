@@ -22,7 +22,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -36,7 +35,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
@@ -75,55 +73,69 @@ public class MainActivity extends ListActivity implements
     private static final String PROPERTY_ID = "App";
     private static final String mailtag = BuildConfig.VERSION_NAME;
     public String fireip = "";
-    public boolean notificationDisplay = false;
     public boolean debugDisplay = false;
     private AdView adView;
     public boolean installAPKdirectly = false;
     public String encPath = null;
     HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
-    TextView textAbove;
-    EditText debugView;
+    TextView textAbove = null;
+    EditText debugView = null;
     static private final String IPV4_REGEX = "(([0-1]?[0-9]{1,2}\\.)|(2[0-4][0-9]\\.)|(25[0-5]\\.)){3}(([0-1]?[0-9]{1,2})|(2[0-4][0-9])|(25[0-5]))";
     static private Pattern IPV4_PATTERN = Pattern.compile(IPV4_REGEX);
 
 
     @Override
     protected void onCreate(Bundle b) {
-        if (BuildConfig.DEBUG) {
-            //     Log.initialize(this);
-        }
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         super.onCreate(b);
         // requestWindowFeature(Window.FEATURE_PROGRESS);
         setContentView(R.layout.activity_main);
-        new DrawerBuilder()
+
+        //app drawer
+        final Drawer drawer = new DrawerBuilder()
                 .withActionBarDrawerToggle(false)
                 .withTranslucentStatusBar(false)
                 .withSystemUIHidden(false)
+                        //just use this with the Drawer
+                .withSelectedItem(-1)
+                .addDrawerItems(
+                        new PrimaryDrawerItem().withName(R.string.copy),
+                        new SecondaryDrawerItem().withName("sideload"),
+                        new DividerDrawerItem(),
+                        new SecondaryDrawerItem().withName("email feedback"),
+                        new SecondaryDrawerItem().withName("webpage help"),
+                        new SecondaryDrawerItem().withName("quick help guide"),
+                        new SecondaryDrawerItem().withName("donate"),
+                        new DividerDrawerItem(),
+                        new PrimaryDrawerItem().withName(R.string.action_settings).withDescription("testdescription")
+
+                )
+                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        Toast.makeText(MainActivity.this, "selected position " + position, Toast.LENGTH_LONG).show();
+                        //some of the functions we wanna load here:
+                        /*dialogBeforeInstall();
+                        showPreferences();
+                        showFilePicker();
+                        showDialogHelp();
+                        */
+                        return true; //@TODO change function -> void
+                    }
+                })
                 .withActivity(this).build();
 
-        //floating action menu
-        final View actionB = findViewById(R.id.action_b);
-        actionB.setVisibility(View.GONE);
-        FloatingActionButton actionC = new FloatingActionButton(getBaseContext());
-        actionC.setTitle("Expert Option?");
-        actionC.setOnClickListener(new OnClickListener() {
+
+        drawer.openDrawer();
+
+
+        //floating action button
+        findViewById(R.id.multiple_actions).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                actionB.setVisibility(actionB.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
-            }
-        });
-
-        final FloatingActionsMenu menuMultipleActions = (FloatingActionsMenu) findViewById(R.id.multiple_actions);
-        menuMultipleActions.addButton(actionC);
-
-        final FloatingActionButton actionA = (FloatingActionButton) findViewById(R.id.action_a);
-        actionA.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                actionA.setTitle("Action A clicked");
+                drawer.openDrawer();
             }
         });
 
@@ -171,45 +183,12 @@ public class MainActivity extends ListActivity implements
             layout.setPadding(0, 0, 0, 0); //free ad-space for donate version
         }
 
-
-        //while showing helpdialog we build list in background for ready when user read.
-
-
+        //while showing helpdialog we build list in background for ready when user read. //@TODO no helpdialog, so need for loading-dialog here
         setListAdapter(new AppAdapter(this, R.layout.app_item,
                 new ArrayList<SortablePackageInfo>(), R.layout.app_item));
         new ListTask(this, R.layout.app_item).execute("");
 
-        final View bs = (View) findViewById(R.id.firetv);
-        bs.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                dialogBeforeInstall();
-            }
-        });
-
-        final View bs2 = (View) findViewById(R.id.action_a);
-        bs2.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                showPreferences();
-            }
-        });
-
-        final View bs3 = (View) findViewById(R.id.action_b);
-        bs3.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                showFilePicker();
-            }
-        });
-
         t1.send(new HitBuilders.AppViewBuilder().build());
-
-
-        findViewById(R.id.floatinghelp).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDialogHelp();
-            }
-        });
-
 
         SharedPreferences settings = getSharedPreferences(PREFSFILE, 0);
         String skipMessage = settings.getString("skipMessage", "NOT checked");
@@ -221,14 +200,8 @@ public class MainActivity extends ListActivity implements
 
     private void showIntroHelp() {
         final ListView listView = getListView();
-        final View firetv = findViewById(R.id.firetv);
-        final FloatingActionsMenu menuMultipleActions = (FloatingActionsMenu) findViewById(R.id.multiple_actions);
-        final View action_a = findViewById(R.id.action_a);
-
-        menuMultipleActions.expand();
 
         ShowTipsView showtips = new ShowTipsBuilder(this)
-                .setTarget(action_a)
                 .setTitle("Please open Settings")
                 .setDescription("and enter your Fire's IP-Address (Network Address)")
                 .setDelay(1000)
@@ -242,16 +215,13 @@ public class MainActivity extends ListActivity implements
                 .build();
 
         final ShowTipsView showtips3 = new ShowTipsBuilder(this)
-                .setTarget(firetv)
                 .setTitle("and finally")
                 .setDescription("install them on your Fire-Device with this Button")
                 .setDelay(1000)
                 .build();
 
-        final View bhelp = findViewById(R.id.floatinghelp);
-
         final ShowTipsView showtips4 = new ShowTipsBuilder(this)
-                .setTarget(bhelp)
+                .setTarget(findViewById(R.id.multiple_actions))
                 .setTitle("Need help?")
                 .setDescription("Press this Button for more information, like where to find installed apps on Fire-Device, how to know IP-Adress and more.\n" +
                         "Hint of the day: There's a checkbox for hiding this interactive-Guide on start ;)\n\nHope you enjoy my app. Have Fun!\n\nFeeling adventurous? Try Menu -> Sideloading, push any apk on your phones sd-card.\n\n")
@@ -280,7 +250,7 @@ public class MainActivity extends ListActivity implements
         showtips4.setCallback(new ShowTipsViewInterface() {
             @Override
             public void gotItClicked() {
-                menuMultipleActions.collapse();
+             ;
             }
         });
 
@@ -493,8 +463,6 @@ public class MainActivity extends ListActivity implements
         fireip = (String) preferences.get("example_text");
 
         if ((!isNothingSelected()) || (installAPKdirectly == true)) {
-
-            //notificationDisplay = (Boolean) preferences.get("notifications_new_message");
 
             debugDisplay = (Boolean) preferences.get("debug_view_enabled");
 
@@ -819,9 +787,6 @@ public class MainActivity extends ListActivity implements
         protected void onPreExecute() {
             lockScreenOrientation();
 
-            if (notificationDisplay == true) {
-                //notificationHelper.createNotification();
-            }
             if (!debugDisplay) {
                 pDialog.getProgressHelper().setBarColor(Color.parseColor("#ff9900"));
                 pDialog.setTitleText("installing on Fire...");
@@ -844,9 +809,6 @@ public class MainActivity extends ListActivity implements
             String passedValues = v[0];// + "," + v[1];
 
             LogToView("fireinstaller", "onProgressUpdate" + " passedValues " + passedValues); //TODO why we used to log v here?
-            if (notificationDisplay == true) {
-                //notificationHelper.progressUpdate(completed);
-            }
 
             if (!debugDisplay) {
                 pDialog.setContentText(passedValues);
@@ -857,9 +819,7 @@ public class MainActivity extends ListActivity implements
         protected void onPostExecute(final Void result) {
             installAPKdirectly = false;
             //this should be self explanatory
-            if (notificationDisplay == true) {
-                //notificationHelper.completed();
-            }
+
             if (!debugDisplay) {
                 pDialog.setCancelable(true);
                 pDialog.dismissWithAnimation();
