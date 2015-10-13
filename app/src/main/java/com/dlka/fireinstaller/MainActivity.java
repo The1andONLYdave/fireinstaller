@@ -98,7 +98,11 @@ public class MainActivity extends ListActivity implements
         super.onCreate(b);
         // requestWindowFeature(Window.FEATURE_PROGRESS);
         setContentView(R.layout.activity_main);
-
+        new DrawerBuilder()
+                .withActionBarDrawerToggle(false)
+                .withTranslucentStatusBar(false)
+                .withSystemUIHidden(false)
+                .withActivity(this).build();
 
         //floating action menu
         final View actionB = findViewById(R.id.action_b);

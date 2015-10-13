@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <style name="MaterialDarkAmazon" parent="@android:style/Theme.Material" >
+    <style name="AppBaseTheme" parent="android:Theme.Holo">
         <item name="android:colorAccent">@color/accent_material_dark_1</item>
     </style>
     <style name="menu_labels_style">
