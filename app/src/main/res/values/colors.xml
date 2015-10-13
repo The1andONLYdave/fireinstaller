@@ -8,4 +8,5 @@
     <color name="black_semi_transparent">#B2000000</color>
     <color name="blue_semi_transparent">#B20066FF</color>
     <color name="blue">#0066FF</color>
+    <color name="background">#000000</color>
 </resources>
