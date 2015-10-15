@@ -34,7 +34,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
@@ -90,7 +89,6 @@ public class MainActivity extends ListActivity implements
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
         super.onCreate(b);
-        // requestWindowFeature(Window.FEATURE_PROGRESS);
         setContentView(R.layout.activity_main);
 
         //app drawer
@@ -98,7 +96,6 @@ public class MainActivity extends ListActivity implements
                 .withActionBarDrawerToggle(false)
                 .withTranslucentStatusBar(false)
                 .withSystemUIHidden(false)
-                        //just use this with the Drawer
                 .withSelectedItem(-1)
                 .addDrawerItems(
                         new PrimaryDrawerItem().withName(R.string.copy),//0
@@ -143,14 +140,11 @@ public class MainActivity extends ListActivity implements
                                 showPreferences();
                                 break;
                             }
-
                         }
                         return true; //@TODO change function -> void
                     }
                 })
                 .withActivity(this).build();
-
-
         //floating action button
         findViewById(R.id.multiple_actions).setOnClickListener(new OnClickListener() {
             @Override
@@ -158,7 +152,6 @@ public class MainActivity extends ListActivity implements
                 drawer.openDrawer();
             }
         });
-
 
         ListView listView = getListView();
         listView.setOnItemClickListener(this);
@@ -426,6 +419,11 @@ public class MainActivity extends ListActivity implements
 
         Map<String, ?> preferences = PreferenceManager.getDefaultSharedPreferences(this).getAll();
         fireip = (String) preferences.get("example_text");
+        if (fireip.isEmpty()) {
+            Toast.makeText(this, "Target? Fire's IP-Address is empty.", Toast.LENGTH_LONG).show();
+            showPreferences();
+            return;
+        }
         if (fireip.equals("192.0.0.0")) {
             Toast.makeText(this, "Target? Please enter Fire's IP-Address before.", Toast.LENGTH_LONG).show();
             showPreferences();
@@ -439,7 +437,7 @@ public class MainActivity extends ListActivity implements
 
         new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                 .setTitleText("Are you sure?")
-                .setContentText("Do you want to install at ip " + fireip)
+                .setContentText("Do you want to install at ip " + fireip.toString())
                 .setCancelText("No,cancel plx!")
                 .setConfirmText("Yes,do it!")
                 .showCancelButton(true)
@@ -447,7 +445,7 @@ public class MainActivity extends ListActivity implements
                     @Override
                     public void onClick(SweetAlertDialog sDialog) {
                         sDialog.cancel();
-                        copyMenuSelect();
+                        copyMenuSelect(fireip.toString());
                     }
                 })
                 .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
@@ -469,37 +467,17 @@ public class MainActivity extends ListActivity implements
         ((AppAdapter) adapter).notifyDataSetChanged();
     }
 
-    private void copyMenuSelect() {
-
-        Map<String, ?> preferences = PreferenceManager.getDefaultSharedPreferences(this).getAll();
-        fireip = (String) preferences.get("example_text");
+    private void copyMenuSelect(String fireip) {
 
         if ((!isNothingSelected()) || (installAPKdirectly == true)) {
-
-            debugDisplay = (Boolean) preferences.get("debug_view_enabled");
-
-            TextView textAbove = (TextView) findViewById(R.id.format_as);
-            EditText debugView = (EditText) findViewById(R.id.debugText);
-
-            textAbove.setVisibility(View.GONE);
-            if (debugDisplay) {
-                debugView.setVisibility(View.VISIBLE);
-                Log.d("Fireinstaller", "debug message test");
-                Log.e("Fireinstaller", "failure message test");
-            }
-
-            Toast.makeText(this, "Installing at IP" + fireip, Toast.LENGTH_LONG).show();
             LogToView("Fireinstaller", "IP ausgelesen:" + fireip);
-
             pushFireTv();
-
         } else {
             Toast.makeText(this, "no app selected", Toast.LENGTH_LONG).show();
         }
     }
 
     public void pushFireTv() {
-
         //lets start our long running process Asyncronous Task
         new LongRunningTask().execute();
 
@@ -555,7 +533,6 @@ public class MainActivity extends ListActivity implements
                     : (trackerId == TrackerName.GLOBAL_TRACKER) ? analytics.newTracker(R.xml.global_tracker)
                     : analytics.newTracker(R.xml.global_tracker);
             mTrackers.put(trackerId, t);
-
         }
         return mTrackers.get(trackerId);
     }
@@ -569,9 +546,7 @@ public class MainActivity extends ListActivity implements
 
 
     private class LongRunningTask extends AsyncTask<String, String, Void> {
-
         SweetAlertDialog pDialog = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.PROGRESS_TYPE);
-
         @Override
         protected Void doInBackground(String... params) {
 
@@ -819,28 +794,16 @@ public class MainActivity extends ListActivity implements
 
         protected void onProgressUpdate(String... v) {
             String passedValues = v[0];// + "," + v[1];
-
             LogToView("fireinstaller", "onProgressUpdate" + " passedValues " + passedValues); //TODO why we used to log v here?
-
-            if (!debugDisplay) {
-                pDialog.setContentText(passedValues);
-            }
-
+            pDialog.setContentText(passedValues);
         }
 
         protected void onPostExecute(final Void result) {
             installAPKdirectly = false;
             //this should be self explanatory
-
-            if (!debugDisplay) {
                 pDialog.setCancelable(true);
                 pDialog.dismissWithAnimation();
-            }
             unlockScreenOrientation();
-            if (!debugDisplay) {
-                TextView textAbove = (TextView) findViewById(R.id.format_as); //make sure we don't call an empty reference at textAbove
-                textAbove.setVisibility(View.VISIBLE);
-            }
             LogToView("fireinstaller", "complete. READY?\n");
             AppRate.with(MainActivity.this).checkAndShow();
         }
@@ -865,8 +828,6 @@ public class MainActivity extends ListActivity implements
             Log.d("onCancelled", "Killing adb server. Installation canceled :(");
             installAPKdirectly = false;
             Log.d("onCancelled", "this should not happen...\n");
-
-
             Process adb2 = null;
             try {
                 adb2 = Runtime.getRuntime().exec("sh");
@@ -938,7 +899,6 @@ public class MainActivity extends ListActivity implements
         } else {
             Toast.makeText(this, "Please select only files with .apk ending", Toast.LENGTH_LONG).show();
         }
-
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -949,7 +909,6 @@ public class MainActivity extends ListActivity implements
                 // For JellyBean and above
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                     ClipData clip = data.getClipData();
-
                     if (clip != null) {
                         for (int i = 0; i < clip.getItemCount(); i++) {
                             Uri uri = clip.getItemAt(i).getUri();
@@ -961,7 +920,6 @@ public class MainActivity extends ListActivity implements
                 } else {
                     ArrayList<String> paths = data.getStringArrayListExtra
                             (FilePickerActivity.EXTRA_PATHS);
-
                     if (paths != null) {
                         for (String path : paths) {
                             Uri uri = Uri.parse(path);
@@ -970,7 +928,6 @@ public class MainActivity extends ListActivity implements
                         }
                     }
                 }
-
             } else {
                 Uri uri = data.getData();
                 Log.d("filepickerdebug3", uri.getEncodedPath());
