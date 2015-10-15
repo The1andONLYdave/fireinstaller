@@ -546,7 +546,6 @@ public class MainActivity extends ListActivity implements
 
     private class LongRunningTask extends AsyncTask<String, String, Void> {
         SweetAlertDialog pDialog = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.PROGRESS_TYPE);
-        SweetAlertDialog cDialog = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.PROGRESS_TYPE);
 
         @Override
         protected Void doInBackground(String... params) {
@@ -724,7 +723,7 @@ public class MainActivity extends ListActivity implements
             //CLOSINGCONNECTION //should work
 
             //TODO better logging with errorcontent too
-            publishProgress("Waiting... installation running... When finished this Dialog disappears");
+            publishProgress("Please waiting... installation running... When finished this Dialog disappears");
             Log.e("fireconnector", "closing connections");
 
             //After pushing:
@@ -774,6 +773,7 @@ public class MainActivity extends ListActivity implements
         @Override
         protected void onPreExecute() {
             lockScreenOrientation();
+
             pDialog.getProgressHelper().setBarColor(Color.parseColor("#ff9900"));
             pDialog.setTitleText("installing on Fire...");
             pDialog.setCancelable(false);
@@ -783,23 +783,12 @@ public class MainActivity extends ListActivity implements
             pDialog.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
                 @Override
                 public void onClick(SweetAlertDialog sDialog) {
-                    cDialog
-                            .setTitleText("Destroy Install-Process!!")
-                            .setContentText("You really sure? ")
-                            .setConfirmText("Yes, sure, kill em, pls")
-                            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-                                @Override
-                                public void onClick(SweetAlertDialog cDialog) {
-                                    cancel(true);
-                                    cDialog.cancel();
-                                }
-                            })
-                            .setCancelText("No, continue Installation")
-                            .changeAlertType(SweetAlertDialog.WARNING_TYPE);
-                    cDialog.show();
+                    cancel(true);
+                    sDialog.cancel();
                 }
             });
             pDialog.show();
+
         }
 
         protected void onProgressUpdate(String... v) {
