@@ -1,10 +1,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/drawer"
+        android:showAsAction="withText"
+        android:title="Show Drawer"></item>
+    <item
         android:id="@+id/copy"
         android:icon="@drawable/ic_menu_upload"
         android:showAsAction="never|withText"
         android:title="@string/copy"></item>
+    <item
+        android:id="@+id/item_externalAPK"
+        android:icon="@drawable/ic_action_help"
+        android:title="@string/externalAPK"></item>
     <item
         android:id="@+id/deselect_all"
         android:icon="@drawable/ic_action_deselect_all"
@@ -24,8 +32,4 @@
         android:id="@+id/item_settings"
         android:icon="@drawable/ic_action_help"
         android:title="@string/settings"></item>
-    <item
-        android:id="@+id/item_externalAPK"
-        android:icon="@drawable/ic_action_help"
-        android:title="@string/externalAPK"></item>
 </menu>

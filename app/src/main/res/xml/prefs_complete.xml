@@ -63,13 +63,8 @@
             android:title="debugActivityLauncher">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:targetClass="com.dlka.fireinstaller.SettingsActivity"
+                android:targetClass="com.dlka.fireinstaller.DebugActivity"
                 android:targetPackage="com.dlka.fireinstaller" />
         </Preference>
-        <CheckBoxPreference
-            android:defaultValue="false"
-            android:key="debug_view_enabled"
-            android:summary="Developer and Tester features. unstable!"
-            android:title="Enable Debug Window, disable Progress Dialog and more" />
     </PreferenceCategory>
 </PreferenceScreen>

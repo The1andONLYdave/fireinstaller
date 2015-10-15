@@ -27,11 +27,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
@@ -77,11 +75,9 @@ public class MainActivity extends ListActivity implements
     public boolean installAPKdirectly = false;
     public String encPath = null;
     HashMap<TrackerName, Tracker> mTrackers = new HashMap<TrackerName, Tracker>();
-    TextView textAbove = null;
-    EditText debugView = null;
     static private final String IPV4_REGEX = "(([0-1]?[0-9]{1,2}\\.)|(2[0-4][0-9]\\.)|(25[0-5]\\.)){3}(([0-1]?[0-9]{1,2})|(2[0-4][0-9])|(25[0-5]))";
     static private Pattern IPV4_PATTERN = Pattern.compile(IPV4_REGEX);
-
+    Drawer drawer=null;
 
     @Override
     protected void onCreate(Bundle b) {
@@ -92,7 +88,7 @@ public class MainActivity extends ListActivity implements
         setContentView(R.layout.activity_main);
 
         //app drawer
-        final Drawer drawer = new DrawerBuilder()
+        drawer = new DrawerBuilder()
                 .withActionBarDrawerToggle(false)
                 .withTranslucentStatusBar(false)
                 .withSystemUIHidden(false)
@@ -188,6 +184,7 @@ public class MainActivity extends ListActivity implements
                     .addTestDevice("89CADD0B4B609A30ABDCB7ED4E90A8DE")
                     .addTestDevice("CCCBB7E354C2E6E64DB5A399A77298ED")  //current Nexus 4
                     .addTestDevice("4DA61F48D168C897127AACD506BF35DF")  //current Note
+                    .addTestDevice("9190B60D7EC5559B167C1AF6D89D714A")  // Nexus 4
                             //TODO current tablet
                     .build();
 
@@ -313,6 +310,10 @@ public class MainActivity extends ListActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
+            case R.id.drawer: {
+                drawer.openDrawer();
+                break;
+            }
             case R.id.copy: {
                 dialogBeforeInstall();
                 break;
@@ -411,8 +412,6 @@ public class MainActivity extends ListActivity implements
 
     public void LogToView(String title, String message) {
         Log.d(title, message);
-        EditText debugView = (EditText) findViewById(R.id.debugText);
-        debugView.setText(debugView.getText() + title + " : " + message + "\n");
     }
 
     private void dialogBeforeInstall() {
@@ -547,6 +546,7 @@ public class MainActivity extends ListActivity implements
 
     private class LongRunningTask extends AsyncTask<String, String, Void> {
         SweetAlertDialog pDialog = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.PROGRESS_TYPE);
+
         @Override
         protected Void doInBackground(String... params) {
 
@@ -801,8 +801,8 @@ public class MainActivity extends ListActivity implements
         protected void onPostExecute(final Void result) {
             installAPKdirectly = false;
             //this should be self explanatory
-                pDialog.setCancelable(true);
-                pDialog.dismissWithAnimation();
+            pDialog.setCancelable(true);
+            pDialog.dismissWithAnimation();
             unlockScreenOrientation();
             LogToView("fireinstaller", "complete. READY?\n");
             AppRate.with(MainActivity.this).checkAndShow();
@@ -877,15 +877,9 @@ public class MainActivity extends ListActivity implements
 
             cancel(true);
             //TODO stop installertask
-            if (!debugDisplay) {
-                pDialog.setCancelable(true);
-                pDialog.dismissWithAnimation();
-            }
+            pDialog.setCancelable(true);
+            pDialog.dismissWithAnimation();
             unlockScreenOrientation();
-            if (!debugDisplay) {
-                TextView textAbove = (TextView) findViewById(R.id.format_as); //make sure we don't call an empty reference at textAbove
-                textAbove.setVisibility(View.VISIBLE);
-            }
             Log.d("onCancel", "finished");
         }
 

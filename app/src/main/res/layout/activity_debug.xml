@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.dlka.fireinstaller.DebugActivity">
+    tools:context=".DebugActivity">
 
 
     <TextView
@@ -17,40 +17,13 @@
         android:text="Debug activity" />
 
     <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/textView2"
-        android:text="Simulate Notification" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/button"
-        android:text="Notification continue" />
-
-    <Button
-        android:id="@+id/button3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/button2"
-        android:text="Notification completed" />
-
-    <Button
         android:id="@+id/button4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/button3"
-        android:text="Google Play Services" />
+        android:text="Get Google Play Services Version" />
 
     <Button
         android:id="@+id/button5"
@@ -61,28 +34,26 @@
         android:layout_below="@+id/button4"
         android:text="Ping FireTV/FireStick (ip from prefs)" />
 
-    <Button
-        android:id="@+id/button6"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/bannerLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/button5"
-        android:text="Test new design" />
+        android:gravity="bottom|center_vertical|end"
+        android:padding="15dp" />
 
     <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/scrollView" >
+        android:layout_height="fill_parent">
 
         <EditText
             android:id="@+id/editTextLog"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Log"
-            android:selectAllOnFocus="true"
-            android:paddingBottom="10dp"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
             android:focusableInTouchMode="false"
+            android:paddingBottom="10dp"
+            android:selectAllOnFocus="true"
+            android:text="Log \n(if you press Ping wait 5 Seconds please)"
             android:textIsSelectable="true" />
     </ScrollView>
 

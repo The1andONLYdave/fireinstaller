@@ -15,6 +15,13 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/bannerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="bottom|center_vertical|end"
+            android:padding="15dp" />
+
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
@@ -24,7 +31,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
-
 
                 <TextView
                     android:id="@+id/format_as"
@@ -38,7 +44,6 @@
                     android:text="@string/newquickguide"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="#FF9900" />
-
             </LinearLayout>
         </LinearLayout>
 
@@ -48,10 +53,7 @@
             android:layout_height="0dp"
             android:gravity="center"
             android:minHeight="15dp"
-            android:padding="0dp">
-
-        </LinearLayout>
-
+            android:padding="0dp"/>
         <TextView
             android:id="@+id/shimmer_tv"
             android:layout_width="wrap_content"
@@ -59,27 +61,11 @@
             android:text="@string/howto2"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textStyle="bold" />
-
         <ListView
             android:id="@android:id/list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingTop="0dp" />
-
-        <EditText
-            android:id="@+id/debugText"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="show debug output if turned on in prefs\n"
-            android:visibility="gone" />
-
-        <LinearLayout
-            android:id="@+id/bannerLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="bottom|center_vertical|end"
-            android:padding="15dp" />
-
     </LinearLayout>
 
     <com.getbase.floatingactionbutton.FloatingActionButton
@@ -87,13 +73,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="16dp"
-        fab:fab_addButtonColorNormal="#FF9900"
-        fab:fab_addButtonColorPressed="#FF9900"
-        fab:fab_addButtonPlusIconColor="#FF9900"
-        fab:fab_title="Menu">
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="center_vertical|right"
+        android:layout_marginBottom="100dp"
+        fab:fab_title="Menu"
+        fab:fab_colorNormal="#77FF9900"
+        fab:fab_colorPressed="#FF9900">
     </com.getbase.floatingactionbutton.FloatingActionButton>
-
 
 </RelativeLayout>

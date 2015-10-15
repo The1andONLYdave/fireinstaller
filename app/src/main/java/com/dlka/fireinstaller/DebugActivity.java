@@ -9,7 +9,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
@@ -23,46 +27,21 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.Map;
 
+import fr.nicolaspomepuy.discreetapprate.AppRate;
+
 
 public class DebugActivity extends Activity {
     public String fireip = "";
+    private AdView adView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_debug);
 
-        final Button bf = (Button) findViewById(R.id.button);
-        final Button bs = (Button) findViewById(R.id.button2);
-        final Button bt = (Button) findViewById(R.id.button3);
         final Button bv = (Button) findViewById(R.id.button4);
         final Button bfifth = (Button) findViewById(R.id.button5);
-        final Button bsixth = (Button) findViewById(R.id.button5);
 
-        bs.setEnabled(false);
-        bt.setEnabled(false);
-        bf.setEnabled(false);
-
-        bf.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                bs.setEnabled(true);
-                bt.setEnabled(true);
-                bf.setEnabled(false);
-                bsixth.setEnabled(false);
-            }
-        });
-        bs.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-            }
-        });
-        bt.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                bs.setEnabled(false);
-                bt.setEnabled(false);
-                bf.setEnabled(true);
-                bsixth.setEnabled(true);
-            }
-        });
         bv.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 newLog(String.valueOf(getResources().getInteger(com.google.android.gms.R.integer.google_play_services_version)));
@@ -81,6 +60,33 @@ public class DebugActivity extends Activity {
         });
 
         Log.d("DebugActivity", "ready");
+
+        LinearLayout layout = (LinearLayout) findViewById(R.id.bannerLayout);
+        layout.setVisibility(View.INVISIBLE);
+
+        if (!BuildConfig.IS_PRO_VERSION) {
+
+            // Create the adView.
+            adView = new AdView(this);
+            adView.setAdUnitId("ca-app-pub-8761501900041217/6245885681");
+            adView.setAdSize(AdSize.BANNER);
+
+            layout.setVisibility(View.VISIBLE);
+            layout.addView(adView);
+
+            AdRequest adRequest = new AdRequest.Builder()
+                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                    .addTestDevice("89CADD0B4B609A30ABDCB7ED4E90A8DE")
+                    .addTestDevice("CCCBB7E354C2E6E64DB5A399A77298ED")  //current Nexus 4
+                    .addTestDevice("4DA61F48D168C897127AACD506BF35DF")  //current Note
+                    .addTestDevice("9190B60D7EC5559B167C1AF6D89D714A")  // Nexus 4
+                            //TODO current tablet
+                    .build();
+
+            adView.loadAd(adRequest);
+        } else {
+            layout.setPadding(0, 0, 0, 0); //free ad-space for donate version
+        }
     }
 
 
@@ -175,8 +181,29 @@ public class DebugActivity extends Activity {
         return output;
     }
 
-    private void showNewDesign() {
-        Intent myIntent = new Intent(DebugActivity.this, MainActivity.class);
-        DebugActivity.this.startActivity(myIntent);
+    @Override
+    public void onDestroy() {
+        if (!BuildConfig.IS_PRO_VERSION) {
+            adView.destroy();
+        }
+        super.onDestroy();
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!BuildConfig.IS_PRO_VERSION) {
+            adView.resume();
+        }
+        AppRate.with(DebugActivity.this).checkAndShow();
+    }
+
+
+    @Override
+    public void onPause() {
+        if (!BuildConfig.IS_PRO_VERSION) {
+            adView.pause();
+        }
     }
 }
