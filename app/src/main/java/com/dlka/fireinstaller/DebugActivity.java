@@ -205,5 +205,6 @@ public class DebugActivity extends Activity {
         if (!BuildConfig.IS_PRO_VERSION) {
             adView.pause();
         }
+        super.onPause();
     }
 }
