@@ -12,11 +12,11 @@ android {
     }
     productFlavors {
         vanilla {
-            applicationId "com.dlka.fireinstaller"
+            applicationId "com.dlka.fireinstaller3"
             minSdkVersion 14
             targetSdkVersion 23
             versionName '0.9.5h free'
-            manifestPlaceholders = [ applicationName:"Fireinstaller" ]
+            manifestPlaceholders = [ applicationName:"Fireinstaller Pro" ]
             manifestPlaceholders = [ applicationCode:"64" ]
             buildConfigField "boolean", "IS_PRO_VERSION", "false"
             buildConfigField "boolean", "DONATIONS_GOOGLE", "true"
