@@ -418,11 +418,18 @@ public class MainActivity extends ListActivity implements
 
         Map<String, ?> preferences = PreferenceManager.getDefaultSharedPreferences(this).getAll();
         fireip = (String) preferences.get("example_text");
-        if (fireip.isEmpty()) {
+        try { //NullpointerException on Android Marshmallow
+            if (fireip.isEmpty()) {
+                Toast.makeText(this, "Target? Fire's IP-Address is empty.", Toast.LENGTH_LONG).show();
+                showPreferences();
+                return;
+            }
+        } catch (Exception e) {
             Toast.makeText(this, "Target? Fire's IP-Address is empty.", Toast.LENGTH_LONG).show();
             showPreferences();
             return;
         }
+
         if (fireip.equals("192.0.0.0")) {
             Toast.makeText(this, "Target? Please enter Fire's IP-Address before.", Toast.LENGTH_LONG).show();
             showPreferences();
