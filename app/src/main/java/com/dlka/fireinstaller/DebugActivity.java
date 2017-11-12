@@ -39,9 +39,16 @@ public class DebugActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_debug);
 
+        final Button bt = (Button) findViewById(R.id.button3);
         final Button bv = (Button) findViewById(R.id.button4);
         final Button bfifth = (Button) findViewById(R.id.button5);
 
+        bt.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+        Log.d("debugActivity", "detecting arch");
+            newLog(detectArch());
+            }
+        });
         bv.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 newLog(String.valueOf(getResources().getInteger(com.google.android.gms.R.integer.google_play_services_version)));
@@ -93,6 +100,87 @@ public class DebugActivity extends Activity {
     public void newLog(String message) {
         EditText log = (EditText) findViewById(R.id.editTextLog);
         log.setText(log.getText() + message);
+    }
+
+    public String detectArch() {
+        Process detect = null;
+        try {
+            detect = Runtime.getRuntime().exec("sh");
+
+        } catch (IOException e1) {
+            Log.e("firedebug", "IOException error e " + e1);
+        }
+
+        DataOutputStream outputStream = null;
+        DataInputStream inputStream = null;
+        String output = "";
+        if (detect != null) {
+            outputStream = new DataOutputStream(detect.getOutputStream());
+            inputStream = new DataInputStream(detect.getInputStream());
+        } else {
+            Log.e("firedebug", "adb == null");
+        }
+        try {
+            if (outputStream != null) {
+                outputStream.writeBytes("uname -m \n ");
+                outputStream.flush();
+
+                int readed = 0;
+                byte[] buff = new byte[4096];
+                while (inputStream.available() <= 0) {
+                    try {
+                        Thread.sleep(5000);
+                    } catch (Exception ex) {
+                    }
+                }
+
+                while (inputStream.available() > 0) {
+                    readed = inputStream.read(buff);
+                    if (readed <= 0) break;
+                    String seg = new String(buff, 0, readed);
+                    output = seg; //result is a string to show in textview
+                }
+
+            } else {
+                Log.e("firedebug", "outputStream == null");
+            }
+        } catch (IOException e1) {
+            Log.e("firedebug", "IOException error 1" + e1);
+        }
+
+        //CLOSINGCONNECTION //should work
+
+
+        //After pushing:
+        try {
+            if (outputStream != null) {
+                outputStream.close();
+            } else {
+                Log.e("firedebug", "outputStream closed already ");
+            }
+            if (inputStream != null) {
+                inputStream.close();
+            } else {
+                Log.e("firedebug", "inputStream closed already ");
+            }
+            if (detect != null) {
+                detect.waitFor();
+            } else {
+                Log.e("firedebug", "ping closed already ");
+            }
+        } catch (IOException e) {
+            Log.e("firedebug", "IOException error 2 " + e);
+        } catch (InterruptedException e) {
+            Log.e("firedebug", "InterruptedException error 5 " + e);
+        }
+        if (detect != null) {
+            detect.destroy();
+        } else {
+            Log.e("firedebug", "ping already destroyed ");
+        }
+
+
+        return output;
     }
 
     public String pingTV(String fireip) {

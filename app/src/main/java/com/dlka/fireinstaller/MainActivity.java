@@ -580,7 +580,7 @@ public class MainActivity extends ListActivity implements
                 outputStream = new DataOutputStream(adb.getOutputStream());
                 inputStream = new DataInputStream(adb.getInputStream());
             } else {
-                publishProgress("asb == null");
+                publishProgress("adb == null");
                 Log.e("fireconnector", "adb == null");
             }
             try {
@@ -615,6 +615,11 @@ public class MainActivity extends ListActivity implements
             } catch (IOException e1) {
                 publishProgress("IOException error 1" + e1.toString());
                 Log.e("fireconnector", "IOException error 1" + e1);
+                //connection not sucessful trying bundled adb
+                //1.getting arch (see DebugActivity.java "uname -m")
+
+                //2.using bundled adb
+
             }
 
 
