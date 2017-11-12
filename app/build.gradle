@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    compileSdkVersion 27
+    buildToolsVersion "27.0.1"
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
         }
     }
@@ -14,10 +14,11 @@ android {
         vanilla {
             applicationId "com.dlka.fireinstaller3"
             minSdkVersion 14
-            targetSdkVersion 23
-            versionName '0.9.6 free'
+            targetSdkVersion 27
+            flavorDimensions "default"
+            versionName '1.0.0 free'
             manifestPlaceholders = [ applicationName:"Fireinstaller Pro" ]
-            manifestPlaceholders = [ applicationCode:"65" ]
+            manifestPlaceholders = [ applicationCode:"66" ]
             buildConfigField "boolean", "IS_PRO_VERSION", "false"
             buildConfigField "boolean", "DONATIONS_GOOGLE", "true"
 
@@ -25,10 +26,10 @@ android {
         donateVersion {
             minSdkVersion 14
             applicationId 'com.dlka.fireinstaller2'
-            targetSdkVersion 23
-            versionName '0.9.6 pro'
+            targetSdkVersion 27
+            versionName '1.0.0 pro'
             manifestPlaceholders = [ applicationName:"Fireinstaller Donate" ]
-            manifestPlaceholders = [ applicationCode:"65" ]
+            manifestPlaceholders = [ applicationCode:"66" ]
             buildConfigField "boolean", "IS_PRO_VERSION", "true"
             buildConfigField "boolean", "DONATIONS_GOOGLE", "true"
 
