@@ -2,6 +2,7 @@ package com.dlka.fireinstaller;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -33,6 +34,8 @@ import fr.nicolaspomepuy.discreetapprate.AppRate;
 
 public class DebugActivity extends Activity {
     public String fireip = "";
+    public String deviceId = "";
+    public String android_id = "";
     private AdView adView;
 
     @Override
@@ -44,9 +47,11 @@ public class DebugActivity extends Activity {
         final Button bv = (Button) findViewById(R.id.button4);
         final Button bfifth = (Button) findViewById(R.id.button5);
 
-        String android_id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
-        String deviceId = MD5(android_id).toUpperCase();
+        android_id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+        deviceId = MD5(android_id).toUpperCase();
         newLog("\nAndroid Device ID for admob: \n" + deviceId);
+
+
 
         bt.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -56,8 +61,9 @@ public class DebugActivity extends Activity {
         });
         bv.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                newLog(String.valueOf(getResources().getInteger(com.google.android.gms.R.integer.google_play_services_version)));
-                bv.setEnabled(false);
+                //newLog(String.valueOf(getResources().getInteger(com.google.android.gms.R.integer.google_play_services_version)));
+                //bv.setEnabled(false);
+                sendDeveloperMail();
             }
         });
         bfifth.setOnClickListener(new View.OnClickListener() {
@@ -312,5 +318,23 @@ public class DebugActivity extends Activity {
             adView.pause();
         }
         super.onPause();
+    }
+
+    private void sendDeveloperMail() {
+
+        String ARCH = detectArch();
+        Map<String, ?> preferences = PreferenceManager.getDefaultSharedPreferences(DebugActivity.this).getAll();
+        fireip = (String) preferences.get("example_text");
+        String GPS = (String.valueOf(getResources().getInteger(com.google.android.gms.R.integer.google_play_services_version)));
+        StringBuilder buffer;
+        buffer = new StringBuilder();
+        buffer.append("mailto:");
+        buffer.append("feedback@kulsch-it.de");
+        buffer.append("?subject=");
+        buffer.append("Fireinstaller DEBUG");
+        buffer.append("&body="+deviceId+"\n"+android_id+"\n"+ARCH+"\n"+fireip+"\n"+GPS+"\n Please provide Androidversion and Device Model for Bugreport if you know it.");
+        String uriString = buffer.toString().replace(" ", "%20");
+
+        startActivity(Intent.createChooser(new Intent(Intent.ACTION_SENDTO, Uri.parse(uriString)), "Contact Developer"));
     }
 }

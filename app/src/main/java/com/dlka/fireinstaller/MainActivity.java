@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -73,6 +74,8 @@ public class MainActivity extends ListActivity implements
     private static final String PROPERTY_ID = "App";
     private static final String mailtag = BuildConfig.VERSION_NAME;
     public String fireip = "";
+    public String deviceId = "";
+    public String android_id = "";
 
     private AdView adView;
     public boolean installAPKdirectly = false;
@@ -84,6 +87,9 @@ public class MainActivity extends ListActivity implements
 
     @Override
     protected void onCreate(Bundle b) {
+
+        android_id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+        deviceId = MD5(android_id).toUpperCase();
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
@@ -169,7 +175,7 @@ public class MainActivity extends ListActivity implements
         //fix for white or black empty screen on app startup, see https://code.google.com/p/android/issues/detail?id=82157
         t1.enableExceptionReporting(false);
 
-        LinearLayout layout = findViewById(R.id.bannerLayout);
+        LinearLayout layout = (LinearLayout) findViewById(R.id.bannerLayout);
         layout.setVisibility(View.INVISIBLE);
 
         if (!BuildConfig.IS_PRO_VERSION) {
@@ -398,13 +404,18 @@ public class MainActivity extends ListActivity implements
     }
 
     private void sendDeveloperMail() {
+        String ARCH = detectArch();
+        Map<String, ?> preferences = PreferenceManager.getDefaultSharedPreferences(MainActivity.this).getAll();
+        fireip = (String) preferences.get("example_text");
+        String GPS = (String.valueOf(getResources().getInteger(com.google.android.gms.R.integer.google_play_services_version)));
+
         StringBuilder buffer;
         buffer = new StringBuilder();
         buffer.append("mailto:");
         buffer.append("feedback@kulsch-it.de");
         buffer.append("?subject=");
         buffer.append("Fireinstaller" + mailtag);
-        buffer.append("&body=Please provide Androidversion and Device Model for Bugreport if you know it.");
+        buffer.append("&body="+deviceId+"\n"+android_id+"\n"+ARCH+"\n"+fireip+"\n"+GPS+"\n Please provide Androidversion and Device Model for Bugreport if you know it.");
         String uriString = buffer.toString().replace(" ", "%20");
 
         startActivity(Intent.createChooser(new Intent(Intent.ACTION_SENDTO, Uri.parse(uriString)), "Contact Developer"));
@@ -950,6 +961,101 @@ public class MainActivity extends ListActivity implements
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(Uri.parse(url));
         startActivity(i);
+    }
+
+    public String detectArch() {
+        Process detect = null;
+        try {
+            detect = Runtime.getRuntime().exec("sh");
+
+        } catch (IOException e1) {
+            Log.e("firedebug", "IOException error e " + e1);
+        }
+
+        DataOutputStream outputStream = null;
+        DataInputStream inputStream = null;
+        String output = "";
+        if (detect != null) {
+            outputStream = new DataOutputStream(detect.getOutputStream());
+            inputStream = new DataInputStream(detect.getInputStream());
+        } else {
+            Log.e("firedebug", "adb == null");
+        }
+        try {
+            if (outputStream != null) {
+                outputStream.writeBytes("uname -m \n ");
+                outputStream.flush();
+
+                int readed = 0;
+                byte[] buff = new byte[4096];
+                while (inputStream.available() <= 0) {
+                    try {
+                        Thread.sleep(5000);
+                    } catch (Exception ex) {
+                    }
+                }
+
+                while (inputStream.available() > 0) {
+                    readed = inputStream.read(buff);
+                    if (readed <= 0) break;
+                    String seg = new String(buff, 0, readed);
+                    output = seg; //result is a string to show in textview
+                }
+
+            } else {
+                Log.e("firedebug", "outputStream == null");
+            }
+        } catch (IOException e1) {
+            Log.e("firedebug", "IOException error 1" + e1);
+        }
+
+        //CLOSINGCONNECTION //should work
+
+
+        //After pushing:
+        try {
+            if (outputStream != null) {
+                outputStream.close();
+            } else {
+                Log.e("firedebug", "outputStream closed already ");
+            }
+            if (inputStream != null) {
+                inputStream.close();
+            } else {
+                Log.e("firedebug", "inputStream closed already ");
+            }
+            if (detect != null) {
+                detect.waitFor();
+            } else {
+                Log.e("firedebug", "ping closed already ");
+            }
+        } catch (IOException e) {
+            Log.e("firedebug", "IOException error 2 " + e);
+        } catch (InterruptedException e) {
+            Log.e("firedebug", "InterruptedException error 5 " + e);
+        }
+        if (detect != null) {
+            detect.destroy();
+        } else {
+            Log.e("firedebug", "ping already destroyed ");
+        }
+
+
+        return output;
+    }
+
+    public String MD5(String md5) {
+        try {
+            java.security.MessageDigest md = java.security.MessageDigest.getInstance("MD5");
+            byte[] array = md.digest(md5.getBytes());
+            StringBuffer sb = new StringBuffer();
+            for (int i = 0; i < array.length; ++i) {
+                sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1,3));
+            }
+            return sb.toString();
+        } catch (java.security.NoSuchAlgorithmException e) {
+        }
+        return null;
     }
 }
 

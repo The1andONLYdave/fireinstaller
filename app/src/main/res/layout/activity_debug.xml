@@ -32,7 +32,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/button3"
-        android:text="Get Google Play Services Version" />
+        android:text="Mail helpful information" />
 
     <Button
         android:id="@+id/button5"
@@ -60,9 +60,10 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:focusableInTouchMode="false"
+            android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:selectAllOnFocus="true"
-            android:text="Log \n(if you press Ping wait 5 Seconds please)"
+            android:text="\nLog:\n \n(if you press Ping wait 5 Seconds please)"
             android:textIsSelectable="true" />
     </ScrollView>
 
