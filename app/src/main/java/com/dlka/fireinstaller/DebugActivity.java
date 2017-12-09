@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -42,6 +43,10 @@ public class DebugActivity extends Activity {
         final Button bt = (Button) findViewById(R.id.button3);
         final Button bv = (Button) findViewById(R.id.button4);
         final Button bfifth = (Button) findViewById(R.id.button5);
+
+        String android_id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+        String deviceId = MD5(android_id).toUpperCase();
+        newLog("\nAndroid Device ID for admob: \n" + deviceId);
 
         bt.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -96,6 +101,19 @@ public class DebugActivity extends Activity {
         }
     }
 
+    public String MD5(String md5) {
+        try {
+            java.security.MessageDigest md = java.security.MessageDigest.getInstance("MD5");
+            byte[] array = md.digest(md5.getBytes());
+            StringBuffer sb = new StringBuffer();
+            for (int i = 0; i < array.length; ++i) {
+                sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1,3));
+            }
+            return sb.toString();
+        } catch (java.security.NoSuchAlgorithmException e) {
+        }
+        return null;
+    }
 
     public void newLog(String message) {
         EditText log = (EditText) findViewById(R.id.editTextLog);
