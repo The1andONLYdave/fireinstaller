@@ -35,6 +35,9 @@ import android.widget.Toast;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
+import android.support.v7.app.AppCompatActivity;
+import com.google.android.gms.ads.MobileAds;
+
 import com.google.android.gms.analytics.GoogleAnalytics;
 import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
@@ -70,7 +73,7 @@ public class MainActivity extends ListActivity implements
     private static final String PROPERTY_ID = "App";
     private static final String mailtag = BuildConfig.VERSION_NAME;
     public String fireip = "";
-    public boolean debugDisplay = false;
+
     private AdView adView;
     public boolean installAPKdirectly = false;
     public String encPath = null;
@@ -166,7 +169,7 @@ public class MainActivity extends ListActivity implements
         //fix for white or black empty screen on app startup, see https://code.google.com/p/android/issues/detail?id=82157
         t1.enableExceptionReporting(false);
 
-        LinearLayout layout = (LinearLayout) findViewById(R.id.bannerLayout);
+        LinearLayout layout = findViewById(R.id.bannerLayout);
         layout.setVisibility(View.INVISIBLE);
 
         if (!BuildConfig.IS_PRO_VERSION) {
@@ -181,11 +184,8 @@ public class MainActivity extends ListActivity implements
 
             AdRequest adRequest = new AdRequest.Builder()
                     .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                    .addTestDevice("89CADD0B4B609A30ABDCB7ED4E90A8DE")
-                    .addTestDevice("CCCBB7E354C2E6E64DB5A399A77298ED")  //current Nexus 4
-                    .addTestDevice("4DA61F48D168C897127AACD506BF35DF")  //current Note
                     .addTestDevice("9190B60D7EC5559B167C1AF6D89D714A")  // Nexus 4
-                            //TODO current tablet
+                    // @ToDo current chromebook, current A3
                     .build();
 
             adView.loadAd(adRequest);
@@ -443,7 +443,7 @@ public class MainActivity extends ListActivity implements
 
         new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                 .setTitleText("Are you sure?")
-                .setContentText("Do you want to install at ip " + fireip.toString())
+                .setContentText("Do you want to install at ip " + fireip)
                 .setCancelText("No,cancel plx!")
                 .setConfirmText("Yes,do it!")
                 .showCancelButton(true)
@@ -451,7 +451,7 @@ public class MainActivity extends ListActivity implements
                     @Override
                     public void onClick(SweetAlertDialog sDialog) {
                         sDialog.cancel();
-                        copyMenuSelect(fireip.toString());
+                        copyMenuSelect(fireip);
                     }
                 })
                 .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
