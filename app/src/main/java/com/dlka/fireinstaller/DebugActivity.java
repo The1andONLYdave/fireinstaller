@@ -92,13 +92,11 @@ public class DebugActivity extends Activity {
             layout.setVisibility(View.VISIBLE);
             layout.addView(adView);
 
+            // @ToDo: add your current dev-phone
             AdRequest adRequest = new AdRequest.Builder()
                     .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                     .addTestDevice("89CADD0B4B609A30ABDCB7ED4E90A8DE")
-                    .addTestDevice("CCCBB7E354C2E6E64DB5A399A77298ED")  //current Nexus 4
-                    .addTestDevice("4DA61F48D168C897127AACD506BF35DF")  //current Note
-                    .addTestDevice("9190B60D7EC5559B167C1AF6D89D714A")  // Nexus 4
-                            //TODO current tablet
+                    .addTestDevice("9678FC5A2710D9DD3A62E2BC9C66ADB4")
                     .build();
 
             adView.loadAd(adRequest);
@@ -208,7 +206,7 @@ public class DebugActivity extends Activity {
     }
 
     public String pingTV(String fireip) {
-        //TODO ping logic:  3 pings, no backgroung, return error if unseccesfull instead of UI freeze
+        //TODO ping logic:  3 pings, no backgroung, return error if unsuccessful instead of UI freeze
         Log.d("debugActivity", "pingTV starting");
 
         Process ping = null;

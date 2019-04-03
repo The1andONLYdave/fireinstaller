@@ -42,12 +42,12 @@ public class AppAdapter extends ArrayAdapter<SortablePackageInfo> {
         SortablePackageInfo spi = getItem(position);
         ViewHolder viewHolder = (ViewHolder) ret.getTag();
 
-        viewHolder.appName.setText(spi.displayName);
-        viewHolder.appPackage.setText(spi.packageName);
-        new IconLoaderTask(getContext().getPackageManager(), viewHolder.appIcon).execute(spi.appInfo);
+        viewHolder.appName.setText(spi.getDisplayName());
+        viewHolder.appPackage.setText(spi.getPackageName());
+        new IconLoaderTask(getContext().getPackageManager(), viewHolder.appIcon).execute(spi.getAppInfo());
 
         CheckBox sel = ((CheckBox) ret.findViewById(R.id.selected));
-        sel.setChecked(spi.selected);
+        sel.setChecked(spi.getSelected());
         sel.setOnClickListener(spi);
 
         return ret;

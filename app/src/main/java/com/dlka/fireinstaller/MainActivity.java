@@ -191,6 +191,7 @@ public class MainActivity extends ListActivity implements
             AdRequest adRequest = new AdRequest.Builder()
                     .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                     .addTestDevice("9190B60D7EC5559B167C1AF6D89D714A")  // Nexus 4
+                    .addTestDevice("9678FC5A2710D9DD3A62E2BC9C66ADB4")
                     // @ToDo current chromebook, current A3
                     .build();
 
@@ -296,7 +297,7 @@ public class MainActivity extends ListActivity implements
         int count = adapter.getCount();
         for (int i = 0; i < count; i++) {
             SortablePackageInfo spi = (SortablePackageInfo) adapter.getItem(i);
-            editor.putBoolean(SELECTED + "." + spi.packageName, spi.selected);
+            editor.putBoolean(SELECTED + "." + spi.getPackageName(), spi.getSelected());
         }
         editor.commit();
     }
@@ -479,7 +480,7 @@ public class MainActivity extends ListActivity implements
         int count = adapter.getCount();
         for (int i = 0; i < count; i++) {
             SortablePackageInfo spi = (SortablePackageInfo) adapter.getItem(i);
-            spi.selected = false;
+            spi.setSelected(false);
         }
         ((AppAdapter) adapter).notifyDataSetChanged();
     }
@@ -506,7 +507,7 @@ public class MainActivity extends ListActivity implements
             int count = adapter.getCount();
             for (int i = 0; i < count; i++) {
                 SortablePackageInfo spi = (SortablePackageInfo) adapter.getItem(i);
-                if (spi.selected) {
+                if (spi.getSelected()) {
                     return false;
                 }
             }
@@ -529,7 +530,7 @@ public class MainActivity extends ListActivity implements
                             long id) {
         AppAdapter aa = (AppAdapter) getListAdapter();
         SortablePackageInfo spi = aa.getItem(position);
-        spi.selected = !spi.selected;
+        spi.setSelected(!spi.getSelected());
         aa.notifyDataSetChanged();
     }
 
@@ -690,10 +691,10 @@ public class MainActivity extends ListActivity implements
             } else {
                 for (int i = 0; i < count; i++) {
                     SortablePackageInfo spi = (SortablePackageInfo) adapter.getItem(i);
-                    if (spi.selected) {
-                        Log.d("fireconnector", " ret.append package: " + spi.displayName + ", sourceDir: " + spi.sourceDir);
+                    if (spi.getSelected()) {
+                        Log.d("fireconnector", " ret.append package: " + spi.getDisplayName() + ", sourceDir: " + spi.getSourceDir());
 
-                        publishProgress("Install:\"" + spi.displayName + "\"  (app number " + (i + 1) + ") from " + spi.sourceDir + " . \n\n" +
+                        publishProgress("Install:\"" + spi.getDisplayName() + "\"  (app number " + (i + 1) + ") from " + spi.getSourceDir() + " . \n\n" +
                                 " May take long time.\n\n\n" +
                                 "If no progress after some Minutes: Check if IP " + fireip + " is correct on your Fire TV. " +
                                 "If it's wrong, just (force close and) restart this app. " +
@@ -707,8 +708,8 @@ public class MainActivity extends ListActivity implements
                             //Foreach Entry do and show progress thing:
 
                             if (outputStream != null) {
-                                Log.d("fireconnector", "/system/bin/adb install -r " + spi.sourceDir + "\n");//add -g, ‚grant permissions on non-interactive install
-                                outputStream.writeBytes("/system/bin/adb install -r " + spi.sourceDir + "\n");
+                                Log.d("fireconnector", "/system/bin/adb install -r " + spi.getSourceDir() + "\n");//add -g, ‚grant permissions on non-interactive install
+                                outputStream.writeBytes("/system/bin/adb install -r " + spi.getSourceDir() + "\n");
                                 outputStream.flush();
 
                                 int readed = 0;
