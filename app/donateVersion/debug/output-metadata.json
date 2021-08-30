@@ -1,0 +1,20 @@
+{
+  "version": 3,
+  "artifactType": {
+    "type": "APK",
+    "kind": "Directory"
+  },
+  "applicationId": "com.dlka.fireinstaller2",
+  "variantName": "donateVersionDebug",
+  "elements": [
+    {
+      "type": "SINGLE",
+      "filters": [],
+      "attributes": [],
+      "versionCode": 100,
+      "versionName": "1.0.0 pro",
+      "outputFile": "app-donateVersion-debug.apk"
+    }
+  ],
+  "elementType": "File"
+}
