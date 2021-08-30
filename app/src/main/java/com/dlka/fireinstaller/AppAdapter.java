@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class AppAdapter extends ArrayAdapter<SortablePackageInfo> {
 
-    private int layout;
+    private final int layout;
 
     public AppAdapter(Context context, int textViewResourceId, List<SortablePackageInfo> spi,
                       int layout) {
@@ -34,9 +34,9 @@ public class AppAdapter extends ArrayAdapter<SortablePackageInfo> {
                     Context.LAYOUT_INFLATER_SERVICE);
             ret = inflater.inflate(layout, null);
             ViewHolder vh = new ViewHolder();
-            vh.appName = (TextView) ret.findViewById(R.id.appname);
-            vh.appPackage = (TextView) ret.findViewById(R.id.apppackage);
-            vh.appIcon = (ImageView) ret.findViewById(R.id.icon);
+            vh.appName = ret.findViewById(R.id.appname);
+            vh.appPackage = ret.findViewById(R.id.apppackage);
+            vh.appIcon = ret.findViewById(R.id.icon);
             ret.setTag(vh);
         }
         SortablePackageInfo spi = getItem(position);
@@ -46,7 +46,7 @@ public class AppAdapter extends ArrayAdapter<SortablePackageInfo> {
         viewHolder.appPackage.setText(spi.packageName);
         new IconLoaderTask(getContext().getPackageManager(), viewHolder.appIcon).execute(spi.appInfo);
 
-        CheckBox sel = ((CheckBox) ret.findViewById(R.id.selected));
+        CheckBox sel = (ret.findViewById(R.id.selected));
         sel.setChecked(spi.selected);
         sel.setOnClickListener(spi);
 

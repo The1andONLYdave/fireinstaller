@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "27.0.2"
+    compileSdkVersion 30
+    buildToolsVersion "30.0.2"
 
     buildTypes {
         release {
@@ -14,11 +14,10 @@ android {
         vanilla {
             applicationId "com.dlka.fireinstaller3"
             minSdkVersion 14
-            targetSdkVersion 25
+            targetSdkVersion 30
             flavorDimensions "default"
             versionName '1.0.0 free'
             manifestPlaceholders = [ applicationName:"Fireinstaller Pro" ]
-            manifestPlaceholders = [ applicationCode:"66" ]
             buildConfigField "boolean", "IS_PRO_VERSION", "false"
             buildConfigField "boolean", "DONATIONS_GOOGLE", "true"
 
@@ -26,30 +25,33 @@ android {
         donateVersion {
             minSdkVersion 14
             applicationId 'com.dlka.fireinstaller2'
-            targetSdkVersion 25
+            targetSdkVersion 30
             versionName '1.0.0 pro'
             manifestPlaceholders = [ applicationName:"Fireinstaller Donate" ]
-            manifestPlaceholders = [ applicationCode:"66" ]
             buildConfigField "boolean", "IS_PRO_VERSION", "true"
             buildConfigField "boolean", "DONATIONS_GOOGLE", "true"
 
         }
     }
+    defaultConfig {
+        targetSdk 30
+    }
 }
 
 
 dependencies {
-    compile 'com.google.android.gms:play-services-ads:8.1.0'
- //   compile 'com.android.support:appcompat-v7:26.1.0'
-    compile 'com.google.android.gms:play-services-analytics:8.1.0'
-    compile 'com.android.support:support-v4:21.0.3'
-    compile 'cn.pedant.sweetalert:library:1.3'
-    compile 'fr.nicolaspomepuy:discreetapprate:2.0.3@aar'
-    compile 'net.fredericosilva:showTipsView:1.0.2'
-    compile 'org.sufficientlysecure:donations:2.3'
-    compile 'com.getbase:floatingactionbutton:1.10.0'
-    compile 'com.nononsenseapps:filepicker:2.4.2'
-    compile('com.mikepenz:materialdrawer:4.3.4@aar') {
+//  implementation 'com.google.android.gms:play-services-ads:8.1.0'
+//  compile 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.google.android.gms:play-services-analytics:8.1.0'
+    implementation 'com.android.support:support-v4:21.0.3'
+//  implementation 'cn.pedant.sweetalert:library:1.3'
+    implementation 'com.github.f0ris.sweetalert:library:1.6.2'
+    implementation 'fr.nicolaspomepuy:discreetapprate:2.0.3@aar'
+    implementation 'net.fredericosilva:showTipsView:1.0.2'
+    implementation 'org.sufficientlysecure:donations:2.3'
+    implementation 'com.getbase:floatingactionbutton:1.10.0'
+    implementation 'com.nononsenseapps:filepicker:2.4.2'
+    implementation('com.mikepenz:materialdrawer:4.3.4@aar') {
         transitive = true
     }
 }

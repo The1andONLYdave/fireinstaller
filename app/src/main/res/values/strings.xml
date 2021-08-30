@@ -68,4 +68,7 @@
         <item>20 Euros</item>
     </string-array>
     <string name="externalAPK">(BETA) sideload APK</string>
+    <string name="helppage">Help Webpage</string>
+    <string name="viewbrowser">open in browser</string>
+    <string name="enterIP">Here you can enter IP-Address.</string>
 </resources>

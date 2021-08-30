@@ -4,25 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
-import com.mikepenz.materialdrawer.Drawer;
-import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.model.DividerDrawerItem;
-import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
-import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
-import com.nononsenseapps.filepicker.FilePickerActivity;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -36,40 +22,30 @@ public class DebugActivity extends Activity {
     public String fireip = "";
     public String deviceId = "";
     public String android_id = "";
-    private AdView adView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_debug);
 
-        final Button bt = (Button) findViewById(R.id.button3);
-        final Button bv = (Button) findViewById(R.id.button4);
-        final Button bfifth = (Button) findViewById(R.id.button5);
-
-        android_id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
-        deviceId = MD5(android_id).toUpperCase();
-        newLog("\nAndroid Device ID for admob: \n" + deviceId);
-
-
+        final Button bt = findViewById(R.id.button3);
+        final Button bv = findViewById(R.id.button4);
+        final Button bfifth = findViewById(R.id.button5);
 
         bt.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-        Log.d("debugActivity", "detecting arch");
-            newLog(detectArch());
+                newLog(detectArch());
             }
         });
         bv.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //newLog(String.valueOf(getResources().getInteger(com.google.android.gms.R.integer.google_play_services_version)));
-                //bv.setEnabled(false);
                 sendDeveloperMail();
             }
         });
         bfifth.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Log.d("debugActivity", "pingTV starting");
-                Map<String, ?> preferences = PreferenceManager.getDefaultSharedPreferences(DebugActivity.this).getAll();
+                Map<String, ?> preferences =
+                        PreferenceManager.getDefaultSharedPreferences(DebugActivity.this).getAll();
                 fireip = (String) preferences.get("example_text");
 
                 newLog("\nping running: ip " + fireip + " please wait 5 seconds for output\n");
@@ -77,52 +53,13 @@ public class DebugActivity extends Activity {
             }
         });
 
-        Log.d("DebugActivity", "ready");
-
         LinearLayout layout = (LinearLayout) findViewById(R.id.bannerLayout);
         layout.setVisibility(View.INVISIBLE);
-
-        if (!BuildConfig.IS_PRO_VERSION) {
-
-            // Create the adView.
-            adView = new AdView(this);
-            adView.setAdUnitId("ca-app-pub-8761501900041217/6245885681");
-            adView.setAdSize(AdSize.BANNER);
-
-            layout.setVisibility(View.VISIBLE);
-            layout.addView(adView);
-
-            AdRequest adRequest = new AdRequest.Builder()
-                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                    .addTestDevice("89CADD0B4B609A30ABDCB7ED4E90A8DE")
-                    .addTestDevice("CCCBB7E354C2E6E64DB5A399A77298ED")  //current Nexus 4
-                    .addTestDevice("4DA61F48D168C897127AACD506BF35DF")  //current Note
-                    .addTestDevice("9190B60D7EC5559B167C1AF6D89D714A")  // Nexus 4
-                            //TODO current tablet
-                    .build();
-
-            adView.loadAd(adRequest);
-        } else {
-            layout.setPadding(0, 0, 0, 0); //free ad-space for donate version
-        }
-    }
-
-    public String MD5(String md5) {
-        try {
-            java.security.MessageDigest md = java.security.MessageDigest.getInstance("MD5");
-            byte[] array = md.digest(md5.getBytes());
-            StringBuffer sb = new StringBuffer();
-            for (int i = 0; i < array.length; ++i) {
-                sb.append(Integer.toHexString((array[i] & 0xFF) | 0x100).substring(1,3));
-            }
-            return sb.toString();
-        } catch (java.security.NoSuchAlgorithmException e) {
-        }
-        return null;
+        layout.setPadding(0, 0, 0, 0); //free ad-space for donate version
     }
 
     public void newLog(String message) {
-        EditText log = (EditText) findViewById(R.id.editTextLog);
+        EditText log = findViewById(R.id.editTextLog);
         log.setText(log.getText() + message);
     }
 
@@ -132,7 +69,7 @@ public class DebugActivity extends Activity {
             detect = Runtime.getRuntime().exec("sh");
 
         } catch (IOException e1) {
-            Log.e("firedebug", "IOException error e " + e1);
+            newLog(e1.getMessage());
         }
 
         DataOutputStream outputStream = null;
@@ -141,15 +78,13 @@ public class DebugActivity extends Activity {
         if (detect != null) {
             outputStream = new DataOutputStream(detect.getOutputStream());
             inputStream = new DataInputStream(detect.getInputStream());
-        } else {
-            Log.e("firedebug", "adb == null");
         }
         try {
             if (outputStream != null) {
                 outputStream.writeBytes("uname -m \n ");
                 outputStream.flush();
 
-                int readed = 0;
+                int readed;
                 byte[] buff = new byte[4096];
                 while (inputStream.available() <= 0) {
                     try {
@@ -161,15 +96,13 @@ public class DebugActivity extends Activity {
                 while (inputStream.available() > 0) {
                     readed = inputStream.read(buff);
                     if (readed <= 0) break;
-                    String seg = new String(buff, 0, readed);
-                    output = seg; //result is a string to show in textview
+                    output = new String(buff, 0, readed);
+                    //result is a string to show in textview
                 }
 
-            } else {
-                Log.e("firedebug", "outputStream == null");
             }
         } catch (IOException e1) {
-            Log.e("firedebug", "IOException error 1" + e1);
+            newLog(e1.getMessage());
         }
 
         //CLOSINGCONNECTION //should work
@@ -179,44 +112,34 @@ public class DebugActivity extends Activity {
         try {
             if (outputStream != null) {
                 outputStream.close();
-            } else {
-                Log.e("firedebug", "outputStream closed already ");
             }
             if (inputStream != null) {
                 inputStream.close();
-            } else {
-                Log.e("firedebug", "inputStream closed already ");
             }
             if (detect != null) {
                 detect.waitFor();
-            } else {
-                Log.e("firedebug", "ping closed already ");
             }
         } catch (IOException e) {
-            Log.e("firedebug", "IOException error 2 " + e);
+            newLog(e.getMessage());
         } catch (InterruptedException e) {
-            Log.e("firedebug", "InterruptedException error 5 " + e);
+            newLog(e.getMessage());
         }
         if (detect != null) {
             detect.destroy();
-        } else {
-            Log.e("firedebug", "ping already destroyed ");
         }
-
 
         return output;
     }
 
     public String pingTV(String fireip) {
-        //TODO ping logic:  3 pings, no backgroung, return error if unseccesfull instead of UI freeze
-        Log.d("debugActivity", "pingTV starting");
+        //TODO ping logic:  3 pings, no background, return error if unsuccesfull instead of UI freeze
 
         Process ping = null;
         try {
             ping = Runtime.getRuntime().exec("sh");
 
         } catch (IOException e1) {
-            Log.e("firedebug", "IOException error e " + e1);
+            newLog(e1.getMessage());
         }
 
         DataOutputStream outputStream = null;
@@ -225,17 +148,14 @@ public class DebugActivity extends Activity {
         if (ping != null) {
             outputStream = new DataOutputStream(ping.getOutputStream());
             inputStream = new DataInputStream(ping.getInputStream());
-        } else {
-            Log.e("firedebug", "adb == null");
         }
         try {
             if (outputStream != null) { //TODO path to ping? or builtin sh?
                 outputStream.writeBytes("/system/bin/ping -c 3 " + fireip + " \n "); //todo -c3 correct?
                 outputStream.flush();
-                Log.d("firedebug", "/system/bin/ping -c 3 " + fireip + " \n ");
 
-//http://stackoverflow.com/a/16563729/2359197
-                int readed = 0;
+                //http://stackoverflow.com/a/16563729/2359197
+                int readed;
                 byte[] buff = new byte[4096];
                 while (inputStream.available() <= 0) {
                     try {
@@ -251,77 +171,44 @@ public class DebugActivity extends Activity {
                     output = seg; //result is a string to show in textview
                 }
 
-            } else {
-                Log.e("firedebug", "outputStream == null");
             }
         } catch (IOException e1) {
-            Log.e("firedebug", "IOException error 1" + e1);
+            newLog(e1.getMessage());
         }
-
         //CLOSINGCONNECTION //should work
-
 
         //After pushing:
         try {
             if (outputStream != null) {
                 outputStream.close();
-            } else {
-                Log.e("firedebug", "outputStream closed already ");
             }
             if (inputStream != null) {
                 inputStream.close();
-            } else {
-                Log.e("firedebug", "inputStream closed already ");
             }
             if (ping != null) {
                 ping.waitFor();
-            } else {
-                Log.e("firedebug", "ping closed already ");
             }
         } catch (IOException e) {
-            Log.e("firedebug", "IOException error 2 " + e);
+            newLog(e.getMessage());
         } catch (InterruptedException e) {
-            Log.e("firedebug", "InterruptedException error 5 " + e);
+            newLog(e.getMessage());
         }
         if (ping != null) {
             ping.destroy();
-        } else {
-            Log.e("firedebug", "ping already destroyed ");
         }
-
 
         return output;
     }
 
     @Override
-    public void onDestroy() {
-        if (!BuildConfig.IS_PRO_VERSION) {
-            adView.destroy();
-        }
-        super.onDestroy();
-    }
-
-
-    @Override
     protected void onResume() {
         super.onResume();
-        if (!BuildConfig.IS_PRO_VERSION) {
-            adView.resume();
-        }
         AppRate.with(DebugActivity.this).checkAndShow();
     }
 
 
-    @Override
-    public void onPause() {
-        if (!BuildConfig.IS_PRO_VERSION) {
-            adView.pause();
-        }
-        super.onPause();
-    }
 
     private void sendDeveloperMail() {
-
         String ARCH = detectArch();
         Map<String, ?> preferences = PreferenceManager.getDefaultSharedPreferences(DebugActivity.this).getAll();
         fireip = (String) preferences.get("example_text");
@@ -332,7 +219,7 @@ public class DebugActivity extends Activity {
         buffer.append("feedback@kulsch-it.de");
         buffer.append("?subject=");
         buffer.append("Fireinstaller DEBUG");
-        buffer.append("&body="+deviceId+"\n"+android_id+"\n"+ARCH+"\n"+fireip+"\n"+GPS+"\n Please provide Androidversion and Device Model for Bugreport if you know it.");
+        buffer.append("&body=" + deviceId + "\n" + android_id + "\n" + ARCH + "\n" + fireip + "\n" + GPS + "\n Please provide Androidversion and Device Model for Bugreport if you know it.");
         String uriString = buffer.toString().replace(" ", "%20");
 
         startActivity(Intent.createChooser(new Intent(Intent.ACTION_SENDTO, Uri.parse(uriString)), "Contact Developer"));

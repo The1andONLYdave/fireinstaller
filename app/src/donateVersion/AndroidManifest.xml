@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:versionCode="${applicationCode}"
+    android:versionCode="100"
     tools:node="replace" >
 
     <uses-sdk
@@ -60,15 +60,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name="com.dlka.fireinstaller.DonationsActivity"
-            android:label="Donation"
-            android:parentActivityName="com.dlka.fireinstaller.SettingsActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.dlka.fireinstaller.MainActivity"
-                tools:replace="android:value" />
         </activity>
         <activity
             android:name="com.nononsenseapps.filepicker.FilePickerActivity"
